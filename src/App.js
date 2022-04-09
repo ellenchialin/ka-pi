@@ -18,7 +18,7 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box as="section" minH="100vh">
+      <Box minH="100vh">
         <SidebarContent display={{ base: 'none', md: 'unset' }} />
         <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
           <DrawerOverlay />
