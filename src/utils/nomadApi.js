@@ -1,7 +1,6 @@
 const nomad = {
-  hostname: 'https://cafenomad.tw/api/v1.2/cafes',
   getCafesByCity(city) {
-    return fetch(`${this.hostname}/${city}`).then(response => response.json())
+    return fetch(`/api/v1.2/cafes/${city}`).then(response => response.json())
   },
 }
 

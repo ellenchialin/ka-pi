@@ -12,6 +12,7 @@ import { BiSearchAlt } from 'react-icons/bi'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
+import nomad from '../utils/nomadApi'
 
 import { samples } from '../components/cafeSamples'
 
@@ -35,6 +36,13 @@ function Home() {
     )
   }, [])
 
+  useEffect(() => {
+    nomad
+      .getCafesByCity('taipei')
+      .then(json => console.log(json))
+      .catch(error => alert('無法取得資料庫'))
+  }, [])
+
   return (
     <Flex direction="column" align="center">
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
@@ -55,7 +63,7 @@ function Home() {
         as="section"
       >
         {samples.map(cafe => (
-          <CafeCard cafe={cafe} />
+          <CafeCard key={cafe.id} cafe={cafe} />
         ))}
       </Flex>
 
