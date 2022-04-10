@@ -2,6 +2,8 @@ import {
   Box,
   Flex,
   Text,
+  Link,
+  Divider,
   Icon,
   Collapse,
   CloseButton,
@@ -79,6 +81,7 @@ function SidebarContent({ onClose, ...rest }) {
         fontSize="sm"
         color="grey.600"
         aria-label="主選單"
+        h="100%"
       >
         <NavItem icon={HiOutlineHome}>Home</NavItem>
         <NavItem icon={VscLibrary} onClick={integrations.onToggle}>
@@ -99,6 +102,19 @@ function SidebarContent({ onClose, ...rest }) {
         </Collapse>
         <NavItem icon={RiStarSmileLine}>Picks For you</NavItem>
         <NavItem icon={CgCoffee}>Your Cafe Map</NavItem>
+        <Box mt="auto" px="4" pb="5">
+          <Divider />
+          <Text fontSize="0.75em" pt="5">
+            © 2022 ka-pi. All rights reserved.
+          </Text>
+          <Text fontSize="0.75em">
+            此站使用咖啡廳社群{' '}
+            <Link href="https://cafenomad.tw/developers/docs/v1.2" color="blue">
+              Cafe Nomad
+            </Link>{' '}
+            資料庫
+          </Text>
+        </Box>
       </Flex>
     </Box>
   )
