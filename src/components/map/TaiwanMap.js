@@ -2,7 +2,7 @@ import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import { Box } from '@chakra-ui/react'
 
-import taiwanMapData from '../../taiwanMapData'
+// import taiwanMapData from '../../taiwanMapData'
 
 function TaiwanMap() {
   return (
@@ -16,7 +16,7 @@ function TaiwanMap() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <GeoJSON data={taiwanMapData} />
+        <GeoJSON />
       </MapContainer>
     </Box>
   )
