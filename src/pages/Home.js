@@ -37,13 +37,15 @@ function Home() {
 
   return (
     <Flex direction="column" align="center">
-      <Heading as="h1" size="xl">
-        來點 ka-pi
-      </Heading>
-      <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
-      {userLatitude && userLongitude && (
-        <Map userLatitude={userLatitude} userLongitude={userLongitude} />
-      )}
+      <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
+        <Heading as="h1" size="xl">
+          來點 ka-pi
+        </Heading>
+        <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
+        {userLatitude && userLongitude && (
+          <Map userLatitude={userLatitude} userLongitude={userLongitude} />
+        )}
+      </Flex>
 
       <Flex
         w="100%"
@@ -57,7 +59,7 @@ function Home() {
         ))}
       </Flex>
 
-      <Box as="section" my="4">
+      <Flex as="section" my="4" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">
           透過關鍵字搜尋咖啡廳
         </Heading>
@@ -67,15 +69,15 @@ function Home() {
           </InputLeftElement>
           <Input placeholder="Search..." />
         </InputGroup>
-      </Box>
+      </Flex>
 
-      <Box as="section" my="4" w="100%">
+      <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">
           為週末做準備
         </Heading>
-        <Text my="3">點擊地圖查看縣市咖啡廳地圖</Text>
+        <Text mb="3">點擊地圖查看縣市咖啡廳地圖</Text>
         <TaiwanMap />
-      </Box>
+      </Flex>
     </Flex>
   )
 }
