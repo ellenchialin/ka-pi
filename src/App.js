@@ -28,7 +28,7 @@ function App() {
         </Drawer>
         <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
           <Header onOpen={onOpen} />
-          <Box as="main" p="4">
+          <Box as="main" py="8" px="6">
             <Home />
           </Box>
         </Box>

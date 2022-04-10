@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import {
   Flex,
   Heading,
-  Box,
   Text,
   Input,
   InputGroup,
@@ -36,7 +35,7 @@ function Home() {
       <Heading as="h1" size="xl">
         來點 ka-pi
       </Heading>
-      <Text my="3">走幾步路就到，點擊咖啡廳位置看更多資訊</Text>
+      <Text my="3">附近咖啡廳，點擊位置看更多資訊</Text>
       {userLatitude && userLongitude && (
         <Map userLatitude={userLatitude} userLongitude={userLongitude} />
       )}
