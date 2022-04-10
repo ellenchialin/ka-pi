@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   Flex,
+  Box,
   Heading,
   Text,
   Input,
@@ -8,7 +9,11 @@ import {
   InputLeftElement,
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
-import Map from '../components/Map'
+import Map from '../components/map/Map'
+import TaiwanMap from '../components/map/TaiwanMap'
+import CafeCard from '../components/cafe/CafeCard'
+
+import { samples } from '../components/cafeSamples'
 
 function Home() {
   const [userLatitude, setUserLatitude] = useState(null)
@@ -35,17 +40,42 @@ function Home() {
       <Heading as="h1" size="xl">
         來點 ka-pi
       </Heading>
-      <Text my="3">附近咖啡廳，點擊位置看更多資訊</Text>
+      <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
       {userLatitude && userLongitude && (
         <Map userLatitude={userLatitude} userLongitude={userLongitude} />
       )}
 
-      <InputGroup maxW="400px">
-        <InputLeftElement pointerEvents="none">
-          <BiSearchAlt />
-        </InputLeftElement>
-        <Input placeholder="Search..." />
-      </InputGroup>
+      <Flex
+        w="100%"
+        wrap="wrap"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        as="section"
+      >
+        {samples.map(cafe => (
+          <CafeCard cafe={cafe} />
+        ))}
+      </Flex>
+
+      <Box as="section" my="4">
+        <Heading as="h2" size="lg" mb="3">
+          透過關鍵字搜尋咖啡廳
+        </Heading>
+        <InputGroup maxW="400px">
+          <InputLeftElement pointerEvents="none">
+            <BiSearchAlt />
+          </InputLeftElement>
+          <Input placeholder="Search..." />
+        </InputGroup>
+      </Box>
+
+      <Box as="section" my="4" w="100%">
+        <Heading as="h2" size="lg" mb="3">
+          為週末做準備
+        </Heading>
+        <Text my="3">點擊地圖查看縣市咖啡廳地圖</Text>
+        <TaiwanMap />
+      </Box>
     </Flex>
   )
 }
