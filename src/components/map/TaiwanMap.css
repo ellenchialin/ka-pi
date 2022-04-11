@@ -1,0 +1,11 @@
+.taiwanMap path {
+  stroke: #1a202c;
+  fill: transparent;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.taiwanMap path:hover {
+  fill: #1a202c;
+  transform: translate(-5px, -5px);
+}

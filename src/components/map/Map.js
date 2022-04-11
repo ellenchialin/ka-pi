@@ -10,7 +10,7 @@ const cafeIcon = new Icon({
   iconSize: [35, 35],
 })
 
-function Map({ userLatitude, userLongitude }) {
+function Map({ userLatitude, userLongitude, cafes }) {
   // console.log(userLatitude, userLongitude)
 
   /*
@@ -36,7 +36,7 @@ function Map({ userLatitude, userLongitude }) {
         <Marker position={[userLatitude, userLongitude]}>
           <Popup>當前位置</Popup>
         </Marker>
-        {samples.map(cafe => (
+        {cafes.map(cafe => (
           <Marker
             key={cafe.id}
             position={[cafe.latitude, cafe.longitude]}
