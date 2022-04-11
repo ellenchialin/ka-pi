@@ -19,6 +19,7 @@ import nomad from '../utils/nomadApi'
 function Home() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
 
@@ -71,6 +72,10 @@ function Home() {
   }, [])
   */
 
+  const getSearchKeyword = e => {
+    console.log(e.target.value)
+  }
+
   return (
     <Flex direction="column" align="center">
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
@@ -99,7 +104,7 @@ function Home() {
         ))}
       </Flex>
 
-      <Flex as="section" my="4" direction="column" alignItems="center">
+      <Flex as="section" my="20" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">
           透過關鍵字搜尋咖啡廳
         </Heading>
@@ -107,7 +112,7 @@ function Home() {
           <InputLeftElement pointerEvents="none">
             <BiSearchAlt />
           </InputLeftElement>
-          <Input placeholder="Search..." />
+          <Input placeholder="Search..." onChange={getSearchKeyword} />
         </InputGroup>
       </Flex>
 
