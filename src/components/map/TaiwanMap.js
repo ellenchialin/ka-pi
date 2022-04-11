@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Text, Link } from '@chakra-ui/react'
+import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 import nomad from '../../utils/nomadApi'
 import './TaiwanMap.css'
 
 function TaiwanMap() {
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const cityData = [
     {
@@ -125,36 +127,33 @@ function TaiwanMap() {
     const cityChName = cityData.filter(city => city.tag === cityEngName)[0]
       .place
     setHoveredCity(cityChName)
+    setIsLoading(true)
 
-    if (cityEngName === 'miaoli') {
-      nomad
-        .getCafesByCity('miaoli')
-        .then(data => setCityCafes(data))
-        .catch(error => alert(error))
-    }
-
-    /*
     if (cityEngName === 'taipei' || cityEngName === 'new_taipei') {
       nomad
         .getCafesByCity('taipei')
-        .then(data => setCityCafeNumbers(data.length()))
-        .catch(error => alert('暫無法取得該縣市咖啡廳總數'))
+        .then(data => {
+          setCityCafes(data)
+        })
+        .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
+        .finally(() => setIsLoading(false))
     }
-    */
-
-    /*
     if (cityEngName === 'hsinchu_city' || cityEngName === 'hsinchu_country') {
       nomad
         .getCafesByCity('hsinchu')
-        .then(data => setCityCafeNumbers(data.length()))
-        .catch(error => alert('暫無法取得該縣市咖啡廳總數'))
+        .then(data => {
+          setCityCafes(data)
+          setIsLoading(false)
+        })
+        .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
+        .finally(() => setIsLoading(false))
     }
 
     nomad
       .getCafesByCity(cityEngName)
-      .then(data => setCityCafeNumbers(data.length()))
-      .catch(error => alert('暫無法取得該縣市咖啡廳總數'))
-    */
+      .then(data => setCityCafes(data))
+      .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
+      .finally(() => setIsLoading(false))
   }
 
   return (
@@ -182,8 +181,14 @@ function TaiwanMap() {
               {hoveredCity}
             </Heading>
             <Text color="white" fontSize="0.875rem">
-              共收錄 XX 間咖啡廳
+              {isLoading ? '計算中...' : `共收錄 ${cityCafes.length} 間咖啡廳`}
             </Text>
+            <Flex align="center" mt="2">
+              <HiOutlineArrowCircleRight color="#ecc94b" />
+              <Link href="" color="#ecc94b" fontSize="0.875rem" ml="2">
+                前往看完整名單
+              </Link>
+            </Flex>
           </>
         )}
       </Flex>

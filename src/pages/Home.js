@@ -54,7 +54,6 @@ function Home() {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
         // console.log(position)
-
         // reverseGeocode(position.coords.latitude, position.coords.longitude)
       },
       () => {
