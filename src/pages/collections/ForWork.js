@@ -3,13 +3,12 @@ import {
   Flex,
   Heading,
   Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Box,
-  AspectRatio,
-  Image,
+  Spinner,
+  Tag,
+  TagLeftIcon,
+  TagLabel,
 } from '@chakra-ui/react'
+import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
 
 import nomad from '../../utils/nomadApi'
@@ -17,6 +16,8 @@ import nomad from '../../utils/nomadApi'
 function ForWork() {
   const [cafesForWork, setCafesForWork] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const labels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
 
   useEffect(() => {
     nomad
@@ -46,8 +47,24 @@ function ForWork() {
         不受打擾
       </Heading>
       <Text my="3">精選全台最適合工作咖啡廳</Text>
+      <Flex w="400px" justify="space-between" align="center">
+        {labels.map(label => (
+          <Tag size="md" colorScheme="messenger">
+            <TagLeftIcon boxSize="12px" as={FaHashtag} />
+            <TagLabel>{label}</TagLabel>
+          </Tag>
+        ))}
+      </Flex>
+
       {isLoading ? (
-        <Text>Loading...</Text>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.600"
+          siz="xl"
+          mt="6"
+        />
       ) : (
         <>
           <Text my="3">共有 {cafesForWork.length} 間符合</Text>

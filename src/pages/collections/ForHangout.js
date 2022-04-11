@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import {
+  Flex,
+  Heading,
+  Text,
+  Spinner,
+  Tag,
+  TagLeftIcon,
+  TagLabel,
+} from '@chakra-ui/react'
+import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
 import nomad from '../../utils/nomadApi'
 
 function ForHangout() {
   const [cafesForHangout, setCafesForHangout] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const labels = ['不限時', '背景音樂', '通常有位']
 
   useEffect(() => {
     nomad
@@ -32,8 +43,23 @@ function ForHangout() {
         盡情暢聊
       </Heading>
       <Text my="3">精選適合聚會咖啡廳</Text>
+      <Flex w="300px" justify="space-between" align="center">
+        {labels.map(label => (
+          <Tag size="md" colorScheme="messenger">
+            <TagLeftIcon boxSize="12px" as={FaHashtag} />
+            <TagLabel>{label}</TagLabel>
+          </Tag>
+        ))}
+      </Flex>
       {isLoading ? (
-        <Text>Loading...</Text>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.600"
+          siz="xl"
+          mt="6"
+        />
       ) : (
         <>
           <Text my="3">共有 {cafesForHangout.length} 間符合</Text>
