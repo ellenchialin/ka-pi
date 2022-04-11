@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
   Flex,
-  Box,
   Heading,
   Text,
   Input,
@@ -19,6 +18,20 @@ import { samples } from '../components/cafeSamples'
 function Home() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
+  const [userNearbyCafes, setUserNearbyCafes] = useState([])
+
+  const reverseGeocode = (lat, lng) => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAiPvJAVuCQQekLZSIWdeedxpuw5VcO564&language=zh-TW`
+    )
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error =>
+        alert(
+          '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
+        )
+      )
+  }
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -29,6 +42,8 @@ function Home() {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
         console.log(position)
+
+        reverseGeocode(position.coords.latitude, position.coords.longitude)
       },
       () => {
         alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
@@ -39,7 +54,7 @@ function Home() {
   useEffect(() => {
     nomad
       .getCafesByCity('taipei')
-      .then(json => console.log(json))
+      .then(data => console.log(data))
       .catch(error => alert('無法取得資料庫'))
   }, [])
 
