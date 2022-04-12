@@ -19,9 +19,10 @@ function City() {
     console.log('From city page: ', city)
 
     if (city === 'taipei' || city === 'new_taipei') {
-      setTranslatedCityName('臺北市 / 新北市')
+      setTranslatedCityName('台北市 / 新北市')
       return
     } else {
+      console.log(cityData.filter(c => c.tag === city))
       setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
     }
   }

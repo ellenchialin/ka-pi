@@ -11,6 +11,8 @@ import {
 import { areaData } from '../helpers'
 
 function FilterBoard({ translatedCityName, setSelectedAreas }) {
+  console.log('translated City Name: ', translatedCityName)
+
   const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
 
   function CustomCheckbox(props) {
