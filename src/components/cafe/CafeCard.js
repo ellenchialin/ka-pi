@@ -20,7 +20,7 @@ function CafeCard({ cafe }) {
         w="100%"
         maxW={{ sm: '300px', md: '230px' }}
         h="100%"
-        minH="360px"
+        minH={{ sm: '430px', md: '360px' }}
         bg="white"
         borderWidth="1px"
         rounded="lg"

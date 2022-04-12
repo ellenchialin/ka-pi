@@ -48,8 +48,8 @@ function ForWork() {
       </Heading>
       <Text my="3">精選全台最適合工作咖啡廳</Text>
       <Flex w="400px" justify="space-between" align="center">
-        {labels.map(label => (
-          <Tag size="md" colorScheme="messenger">
+        {labels.map((label, i) => (
+          <Tag key={i} size="md" colorScheme="messenger">
             <TagLeftIcon boxSize="12px" as={FaHashtag} />
             <TagLabel>{label}</TagLabel>
           </Tag>

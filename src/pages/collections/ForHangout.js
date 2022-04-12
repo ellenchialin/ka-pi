@@ -44,8 +44,8 @@ function ForHangout() {
       </Heading>
       <Text my="3">精選適合聚會咖啡廳</Text>
       <Flex w="300px" justify="space-between" align="center">
-        {labels.map(label => (
-          <Tag size="md" colorScheme="messenger">
+        {labels.map((label, i) => (
+          <Tag key={i} size="md" colorScheme="messenger">
             <TagLeftIcon boxSize="12px" as={FaHashtag} />
             <TagLabel>{label}</TagLabel>
           </Tag>

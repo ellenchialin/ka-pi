@@ -6,9 +6,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Box,
-  AspectRatio,
-  Image,
+  Spinner,
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import Map from '../components/map/Map'
@@ -16,12 +14,15 @@ import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 import nomad from '../utils/nomadApi'
 
-function Home() {
+function Home(props) {
+  const { cityLinkEndpoint, setCityLinkEndpoint } = props
+
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [userCurrentCity, setUserCurrentCity] = useState('')
+  // const [searchKeyword, setSearchKeyword] = useState('')
+  // const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const reverseGeocode = (lat, lng) => {
     fetch(
@@ -36,8 +37,9 @@ function Home() {
 
         nomad
           .getCafesByCity(currentCity[0].slice(0, -1).toLowerCase())
-          .then(data => setUserNearbyCafes(data.slice(0, 20)))
+          .then(data => setUserNearbyCafes(data.slice(0, 10)))
           .catch(error => alert('無法取得資料庫'))
+          .finally(() => setIsLoading(false))
       })
       .catch(error =>
         alert(
@@ -54,8 +56,7 @@ function Home() {
       position => {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
-        // console.log(position)
-        // reverseGeocode(position.coords.latitude, position.coords.longitude)
+        reverseGeocode(position.coords.latitude, position.coords.longitude)
       },
       () => {
         alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
@@ -83,7 +84,16 @@ function Home() {
           來點 ka-pi
         </Heading>
         <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
-        {userLatitude && userLongitude && (
+        {isLoading ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.600"
+            siz="xl"
+            mt="6"
+          />
+        ) : (
           <Map
             userLatitude={userLatitude}
             userLongitude={userLongitude}
@@ -120,14 +130,17 @@ function Home() {
         <Heading as="h2" size="lg" mb="3">
           為週末做準備
         </Heading>
-        {/*<Text mb="3">點擊地圖查看縣市咖啡廳地圖</Text>*/}
+
         <Flex
           w="100%"
           direction="column"
           alignItems="center"
           position="relative"
         >
-          <TaiwanMap />
+          <TaiwanMap
+            cityLinkEndpoint={cityLinkEndpoint}
+            setCityLinkEndpoint={setCityLinkEndpoint}
+          />
         </Flex>
       </Flex>
     </Flex>
