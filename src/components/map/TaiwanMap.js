@@ -1,7 +1,8 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { Flex, Text, Box } from '@chakra-ui/react'
 import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
+import { cityData } from '../../helpers'
 import './TaiwanMap.css'
 
 function TaiwanMap(props) {
@@ -9,122 +10,6 @@ function TaiwanMap(props) {
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
-  // const { cityLinkEndpoint, setCityLinkEndpoint } = useContext(CityContext)
-  // console.log(setCityLinkEndpoint)
-  // console.log(cityLinkEndpoint)
-
-  const cityData = [
-    {
-      tag: 'taipei',
-      place: '臺北市',
-    },
-
-    {
-      tag: 'new_taipei',
-      place: '新北市',
-    },
-
-    {
-      tag: 'taichung',
-      place: '台中市',
-    },
-
-    {
-      tag: 'tainan',
-      place: '臺南市',
-    },
-
-    {
-      tag: 'kaohsiung',
-      place: '高雄市',
-    },
-
-    {
-      tag: 'keelung',
-      place: '基隆市',
-    },
-
-    {
-      tag: 'taoyuan',
-      place: '桃園市',
-    },
-
-    {
-      tag: 'hsinchu_city',
-      place: '新竹市',
-    },
-
-    {
-      tag: 'hsinchu_country',
-      place: '新竹縣',
-    },
-
-    {
-      tag: 'miaoli',
-      place: '苗栗縣',
-    },
-
-    {
-      tag: 'changhua',
-      place: '彰化縣',
-    },
-
-    {
-      tag: 'nantou',
-      place: '南投縣',
-    },
-
-    {
-      tag: 'yunlin',
-      place: '雲林縣',
-    },
-
-    {
-      tag: 'chiayi_city',
-      place: '嘉義市',
-    },
-
-    {
-      tag: 'chiayi_country',
-      place: '嘉義縣',
-    },
-
-    {
-      tag: 'pingtung',
-      place: '屏東縣',
-    },
-
-    {
-      tag: 'yilan',
-      place: '宜蘭縣',
-    },
-
-    {
-      tag: 'hualien',
-      place: '花蓮縣',
-    },
-
-    {
-      tag: 'taitung',
-      place: '台東縣',
-    },
-
-    {
-      tag: 'penghu',
-      place: '澎湖縣',
-    },
-
-    {
-      tag: 'kinmen',
-      place: '金門縣',
-    },
-
-    {
-      tag: 'lienchiang',
-      place: '連江縣',
-    },
-  ]
 
   const checkCityName = city => {
     console.log(city)
