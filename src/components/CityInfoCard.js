@@ -4,7 +4,8 @@ import { Flex, Heading, Text, Link } from '@chakra-ui/react'
 import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 
 function CityInfoCard({ hoveredCity, isLoading, cityCafes }) {
-  // const { cityLinkEndpoint, setCityLinkEndpoint } = useContext(CityContext)
+  // const { cityLinkEndpoint } = useContext(CityContext)
+  // console.log('From city Card: ', cityLinkEndpoint)
 
   return (
     <>

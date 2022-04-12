@@ -14,7 +14,10 @@ import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 import nomad from '../utils/nomadApi'
 
-function Home() {
+function Home(props) {
+  const { setCityLinkEndpoint } = props
+  console.log('From home page: ', setCityLinkEndpoint)
+
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   // const [searchKeyword, setSearchKeyword] = useState('')
@@ -136,7 +139,7 @@ function Home() {
           alignItems="center"
           position="relative"
         >
-          <TaiwanMap />
+          <TaiwanMap setCityLinkEndpoint={setCityLinkEndpoint} />
         </Flex>
       </Flex>
     </Flex>

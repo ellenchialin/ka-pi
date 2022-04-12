@@ -5,14 +5,15 @@ import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
 import './TaiwanMap.css'
 
-function TaiwanMap() {
+function TaiwanMap(props) {
+  const { setCityLinkEndpoint } = props
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const { cityLinkEndpoint, setCityLinkEndpoint } = useContext(CityContext)
-  console.log(setCityLinkEndpoint)
-  console.log(cityLinkEndpoint)
+  // const { cityLinkEndpoint, setCityLinkEndpoint } = useContext(CityContext)
+  // console.log(setCityLinkEndpoint)
+  // console.log(cityLinkEndpoint)
 
   const cityData = [
     {
@@ -126,14 +127,30 @@ function TaiwanMap() {
     },
   ]
 
+  const checkCityName = city => {
+    if (city.includes('taipei')) return 'taipei'
+    if (city.includes('hsinchu')) return 'hsinchu'
+    return city
+  }
+
   const showCityInfo = e => {
-    console.log(e.target.getAttribute('data-name'))
+    // console.log(e.target.getAttribute('data-name'))
     const cityEngName = e.target.getAttribute('data-name')
     const cityChName = cityData.filter(city => city.tag === cityEngName)[0]
       .place
     setHoveredCity(cityChName)
     setIsLoading(true)
 
+    nomad
+      .getCafesByCity(checkCityName(cityEngName))
+      .then(data => {
+        setCityCafes(data)
+        setCityLinkEndpoint('taipei')
+      })
+      .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
+      .finally(() => setIsLoading(false))
+
+    /*
     if (cityEngName.includes('taipei')) {
       nomad
         .getCafesByCity('taipei')
@@ -163,6 +180,8 @@ function TaiwanMap() {
       })
       .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
       .finally(() => setIsLoading(false))
+
+    */
   }
 
   return (
