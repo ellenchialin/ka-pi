@@ -15,8 +15,7 @@ import CafeCard from '../components/cafe/CafeCard'
 import nomad from '../utils/nomadApi'
 
 function Home(props) {
-  const { setCityLinkEndpoint } = props
-  console.log('From home page: ', setCityLinkEndpoint)
+  const { cityLinkEndpoint, setCityLinkEndpoint } = props
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
@@ -38,7 +37,7 @@ function Home(props) {
 
         nomad
           .getCafesByCity(currentCity[0].slice(0, -1).toLowerCase())
-          .then(data => setUserNearbyCafes(data.slice(0, 20)))
+          .then(data => setUserNearbyCafes(data.slice(0, 10)))
           .catch(error => alert('無法取得資料庫'))
           .finally(() => setIsLoading(false))
       })
@@ -57,7 +56,6 @@ function Home(props) {
       position => {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
-        // console.log(position)
         reverseGeocode(position.coords.latitude, position.coords.longitude)
       },
       () => {
@@ -132,14 +130,17 @@ function Home(props) {
         <Heading as="h2" size="lg" mb="3">
           為週末做準備
         </Heading>
-        {/*<Text mb="3">點擊地圖查看縣市咖啡廳地圖</Text>*/}
+
         <Flex
           w="100%"
           direction="column"
           alignItems="center"
           position="relative"
         >
-          <TaiwanMap setCityLinkEndpoint={setCityLinkEndpoint} />
+          <TaiwanMap
+            cityLinkEndpoint={cityLinkEndpoint}
+            setCityLinkEndpoint={setCityLinkEndpoint}
+          />
         </Flex>
       </Flex>
     </Flex>

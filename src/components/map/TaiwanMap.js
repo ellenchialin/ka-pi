@@ -1,12 +1,11 @@
 import { useState, useContext } from 'react'
 import { Flex, Text, Box } from '@chakra-ui/react'
-import CityContext from '../../contexts/CityContext'
 import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
 import './TaiwanMap.css'
 
 function TaiwanMap(props) {
-  const { setCityLinkEndpoint } = props
+  const { cityLinkEndpoint, setCityLinkEndpoint } = props
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -128,9 +127,17 @@ function TaiwanMap(props) {
   ]
 
   const checkCityName = city => {
-    if (city.includes('taipei')) return 'taipei'
-    if (city.includes('hsinchu')) return 'hsinchu'
-    return city
+    console.log(city)
+    if (city.includes('taipei')) {
+      setCityLinkEndpoint('taipei')
+      return 'taipei'
+    } else if (city.includes('hsinchu')) {
+      setCityLinkEndpoint('hsinchu')
+      return 'hsinchu'
+    } else {
+      setCityLinkEndpoint(city)
+      return city
+    }
   }
 
   const showCityInfo = e => {
@@ -138,6 +145,8 @@ function TaiwanMap(props) {
     const cityEngName = e.target.getAttribute('data-name')
     const cityChName = cityData.filter(city => city.tag === cityEngName)[0]
       .place
+
+    // setFetchCityName(checkCityName(cityEngName))
     setHoveredCity(cityChName)
     setIsLoading(true)
 
@@ -145,43 +154,9 @@ function TaiwanMap(props) {
       .getCafesByCity(checkCityName(cityEngName))
       .then(data => {
         setCityCafes(data)
-        setCityLinkEndpoint('taipei')
       })
       .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
       .finally(() => setIsLoading(false))
-
-    /*
-    if (cityEngName.includes('taipei')) {
-      nomad
-        .getCafesByCity('taipei')
-        .then(data => {
-          setCityCafes(data)
-          setCityLinkEndpoint('taipei')
-        })
-        .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
-        .finally(() => setIsLoading(false))
-    }
-    if (cityEngName.includes('hsinchu')) {
-      nomad
-        .getCafesByCity('hsinchu')
-        .then(data => {
-          setCityCafes(data)
-          setCityLinkEndpoint('hsinchu')
-        })
-        .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
-        .finally(() => setIsLoading(false))
-    }
-
-    nomad
-      .getCafesByCity(cityEngName)
-      .then(data => {
-        setCityCafes(data)
-        setCityLinkEndpoint(cityEngName)
-      })
-      .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
-      .finally(() => setIsLoading(false))
-
-    */
   }
 
   return (
@@ -206,6 +181,7 @@ function TaiwanMap(props) {
         ) : (
           <CityInfoCard
             hoveredCity={hoveredCity}
+            cityLinkEndpoint={cityLinkEndpoint}
             cityCafes={cityCafes}
             isLoading={isLoading}
           />

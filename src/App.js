@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react'
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
-import CityContext from './contexts/CityContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
@@ -24,8 +23,6 @@ import NoMatch from './pages/NoMatch'
 
 function App() {
   const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
-  // const value = { cityLinkEndpoint, setCityLinkEndpoint }
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -46,16 +43,20 @@ function App() {
               <Routes>
                 <Route
                   path="/"
-                  element={<Home setCityLinkEndpoint={setCityLinkEndpoint} />}
+                  element={
+                    <Home
+                      setCityLinkEndpoint={setCityLinkEndpoint}
+                      cityLinkEndpoint={cityLinkEndpoint}
+                    />
+                  }
                 />
                 <Route path="/collections">
                   <Route path="work" element={<ForWork />} />
                   <Route path="hangout" element={<ForHangout />} />
                 </Route>
-                <Route
-                  path="city"
-                  element={<City cityLinkEndpoint={cityLinkEndpoint} />}
-                />
+                <Route path="city">
+                  <Route path=":cityName" element={<City />} />
+                </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route path="user" element={<User />} />
                 <Route path="*" element={<NoMatch />} />
