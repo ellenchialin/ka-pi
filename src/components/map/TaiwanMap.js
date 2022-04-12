@@ -157,11 +157,6 @@ function TaiwanMap() {
       .finally(() => setIsLoading(false))
   }
 
-  const navigateToCity = () => {
-    const navigate = useNavigate()
-    navigate('/city')
-  }
-
   return (
     <>
       <Flex

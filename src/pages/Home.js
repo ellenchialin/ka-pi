@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Spinner,
   Box,
   AspectRatio,
   Image,
@@ -22,6 +23,7 @@ function Home() {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const reverseGeocode = (lat, lng) => {
     fetch(
@@ -38,6 +40,7 @@ function Home() {
           .getCafesByCity(currentCity[0].slice(0, -1).toLowerCase())
           .then(data => setUserNearbyCafes(data.slice(0, 20)))
           .catch(error => alert('無法取得資料庫'))
+          .finally(() => setIsLoading(false))
       })
       .catch(error =>
         alert(
@@ -55,7 +58,7 @@ function Home() {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
         // console.log(position)
-        // reverseGeocode(position.coords.latitude, position.coords.longitude)
+        reverseGeocode(position.coords.latitude, position.coords.longitude)
       },
       () => {
         alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
@@ -83,7 +86,16 @@ function Home() {
           來點 ka-pi
         </Heading>
         <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
-        {userLatitude && userLongitude && (
+        {isLoading ? (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.600"
+            siz="xl"
+            mt="6"
+          />
+        ) : (
           <Map
             userLatitude={userLatitude}
             userLongitude={userLongitude}
