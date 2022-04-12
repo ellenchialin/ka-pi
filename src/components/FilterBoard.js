@@ -10,9 +10,8 @@ import {
 } from '@chakra-ui/react'
 import { areaData } from '../helpers'
 
-function FilterBoard({ translatedCityName }) {
+function FilterBoard({ translatedCityName, setSelectedAreas }) {
   const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
-  const [selectedAreas, setSelectedAreas] = useState([])
 
   function CustomCheckbox(props) {
     const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
@@ -55,11 +54,19 @@ function FilterBoard({ translatedCityName }) {
   }
 
   const { value, getCheckboxProps } = useCheckboxGroup()
-  console.log(value)
+  // console.log(value)
 
   return (
-    <Flex direction="column" align="center" bg="gray.200" px="4" py="6" mb="12">
-      <Flex wrap="wrap" justify="space-evenly" borderRadius="xl">
+    <Flex
+      direction="column"
+      align="center"
+      bg="gray.200"
+      px="4"
+      py="6"
+      mb="12"
+      borderRadius="xl"
+    >
+      <Flex wrap="wrap" justify="space-evenly">
         {cityAreas.map(area => (
           <CustomCheckbox
             key={area}
@@ -75,6 +82,7 @@ function FilterBoard({ translatedCityName }) {
         fontWeight="normal"
         px="6"
         h="8"
+        onClick={() => setSelectedAreas(value)}
       >
         搜尋
       </Button>

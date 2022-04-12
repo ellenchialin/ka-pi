@@ -3,12 +3,15 @@ import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import FilterBoard from '../components/FilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
+import useFilterEffect from '../hooks/useFilterEffect'
 import nomad from '../utils/nomadApi'
 import { cityData } from '../helpers'
 
 function City() {
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
+  const [selectedAreas, setSelectedAreas] = useState([])
+  const [updatedCafes, setUpdatedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const { cityName } = useParams()
 
@@ -38,6 +41,25 @@ function City() {
       .finally(() => setIsLoading(false))
   }, [])
 
+  // 判斷選到行政區的咖啡廳
+  const getSelectedCafes = () => {
+    console.log(selectedAreas)
+
+    if (selectedAreas.length > 0) {
+      setUpdatedCafes([])
+
+      selectedAreas.forEach(area => {
+        const filteredCafes = cityCafes.filter(cafe =>
+          cafe.address.includes(area)
+        )
+        setUpdatedCafes(prev => [...prev, ...filteredCafes])
+      })
+      // console.log('Updated Cafes: ', updatedCafes)
+    }
+  }
+
+  useFilterEffect(getSelectedCafes, selectedAreas)
+
   return (
     <Flex as="section" direction="column" align="center">
       <Heading as="h1" size="xl">
@@ -56,7 +78,10 @@ function City() {
       ) : (
         <>
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
-          <FilterBoard translatedCityName={translatedCityName} />
+          <FilterBoard
+            translatedCityName={translatedCityName}
+            setSelectedAreas={setSelectedAreas}
+          />
           <Flex
             w="100%"
             wrap="wrap"
@@ -64,9 +89,9 @@ function City() {
             alignItems="flex-start"
             as="section"
           >
-            {cityCafes.map(cafe => (
-              <CafeCard key={cafe.id} cafe={cafe} />
-            ))}
+            {updatedCafes.length > 0
+              ? updatedCafes.map(cafe => <CafeCard key={cafe.id} cafe={cafe} />)
+              : cityCafes.map(cafe => <CafeCard key={cafe.id} cafe={cafe} />)}
           </Flex>
         </>
       )}
