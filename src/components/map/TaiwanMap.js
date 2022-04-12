@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Flex, Heading, Text, Link, Box } from '@chakra-ui/react'
 import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 import nomad from '../../utils/nomadApi'
@@ -156,6 +157,11 @@ function TaiwanMap() {
       .finally(() => setIsLoading(false))
   }
 
+  const navigateToCity = () => {
+    const navigate = useNavigate()
+    navigate('/city')
+  }
+
   return (
     <>
       <Flex
@@ -185,7 +191,7 @@ function TaiwanMap() {
             </Text>
             <Flex align="center" mt="2">
               <HiOutlineArrowCircleRight color="#ecc94b" />
-              <Link href="" color="#ecc94b" fontSize="0.875rem" ml="2">
+              <Link href="/city" color="#ecc94b" fontSize="0.875rem" ml="2">
                 前往看完整名單
               </Link>
             </Flex>

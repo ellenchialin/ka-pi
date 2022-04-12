@@ -17,6 +17,7 @@ import ForWork from './pages/collections/ForWork'
 import ForHangout from './pages/collections/ForHangout'
 import Picks from './pages/Picks'
 import User from './pages/User'
+import City from './pages/City'
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -42,6 +43,7 @@ function App() {
                   <Route path="work" element={<ForWork />} />
                   <Route path="hangout" element={<ForHangout />} />
                 </Route>
+                <Route path="city" element={<City />} />
                 <Route path="picks" element={<Picks />} />
                 <Route path="user" element={<User />} />
               </Routes>
