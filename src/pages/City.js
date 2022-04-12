@@ -82,16 +82,23 @@ function City() {
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
           />
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
-          >
-            {updatedCafes.length > 0
-              ? updatedCafes.map(cafe => <CafeCard key={cafe.id} cafe={cafe} />)
-              : cityCafes.map(cafe => <CafeCard key={cafe.id} cafe={cafe} />)}
+          <Flex w="100%" direction="column" as="section">
+            <Text>
+              共
+              {updatedCafes.length > 0 ? updatedCafes.length : cityCafes.length}{' '}
+              間
+            </Text>
+            <Flex
+              wrap="wrap"
+              justifyContent="space-between"
+              alignItems="flex-start"
+            >
+              {updatedCafes.length > 0
+                ? updatedCafes.map(cafe => (
+                    <CafeCard key={cafe.id} cafe={cafe} />
+                  ))
+                : cityCafes.map(cafe => <CafeCard key={cafe.id} cafe={cafe} />)}
+            </Flex>
           </Flex>
         </>
       )}
