@@ -1,14 +1,18 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Flex, Heading, Text, Link, Box } from '@chakra-ui/react'
-import { HiOutlineArrowCircleRight } from 'react-icons/hi'
+import { useState, useContext } from 'react'
+import { Flex, Text, Box } from '@chakra-ui/react'
+import CityContext from '../../contexts/CityContext'
 import nomad from '../../utils/nomadApi'
+import CityInfoCard from '../CityInfoCard'
 import './TaiwanMap.css'
 
 function TaiwanMap() {
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const { cityLinkEndpoint, setCityLinkEndpoint } = useContext(CityContext)
+  console.log(setCityLinkEndpoint)
+  console.log(cityLinkEndpoint)
 
   const cityData = [
     {
@@ -130,21 +134,22 @@ function TaiwanMap() {
     setHoveredCity(cityChName)
     setIsLoading(true)
 
-    if (cityEngName === 'taipei' || cityEngName === 'new_taipei') {
+    if (cityEngName.includes('taipei')) {
       nomad
         .getCafesByCity('taipei')
         .then(data => {
           setCityCafes(data)
+          setCityLinkEndpoint('taipei')
         })
         .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
         .finally(() => setIsLoading(false))
     }
-    if (cityEngName === 'hsinchu_city' || cityEngName === 'hsinchu_country') {
+    if (cityEngName.includes('hsinchu')) {
       nomad
         .getCafesByCity('hsinchu')
         .then(data => {
           setCityCafes(data)
-          setIsLoading(false)
+          setCityLinkEndpoint('hsinchu')
         })
         .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
         .finally(() => setIsLoading(false))
@@ -152,7 +157,10 @@ function TaiwanMap() {
 
     nomad
       .getCafesByCity(cityEngName)
-      .then(data => setCityCafes(data))
+      .then(data => {
+        setCityCafes(data)
+        setCityLinkEndpoint(cityEngName)
+      })
       .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
       .finally(() => setIsLoading(false))
   }
@@ -163,7 +171,7 @@ function TaiwanMap() {
         w="100%"
         maxW="180px"
         h="100%"
-        minH="70px"
+        minH="100px"
         rounded="lg"
         shadow="lg"
         bg="gray.800"
@@ -177,20 +185,11 @@ function TaiwanMap() {
             移動滑鼠到縣市看更多
           </Text>
         ) : (
-          <>
-            <Heading as="h4" size="md" color="white">
-              {hoveredCity}
-            </Heading>
-            <Text color="white" fontSize="0.875rem">
-              {isLoading ? '計算中...' : `共收錄 ${cityCafes.length} 間咖啡廳`}
-            </Text>
-            <Flex align="center" mt="2">
-              <HiOutlineArrowCircleRight color="#ecc94b" />
-              <Link href="/city" color="#ecc94b" fontSize="0.875rem" ml="2">
-                前往看完整名單
-              </Link>
-            </Flex>
-          </>
+          <CityInfoCard
+            hoveredCity={hoveredCity}
+            cityCafes={cityCafes}
+            isLoading={isLoading}
+          />
         )}
       </Flex>
       <Box w="100%" maxW="450px">
@@ -261,6 +260,7 @@ function TaiwanMap() {
             d="M466.05,182.58l-.32.79-1.12.34-2.41.17-.86.52L460.13,186l-.43,3.45-1.55,2.07-.26,1-.43.86-.26,1-2.33,3.62-.17,1.12h-1.21l-.95.43-.78.6-.27.49-.58.63.07.44.78.52.43.95.09,1.21.34.95-.86.78-.34.17-.34.52-.86.52-.95,1L449,209.6l.43.86.09,5-.52,1.21-.78.95-.95.69L446.16,220l-1.21.95-.34.86-.95-.09-2.33,3.36-.86.52-1.29-.26-.95,1.9-.95.52-.78,2-.6.78-1,.86-.86,1.72.07,1.07-.47.7,1,1.15.61,1.22.37,1.46-.61,4.88,1.83,1.83,1.34.49h3.29l2.8,4.76,1.22.61,1.83-.24.85-1.1,1.1-.85,1.59-.24,1.22-.61,4.88-.61,1.46.73.73,1.22,1.1.73.87,1.44,8.21,5.26h5.52l2.07.86,2.76.34,5.52,3.8,5.69.69,2.07-.52-2.07-1.72.52-2.07,2.24-.52,1.55-1,1.55.69,1.38-1.21-.52-1-1.38-1.21.17-2.24,1.38-.52,2.93,2.59,3.28,1,3.1,2.41,6.21,2.59,5,.34,5.52,2.76,2.82.34-.15-2.76-.51-.85.09-2.5,1.73-3.29.26-1,1-1.73.34-7.43.34-1.11.6-.79v-1.45l.68-2.41,1.22-1.64.34-1.22,1.81-1.11.68-.79.87-1.79.09-1.22,3.09-2.92,3.12-1.3h1.28l.36-.17-1-.51-.68-.7-.51-.85v-1.3l-1.73-1-.34-3.37,1.2-.77.6-.87,2.24-.43,1.9-1.2,1.13-.26.34-1.13-.09-1-.43-1.22-.09-1.22-.51-.77-.19-2.41.53-.77-.62-1,.45-1h1.28l-.17-1-.68-.6-.17-.34,1-.45-.85.19-1.22-.45-.09-.85-1.64-1.47.28-1.11,1.2-.09,1,.6.17,1.22,1.2-.09,1-.53-2.5-2.5-2.07-.68-.28-.51-.34-.11-1.11-1.54-.09-.87-2.5-6.21-.09-2.58-.53-.77.26-.43v-1.39l-.34-1.13.34-7-2-2.15-.6-1v-1.13l-.94-1.11-.43-2.33.09-1.22-.7-.68.34-9.58.45-1.47v-1.28l.85-1.9-.17-2.5.68-2.07.09-1.22,1.64-3.52.17-1.22.87-1.47,1-.51.68-2,.62-.77.94-.34,2.58-3,.87-.43,2.15-2.5.17-2.41.34-1,1.9-1.11,1-.26,1-1.47.81-.65.84-.4,1.71-2.41.19-1.28,1.2-.7,1.22-.17.85-.34.77-.76,1.13-.17.85-.53,1.3-.09,1.85-.84-2.48-.49-1.71.12-4.27,1.59-3.66.24L549,118.15l-1,1.1h-2l-1.59-.61-3.54-.24-1.22,1-.37,1.46-.61,1.22,2.8,4-1,2.93-4,2.68-3.66-.24-1.59.24-2.07,1.71-1.71,2.19.37,1.58-.12,1.46-1,1.22-.12,1.46.12.85-1.71.37-1.22.61-5.12-.73-1.59.24-1.34.73L514,145.59l-3.29,1.77-.37,1.16-1.22,1.1-.73,1.22-1.46.49-.49,1.34-1.1-1.22-2.44,1.22-7.19.85,1,.85-.37,1.46-1.58,1.22-1.71-.49-1.22.73-1.46.36-.61,1.34.12,1.71-.24,1.58-1.34,1.1.24,1.71,1,1,.49,1.46v1.83l-1,2.93-1.58.24-1.1.85-.73,1.1-1.46.49-1.83.12-4,2.19-.37,1.71-3.54,2.32-3.17.49-1.58,1-3.51-.2h0Z"
           />
           <path
+            onMouseOver={showCityInfo}
             id="65175d47-0a21-4bf1-abfb-b58e4d3069a0"
             data-name="taoyuan"
             className="96fdfe13-4732-40bb-9e9c-cdc6e310fcb9"

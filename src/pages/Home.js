@@ -7,9 +7,6 @@ import {
   InputGroup,
   InputLeftElement,
   Spinner,
-  Box,
-  AspectRatio,
-  Image,
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import Map from '../components/map/Map'
@@ -20,8 +17,8 @@ import nomad from '../utils/nomadApi'
 function Home() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [userCurrentCity, setUserCurrentCity] = useState('')
+  // const [searchKeyword, setSearchKeyword] = useState('')
+  // const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
