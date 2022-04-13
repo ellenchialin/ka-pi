@@ -28,7 +28,6 @@ function SearchByFeature() {
   const indexOfLastCafe = currentPage * cafesPerPage
   const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
   const currentCafes = filteredCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-
   const paginate = pageNumber => setCurrentPage(pageNumber)
 
   const defaultFeatures = ['不限時', '有插座']
@@ -106,7 +105,7 @@ function SearchByFeature() {
   }
 
   return (
-    <Flex as="section" my="20" direction="column" alignItems="center">
+    <Flex as="section" direction="column" alignItems="center">
       <Heading as="h2" size="lg" mb="3">
         透過條件進階搜尋
       </Heading>

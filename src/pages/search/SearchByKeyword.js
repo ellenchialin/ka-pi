@@ -16,21 +16,23 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
-import CafeCard from '../components/cafe/CafeCard'
-import nomad from '../utils/nomadApi'
+import CafeCard from '../../components/cafe/CafeCard'
+import nomad from '../../utils/nomadApi'
 
-function Search() {
+function SearchByKeyword() {
   const [matchedCafes, setMatchedCafes] = useState([])
-  const [reSearchKeywords, setReSearchKeywords] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [searchKeywords, setSearchKeywords] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  let { keywords } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // let { keywords } = useParams()
 
   // 先拿到從 feature filter board 帶過來的 location state value
-  const navigate = useNavigate()
-  const location = useLocation()
-  const features = location.state
-  console.log(features)
+  // const navigate = useNavigate()
+  // const location = useLocation()
+  // const features = location.state
+  // console.log(features)
 
   // 把拿到的 features 轉 obj
   /*
@@ -60,26 +62,39 @@ function Search() {
         )
         console.log(matched)
         setMatchedCafes(matched)
+        setSearchParams(searchWords)
       })
       .catch(() => alert('搜尋出現問題，請重新嘗試，或通知開發人員'))
       .finally(() => setIsLoading(false))
   }
 
-  useEffect(() => {
-    getSearchResults(keywords)
-  }, [keywords])
+  // 用 custom hook 避免第一次 render 就打 api
 
   const submitSearch = () => {
     setIsLoading(true)
-    navigate(`/search/${reSearchKeywords}`)
-    setReSearchKeywords('')
+    getSearchResults(searchKeywords)
+    // setIsLoading(true)
+    // setReSearchKeywords('')
   }
 
   return (
-    <Flex as="section" direction="column" align="center">
-      <Heading as="h1" size="xl">
-        搜尋關鍵字：{keywords}
-      </Heading>
+    <>
+      <Flex as="section" direction="column" alignItems="center">
+        <Heading as="h2" size="lg" mb="3">
+          透過關鍵字搜尋
+        </Heading>
+        <InputGroup maxW="400px">
+          <InputLeftElement pointerEvents="none">
+            <BiSearchAlt />
+          </InputLeftElement>
+          <Input
+            placeholder="Search..."
+            value={searchKeywords}
+            onChange={e => setSearchKeywords(e.target.value)}
+          />
+        </InputGroup>
+        <Button onClick={submitSearch}>搜尋</Button>
+      </Flex>
       {isLoading ? (
         <Spinner
           thickness="4px"
@@ -90,23 +105,7 @@ function Search() {
           mt="6"
         />
       ) : (
-        <>
-          <Flex as="section" my="20" direction="column" alignItems="center">
-            <Text as="h2" size="lg" mb="3">
-              重新搜尋
-            </Text>
-            <InputGroup maxW="400px">
-              <InputLeftElement pointerEvents="none">
-                <BiSearchAlt />
-              </InputLeftElement>
-              <Input
-                placeholder="Search..."
-                value={reSearchKeywords}
-                onChange={e => setReSearchKeywords(e.target.value)}
-              />
-            </InputGroup>
-            <Button onClick={submitSearch}>搜尋</Button>
-          </Flex>
+        <Flex direction="column" align="center">
           <Text my="3">共找到 {matchedCafes.length} 間關聯咖啡廳</Text>
           <Flex
             w="100%"
@@ -119,10 +118,10 @@ function Search() {
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </Flex>
-        </>
+        </Flex>
       )}
-    </Flex>
+    </>
   )
 }
 
-export default Search
+export default SearchByKeyword

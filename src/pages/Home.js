@@ -113,6 +113,7 @@ function Home(props) {
         ))}
       </Flex>
 
+      {/*
       <Flex as="section" my="20" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">
           透過關鍵字搜尋咖啡廳
@@ -129,6 +130,7 @@ function Home(props) {
         </InputGroup>
         <Button onClick={submitSearch}>搜尋</Button>
       </Flex>
+      */}
 
       {/*
       <Flex as="section" my="20" direction="column" alignItems="center">

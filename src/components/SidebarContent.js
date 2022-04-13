@@ -96,7 +96,7 @@ function SidebarContent({ onClose, ...rest }) {
           />
         </NavItem>
         <Collapse in={integrations.isOpen}>
-          <NavItem as={NavLink} to="/search/keywords" pl="12" py="2">
+          <NavItem as={NavLink} to="/search" pl="12" py="2">
             by Keywords
           </NavItem>
           <NavItem as={NavLink} to="/search/features" pl="12" py="2">
