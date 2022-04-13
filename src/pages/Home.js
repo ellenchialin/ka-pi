@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Flex,
   Heading,
@@ -6,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Button,
   Spinner,
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
@@ -19,13 +21,14 @@ function Home(props) {
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  // const [searchKeyword, setSearchKeyword] = useState('')
+  const [searchKeywords, setSearchKeywords] = useState('')
   // const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
 
   const getNearbyCafes = (lat, lng) => {
-    console.log(lat, lng)
+    // console.log(lat, lng)
 
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAiPvJAVuCQQekLZSIWdeedxpuw5VcO564`
@@ -67,8 +70,9 @@ function Home(props) {
     )
   }, [])
 
-  const getSearchKeyword = e => {
-    console.log(e.target.value)
+  const submitSearch = () => {
+    console.log(searchKeywords)
+    navigate(`/search/${searchKeywords}`)
   }
 
   return (
@@ -116,8 +120,13 @@ function Home(props) {
           <InputLeftElement pointerEvents="none">
             <BiSearchAlt />
           </InputLeftElement>
-          <Input placeholder="Search..." onChange={getSearchKeyword} />
+          <Input
+            placeholder="Search..."
+            value={searchKeywords}
+            onChange={e => setSearchKeywords(e.target.value)}
+          />
         </InputGroup>
+        <Button onClick={submitSearch}>搜尋</Button>
       </Flex>
 
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">

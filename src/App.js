@@ -19,6 +19,7 @@ import ForHangout from './pages/collections/ForHangout'
 import Picks from './pages/Picks'
 import User from './pages/User'
 import City from './pages/City'
+import Search from './pages/Search'
 import NoMatch from './pages/NoMatch'
 
 function App() {
@@ -56,6 +57,9 @@ function App() {
                 </Route>
                 <Route path="city">
                   <Route path=":cityName" element={<City />} />
+                </Route>
+                <Route path="search">
+                  <Route path=":keywords" element={<Search />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route path="user" element={<User />} />
