@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
-import FilterBoard from '../components/FilterBoard'
+import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useFilterEffect from '../hooks/useFilterEffect'
 import nomad from '../utils/nomadApi'
@@ -84,7 +84,7 @@ function City() {
       ) : (
         <>
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
-          <FilterBoard
+          <FilteredByDist
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
           />

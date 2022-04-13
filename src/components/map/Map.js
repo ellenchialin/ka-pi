@@ -1,9 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import { Box } from '@chakra-ui/react'
-import nomad from '../../utils/nomadApi'
-
-import { samples } from '../cafeSamples'
 
 const cafeIcon = new Icon({
   iconUrl: '/cafeIcon.png',

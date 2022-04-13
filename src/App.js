@@ -21,6 +21,7 @@ import User from './pages/User'
 import City from './pages/City'
 import Search from './pages/Search'
 import NoMatch from './pages/NoMatch'
+import SearchByFeature from './pages/search/SearchByFeature'
 
 function App() {
   const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
@@ -59,7 +60,8 @@ function App() {
                   <Route path=":cityName" element={<City />} />
                 </Route>
                 <Route path="search">
-                  <Route path=":keywords" element={<Search />} />
+                  <Route path="keywords" element={<Search />} />
+                  <Route path="features" element={<SearchByFeature />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route path="user" element={<User />} />

@@ -14,6 +14,7 @@ import { BiSearchAlt } from 'react-icons/bi'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
+import FilteredByFeature from '../components/FilteredByFeature'
 import nomad from '../utils/nomadApi'
 
 function Home(props) {
@@ -128,6 +129,15 @@ function Home(props) {
         </InputGroup>
         <Button onClick={submitSearch}>搜尋</Button>
       </Flex>
+
+      {/*
+      <Flex as="section" my="20" direction="column" alignItems="center">
+        <Heading as="h2" size="lg" mb="3">
+          或透過條件搜尋咖啡廳
+        </Heading>
+        <FilteredByFeature />
+      </Flex>
+      */}
 
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">

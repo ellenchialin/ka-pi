@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   useCheckbox,
   chakra,
@@ -8,12 +9,22 @@ import {
   Flex,
   Button,
 } from '@chakra-ui/react'
-import { areaData } from '../cityData'
 
-function FilterBoard({ translatedCityName, setSelectedAreas }) {
-  console.log('translated City Name: ', translatedCityName)
+function FilteredByFeature() {
+  // const [selectedFeatures, setSelectedFeatures] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams({})
+  const navigate = useNavigate()
 
-  const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
+  const features = [
+    { text: '不限時', tag: 'limited_time' },
+    { text: '有站立座位', tag: 'standing_desk' },
+    { text: 'WiFi穩定', tag: 'wifi' },
+    { text: '通常有位子', tag: 'seat' },
+    { text: '安靜', tag: 'quiet' },
+    { text: '咖啡優', tag: 'tasty' },
+    { text: '價格親民', tag: 'cheap' },
+    { text: '背景音樂', tag: 'music' },
+  ]
 
   function CustomCheckbox(props) {
     const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
@@ -49,14 +60,18 @@ function FilterBoard({ translatedCityName, setSelectedAreas }) {
           {state.isChecked && <Box w={2} h={2} bg="gray.500" />}
         </Flex>
         <Text fontSize="0.875rem" {...getLabelProps()}>
-          {props.value}
+          {props.text}
         </Text>
       </chakra.label>
     )
   }
 
   const { value, getCheckboxProps } = useCheckboxGroup()
-  // console.log(value)
+  console.log(value)
+
+  const submitSearch = () => {
+    navigate('/search', { state: { features: value } })
+  }
 
   return (
     <Flex
@@ -69,11 +84,11 @@ function FilterBoard({ translatedCityName, setSelectedAreas }) {
       borderRadius="xl"
     >
       <Flex wrap="wrap" justify="space-evenly">
-        {cityAreas.map(area => (
+        {features.map(feature => (
           <CustomCheckbox
-            key={area}
+            key={feature.tag}
             mb="3"
-            {...getCheckboxProps({ value: area })}
+            {...getCheckboxProps({ value: feature.tag, text: feature.text })}
           />
         ))}
       </Flex>
@@ -84,11 +99,11 @@ function FilterBoard({ translatedCityName, setSelectedAreas }) {
         fontWeight="normal"
         px="6"
         h="8"
-        onClick={() => setSelectedAreas(value)}
+        onClick={submitSearch}
       >
         搜尋
       </Button>
     </Flex>
   )
 }
-export default FilterBoard
+export default FilteredByFeature
