@@ -88,6 +88,22 @@ function SidebarContent({ onClose, ...rest }) {
           Home
         </NavItem>
         <NavItem icon={VscLibrary} onClick={integrations.onToggle}>
+          Explore
+          <Icon
+            as={MdKeyboardArrowRight}
+            ml="auto"
+            transform={integrations.isOpen && 'rotate(90deg)'}
+          />
+        </NavItem>
+        <Collapse in={integrations.isOpen}>
+          <NavItem as={NavLink} to="/search" pl="12" py="2">
+            by Keywords
+          </NavItem>
+          <NavItem as={NavLink} to="/search/features" pl="12" py="2">
+            by Features
+          </NavItem>
+        </Collapse>
+        <NavItem icon={VscLibrary} onClick={integrations.onToggle}>
           Collections
           <Icon
             as={MdKeyboardArrowRight}

@@ -1,16 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import {
-  Flex,
-  Heading,
-  Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Button,
-  Spinner,
-} from '@chakra-ui/react'
-import { BiSearchAlt } from 'react-icons/bi'
+import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
@@ -21,11 +10,8 @@ function Home(props) {
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  const [searchKeywords, setSearchKeywords] = useState('')
-  // const [userCurrentCity, setUserCurrentCity] = useState('')
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const navigate = useNavigate()
 
   const getNearbyCafes = (lat, lng) => {
     // console.log(lat, lng)
@@ -45,13 +31,13 @@ function Home(props) {
           .getCafesByCity(currentCity)
           .then(data => setUserNearbyCafes(data.slice(0, 10)))
           .catch(error => alert('無法取得資料庫'))
-          .finally(() => setIsLoading(false))
       })
       .catch(error =>
         alert(
           '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
         )
       )
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -69,11 +55,6 @@ function Home(props) {
       }
     )
   }, [])
-
-  const submitSearch = () => {
-    console.log(searchKeywords)
-    navigate(`/search/${searchKeywords}`)
-  }
 
   return (
     <Flex direction="column" align="center">
@@ -110,23 +91,6 @@ function Home(props) {
         {userNearbyCafes.map(cafe => (
           <CafeCard key={cafe.id} cafe={cafe} />
         ))}
-      </Flex>
-
-      <Flex as="section" my="20" direction="column" alignItems="center">
-        <Heading as="h2" size="lg" mb="3">
-          透過關鍵字搜尋咖啡廳
-        </Heading>
-        <InputGroup maxW="400px">
-          <InputLeftElement pointerEvents="none">
-            <BiSearchAlt />
-          </InputLeftElement>
-          <Input
-            placeholder="Search..."
-            value={searchKeywords}
-            onChange={e => setSearchKeywords(e.target.value)}
-          />
-        </InputGroup>
-        <Button onClick={submitSearch}>搜尋</Button>
       </Flex>
 
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">

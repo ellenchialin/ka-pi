@@ -16,7 +16,7 @@ function ForHangout() {
   const [cafesForHangout, setCafesForHangout] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const labels = ['不限時', '背景音樂', '通常有位']
+  const labels = ['不限時', '裝潢音樂', '通常有位']
 
   useEffect(() => {
     nomad

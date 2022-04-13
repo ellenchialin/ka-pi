@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
-import FilterBoard from '../components/FilterBoard'
+import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useFilterEffect from '../hooks/useFilterEffect'
 import nomad from '../utils/nomadApi'
@@ -16,9 +16,8 @@ function City() {
   const { cityName } = useParams()
 
   const convertCityName = city => {
-    console.log('From city page: ', city)
-
-    console.log(cityData.filter(c => c.tag === city))
+    // console.log('From city page: ', city)
+    // console.log(cityData.filter(c => c.tag === city))
     setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
 
     /*
@@ -49,7 +48,7 @@ function City() {
 
   // 判斷選到行政區的咖啡廳
   const getSelectedCafes = () => {
-    console.log(selectedAreas)
+    // console.log(selectedAreas)
 
     if (selectedAreas.length > 0) {
       setUpdatedCafes([])
@@ -58,6 +57,8 @@ function City() {
         const filteredCafes = cityCafes.filter(cafe =>
           cafe.address.includes(area)
         )
+        console.log('filtered Cafes: ', filteredCafes)
+
         setUpdatedCafes(prev => [...prev, ...filteredCafes])
       })
       // console.log('Updated Cafes: ', updatedCafes)
@@ -65,6 +66,9 @@ function City() {
   }
 
   useFilterEffect(getSelectedCafes, selectedAreas)
+
+  // BUG
+  // 選到沒有資料的區域，應該要 render no matched，目前畫面不變，仍顯示全部收錄的間數
 
   return (
     <Flex as="section" direction="column" align="center">
@@ -84,7 +88,7 @@ function City() {
       ) : (
         <>
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
-          <FilterBoard
+          <FilteredByDist
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
           />

@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { areaData } from '../cityData'
 
-function FilterBoard({ translatedCityName, setSelectedAreas }) {
+function FilterByDist({ translatedCityName, setSelectedAreas }) {
   console.log('translated City Name: ', translatedCityName)
 
   const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
@@ -56,7 +56,7 @@ function FilterBoard({ translatedCityName, setSelectedAreas }) {
   }
 
   const { value, getCheckboxProps } = useCheckboxGroup()
-  // console.log(value)
+  console.log(value)
 
   return (
     <Flex
@@ -91,4 +91,4 @@ function FilterBoard({ translatedCityName, setSelectedAreas }) {
     </Flex>
   )
 }
-export default FilterBoard
+export default FilterByDist
