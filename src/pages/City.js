@@ -5,7 +5,7 @@ import FilterBoard from '../components/FilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
 import useFilterEffect from '../hooks/useFilterEffect'
 import nomad from '../utils/nomadApi'
-import { cityData } from '../helpers'
+import { cityData } from '../cityData'
 
 function City() {
   const [translatedCityName, setTranslatedCityName] = useState('')
@@ -18,13 +18,18 @@ function City() {
   const convertCityName = city => {
     console.log('From city page: ', city)
 
+    console.log(cityData.filter(c => c.tag === city))
+    setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
+
+    /*
     if (city === 'taipei' || city === 'new_taipei') {
-      setTranslatedCityName('台北市 / 新北市')
+      setTranslatedCityName('台北 / 新北')
       return
     } else {
       console.log(cityData.filter(c => c.tag === city))
       setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
     }
+    */
   }
 
   useEffect(() => {

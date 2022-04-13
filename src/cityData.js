@@ -1,12 +1,12 @@
 export const cityData = [
   {
     tag: 'taipei',
-    place: '臺北市',
+    place: '台北',
   },
 
   {
     tag: 'new_taipei',
-    place: '新北市',
+    place: '新北',
   },
 
   {
@@ -97,7 +97,7 @@ export const cityData = [
 ]
 
 export const areaData = {
-  臺北市: [
+  台北: [
     '中正區',
     '大同區',
     '中山區',
@@ -111,7 +111,7 @@ export const areaData = {
     '士林區',
     '文山區',
   ],
-  新北市: [
+  新北: [
     '板橋區',
     '新莊區',
     '泰山區',
