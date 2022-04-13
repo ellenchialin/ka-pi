@@ -24,19 +24,22 @@ function Home(props) {
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const reverseGeocode = (lat, lng) => {
+  const getNearbyCafes = (lat, lng) => {
+    console.log(lat, lng)
+
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAiPvJAVuCQQekLZSIWdeedxpuw5VcO564`
     )
       .then(res => res.json())
       .then(data => {
-        // console.log(data.results[10].formatted_address)
-        const currentCity = data.results[10].formatted_address.split(' ')
-
+        const currentCity = data.results[0].formatted_address
+          .split(', ')
+          .slice(-2, -1)[0]
+          .split(' ')[0]
+          .toLowerCase()
         // console.log(currentCity[0].slice(0, -1).toLowerCase())
-
         nomad
-          .getCafesByCity(currentCity[0].slice(0, -1).toLowerCase())
+          .getCafesByCity(currentCity)
           .then(data => setUserNearbyCafes(data.slice(0, 10)))
           .catch(error => alert('無法取得資料庫'))
           .finally(() => setIsLoading(false))
@@ -56,22 +59,13 @@ function Home(props) {
       position => {
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
-        reverseGeocode(position.coords.latitude, position.coords.longitude)
+        getNearbyCafes(position.coords.latitude, position.coords.longitude)
       },
       () => {
         alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
       }
     )
   }, [])
-
-  /*
-  useEffect(() => {
-    nomad
-      .getCafesByCity('taipei')
-      .then(data => console.log(data))
-      .catch(error => alert('無法取得資料庫'))
-  }, [])
-  */
 
   const getSearchKeyword = e => {
     console.log(e.target.value)

@@ -8,7 +8,7 @@ import {
   Flex,
   Button,
 } from '@chakra-ui/react'
-import { areaData } from '../helpers'
+import { areaData } from '../cityData'
 
 function FilterBoard({ translatedCityName, setSelectedAreas }) {
   console.log('translated City Name: ', translatedCityName)

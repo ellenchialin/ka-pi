@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Flex, Text, Box } from '@chakra-ui/react'
 import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
-import { cityData } from '../../helpers'
+import { cityData } from '../../cityData'
 import './TaiwanMap.css'
 
 function TaiwanMap(props) {

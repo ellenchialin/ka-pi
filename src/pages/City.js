@@ -5,7 +5,7 @@ import FilterBoard from '../components/FilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
 import useFilterEffect from '../hooks/useFilterEffect'
 import nomad from '../utils/nomadApi'
-import { cityData } from '../helpers'
+import { cityData } from '../cityData'
 
 function City() {
   const [translatedCityName, setTranslatedCityName] = useState('')
