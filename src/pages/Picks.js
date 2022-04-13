@@ -3,12 +3,22 @@ import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import CafeCard from '../components/cafe/CafeCard'
 import nomad from '../utils/nomadApi'
 import Map from '../components/map/Map'
+import Pagination from '../components/Pagination'
 
 function Picks() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage, setCafesPerPage] = useState(10)
+
   const [isLoading, setIsLoading] = useState(true)
+
+  const indexOfLastCafe = currentPage * cafesPerPage
+  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
+  const currentCafes = pickedCafes.slice(indexOfFirstCafe, indexOfLastCafe)
+
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   const getNearbyCafes = (lat, lng) => {
     console.log(lat, lng)
@@ -28,7 +38,7 @@ function Picks() {
           .getCafesByCity(currentCity)
           .then(data => {
             // console.log(data)
-            setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 30))
+            setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
           })
           .catch(error => alert('無法取得資料庫'))
           .finally(() => setIsLoading(false))
@@ -61,7 +71,7 @@ function Picks() {
       <Heading as="h1" size="xl">
         不用思考，無腦跟喝
       </Heading>
-      <Text my="3">根據所在地區，隨機挑選 30 間，評價 4 分以上咖啡廳</Text>
+      <Text my="3">根據所在地區，隨機挑選 100 間，評價 4 分以上咖啡廳</Text>
 
       {isLoading ? (
         <Spinner
@@ -86,10 +96,15 @@ function Picks() {
             alignItems="flex-start"
             as="section"
           >
-            {pickedCafes.map(cafe => (
+            {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </Flex>
+          <Pagination
+            cafesPerPage={cafesPerPage}
+            totalCafes={pickedCafes.length}
+            paginate={paginate}
+          />
         </>
       )}
     </Flex>
