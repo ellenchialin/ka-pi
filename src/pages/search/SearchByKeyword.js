@@ -1,10 +1,5 @@
-import { useState, useEffect } from 'react'
-import {
-  useParams,
-  useNavigate,
-  useSearchParams,
-  useLocation,
-} from 'react-router-dom'
+import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   Flex,
   Heading,
@@ -26,33 +21,6 @@ function SearchByKeyword() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // let { keywords } = useParams()
-
-  // 先拿到從 feature filter board 帶過來的 location state value
-  // const navigate = useNavigate()
-  // const location = useLocation()
-  // const features = location.state
-  // console.log(features)
-
-  // 把拿到的 features 轉 obj
-  /*
-  const paramsObj = features.reduce((acc, value) => {
-    return { ...acc, [value]: true }
-  }, {})
-  console.log(paramsObj)
-  const test = Object.entries(paramsObj).map(([key, value]) => ({
-    [key]: value,
-  }))
-  console.log(test)
-  */
-
-  // set 到 search page params
-  // const [searchParams, setSearchParams] = useSearchParams(...test)
-  // searchParams.set(...test)
-
-  // const params = searchParams.get('feature')
-  // console.log(params)
-
   const getSearchResults = searchWords => {
     nomad
       .getAllCafes()
@@ -73,8 +41,6 @@ function SearchByKeyword() {
   const submitSearch = () => {
     setIsLoading(true)
     getSearchResults(searchKeywords)
-    // setIsLoading(true)
-    // setReSearchKeywords('')
   }
 
   return (

@@ -33,11 +33,11 @@ function SearchByFeature() {
   const defaultFeatures = ['不限時', '有插座']
   const ratingFeatures = [
     { text: 'WiFi穩定', tag: 'wifi' },
-    { text: '通常有位子', tag: 'seat' },
-    { text: '安靜', tag: 'quiet' },
-    { text: '咖啡優', tag: 'tasty' },
+    { text: '通常有位', tag: 'seat' },
+    { text: '店內安靜', tag: 'quiet' },
+    { text: '咖啡好喝', tag: 'tasty' },
     { text: '價格親民', tag: 'cheap' },
-    { text: '背景音樂', tag: 'music' },
+    { text: '裝潢音樂', tag: 'music' },
   ]
 
   function CustomCheckbox(props) {

@@ -56,7 +56,7 @@ function FilterByDist({ translatedCityName, setSelectedAreas }) {
   }
 
   const { value, getCheckboxProps } = useCheckboxGroup()
-  // console.log(value)
+  console.log(value)
 
   return (
     <Flex
