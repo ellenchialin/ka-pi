@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+// prettier-ignore
 import {
-  Flex,
-  Heading,
-  Box,
-  Image,
-  Text,
-  Spinner,
-  Icon,
-  IconButton,
-  Button,
-  Link,
-  Divider,
+  Flex,Heading,Box,Image,Text,Spinner,Icon,IconButton, Button,Link,Divider,useDisclosure,Modal,ModalOverlay,ModalContent,Textarea,ModalFooter,ModalBody,ModalCloseButton,Input,InputLeftElement,InputGroup,
 } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import {
@@ -19,18 +10,27 @@ import {
   BsFillBookmarkFill,
   BsFillExclamationTriangleFill,
 } from 'react-icons/bs'
-import { BiAlarmExclamation } from 'react-icons/bi'
+import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-import { RiDirectionFill, RiGlobalFill, RiReplyAllFill } from 'react-icons/ri'
-
+import {
+  RiDirectionFill,
+  RiGlobalFill,
+  RiReplyAllFill,
+  RiAddFill,
+} from 'react-icons/ri'
+import FileUpload from '../components/FileUpload'
 import nomad from '../utils/nomadApi'
 
 function Cafe() {
   const [cafe, setCafe] = useState({})
+  const [user, setUser] = useState({})
+  const [comment, setComment] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     nomad.getAllCafes().then(data => {
@@ -122,28 +122,50 @@ function Cafe() {
     )
   }
 
-  const Comment = () => {
+  const Comment = ({ userId, text, date }) => {
+    // 透過 userId 去撈 userName & userPhotoUrl
     return (
       <Flex w="100%" direction="column">
         <Flex w="100%" justify="space-between" align="center">
-          <Flex>
+          <Flex align="center">
             <Image
               borderRadius="full"
-              boxSize="150px"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
+              boxSize="50px"
+              mr="2"
+              src="https://images.unsplash.com/photo-1567880905822-56f8e06fe630?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"
+              // src={userPhotoUrl}
+              // alt={userName}
             />
-            <Text>Dan Abramov</Text>
+            <Text fontSize="0.875rem">Dan Abramov</Text>
           </Flex>
-          <Icon as={RiReplyAllFill} w={6} h={6} color="gray.800" />
+          <IconButton
+            icon={<RiReplyAllFill />}
+            colorScheme="blackAlpha"
+            fontSize="20px"
+            variant="ghost"
+            aria-label="回覆留言"
+          />
         </Flex>
-        <Flex>
-          <Text>Must go!</Text>
-          <Text>1 天前</Text>
+        <Flex justify="space-between" fontSize="0.875rem">
+          <Text>{text}</Text>
+          <Text>{date}</Text>
         </Flex>
       </Flex>
     )
   }
+
+  const dummyComments = [
+    {
+      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
+      createdAt: new Date('2022-04-08').getTime(),
+      text: '座位舒適又安靜，下次會再來！',
+    },
+    {
+      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
+      createdAt: new Date('2022-04-14').getTime(),
+      text: '手沖很讚！',
+    },
+  ]
 
   return (
     <Flex
@@ -344,9 +366,59 @@ function Cafe() {
               <Heading as="h4" size="1.5rem">
                 Comments
               </Heading>
-              <Button>Add Comment</Button>
+              <Button onClick={onOpen} leftIcon={<RiAddFill />} size="xs">
+                Add Comment
+              </Button>
+              <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                size="md"
+                isCentered={true}
+              >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <Textarea
+                      value={comment}
+                      onChange={e => setComment(e.target.value)}
+                      placeholder="Leave your comment here..."
+                      size="md"
+                      mt="10"
+                      mb="6"
+                    />
+                    <InputGroup>
+                      <InputLeftElement
+                        children={<RiAddFill color="gray.300" />}
+                      />
+                      <Input
+                        type="file"
+                        border="none"
+                        name="image"
+                        accept="image/*"
+                      />
+                    </InputGroup>
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button
+                      variant="ghost"
+                      isDisabled={comment === '' ? true : false}
+                    >
+                      Submit
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
             </Flex>
-            <Comment />
+            {dummyComments.map(comment => (
+              <Comment
+                key={comment.createdAt}
+                userId={comment.userId}
+                date={comment.createdAt}
+                text={comment.text}
+              />
+            ))}
           </Flex>
         </>
       )}
