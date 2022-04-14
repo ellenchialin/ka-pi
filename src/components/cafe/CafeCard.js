@@ -1,4 +1,4 @@
-import React from 'react'
+import { Link } from 'react-router-dom'
 import {
   Flex,
   Box,
@@ -7,8 +7,6 @@ import {
   Badge,
   Heading,
   Text,
-  IconButton,
-  Link,
 } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
@@ -42,7 +40,7 @@ function CafeCard({ cafe }) {
             <Heading as="h5" size="sm" isTruncated>
               {cafe.name}
             </Heading>
-            <Link>
+            <Link to={`/cafe/${cafe.id}`}>
               <AiOutlineDoubleRight size="0.75em" />
             </Link>
           </Flex>
