@@ -47,9 +47,10 @@ function City() {
   }, [])
 
   // 判斷選到行政區的咖啡廳
+  // 如果都沒選 -> 顯示全部
+  // 篩選後沒有符合 -> 顯示 no match
   const getSelectedCafes = () => {
     // console.log(selectedAreas)
-
     if (selectedAreas.length > 0) {
       setUpdatedCafes([])
 
