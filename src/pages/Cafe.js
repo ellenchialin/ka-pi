@@ -4,10 +4,12 @@ import {
   Flex,
   Heading,
   Box,
+  Image,
   Text,
   Spinner,
   Icon,
   IconButton,
+  Button,
   Link,
   Divider,
 } from '@chakra-ui/react'
@@ -20,7 +22,7 @@ import {
 import { BiAlarmExclamation } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-import { RiDirectionFill, RiGlobalFill } from 'react-icons/ri'
+import { RiDirectionFill, RiGlobalFill, RiReplyAllFill } from 'react-icons/ri'
 
 import nomad from '../utils/nomadApi'
 
@@ -108,6 +110,41 @@ function Cafe() {
     )
   }
 
+  const IGCard = () => {
+    return (
+      <Box boxSize="250px">
+        <Image
+          src="https://bit.ly/dan-abramov"
+          objectFit="cover"
+          alt="網友分享照"
+        />
+      </Box>
+    )
+  }
+
+  const Comment = () => {
+    return (
+      <Flex w="100%" direction="column">
+        <Flex w="100%" justify="space-between" align="center">
+          <Flex>
+            <Image
+              borderRadius="full"
+              boxSize="150px"
+              src="https://bit.ly/dan-abramov"
+              alt="Dan Abramov"
+            />
+            <Text>Dan Abramov</Text>
+          </Flex>
+          <Icon as={RiReplyAllFill} w={6} h={6} color="gray.800" />
+        </Flex>
+        <Flex>
+          <Text>Must go!</Text>
+          <Text>1 天前</Text>
+        </Flex>
+      </Flex>
+    )
+  }
+
   return (
     <Flex
       as="section"
@@ -190,10 +227,14 @@ function Cafe() {
             ></IconButton>
           </Flex>
 
-          <Flex w="100%" direction={{ base: 'column', md: 'row' }}>
+          <Flex
+            w="100%"
+            direction={{ base: 'column', md: 'row' }}
+            justify="space-between"
+          >
             <Flex
               w="100%"
-              maxW={{ base: '100%', md: '250px' }}
+              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
               h="100%"
               minH="100px"
               align="center"
@@ -218,7 +259,7 @@ function Cafe() {
 
             <Flex
               w="100%"
-              maxW={{ base: '100%', md: '250px' }}
+              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
               h="100%"
               minH="100px"
               align="center"
@@ -243,7 +284,7 @@ function Cafe() {
 
             <Flex
               w="100%"
-              maxW={{ base: '100%', md: '250px' }}
+              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
               h="100%"
               minH="100px"
               align="center"
@@ -282,6 +323,30 @@ function Cafe() {
                 value: cafe.music,
               }}
             />
+          </Flex>
+
+          {/* IG Wall section */}
+          <Flex w="100%" direction="column">
+            <Heading as="h4" size="1.5rem">
+              Instagram Wall
+            </Heading>
+            <Flex wrap="wrap" justify="space-between">
+              <IGCard />
+              <IGCard />
+              <IGCard />
+              <IGCard />
+            </Flex>
+          </Flex>
+
+          {/* Comments section */}
+          <Flex w="100%" direction="column" my="6">
+            <Flex w="100%" justify="space-between" align="center">
+              <Heading as="h4" size="1.5rem">
+                Comments
+              </Heading>
+              <Button>Add Comment</Button>
+            </Flex>
+            <Comment />
           </Flex>
         </>
       )}
