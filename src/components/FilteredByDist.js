@@ -77,6 +77,7 @@ function FilterByDist({ translatedCityName, setSelectedAreas }) {
           />
         ))}
       </Flex>
+
       <Button
         colorScheme="blackAlpha"
         variant="solid"
@@ -85,6 +86,7 @@ function FilterByDist({ translatedCityName, setSelectedAreas }) {
         px="6"
         h="8"
         onClick={() => setSelectedAreas(value)}
+        isDisabled={value.length === 0 ? true : false}
       >
         搜尋
       </Button>
