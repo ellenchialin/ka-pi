@@ -46,10 +46,7 @@ function City() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  // 判斷選到行政區的咖啡廳
   const getSelectedCafes = () => {
-    // console.log(selectedAreas)
-
     if (selectedAreas.length > 0) {
       setUpdatedCafes([])
 
@@ -58,17 +55,12 @@ function City() {
           cafe.address.includes(area)
         )
         console.log('filtered Cafes: ', filteredCafes)
-
         setUpdatedCafes(prev => [...prev, ...filteredCafes])
       })
-      // console.log('Updated Cafes: ', updatedCafes)
     }
   }
 
   useFilterEffect(getSelectedCafes, selectedAreas)
-
-  // BUG
-  // 選到沒有資料的區域，應該要 render no matched，目前畫面不變，仍顯示全部收錄的間數
 
   return (
     <Flex as="section" direction="column" align="center">
@@ -94,16 +86,14 @@ function City() {
           />
           <Flex w="100%" direction="column" as="section">
             <Text>
-              共
-              {updatedCafes.length > 0 ? updatedCafes.length : cityCafes.length}{' '}
-              間
+              共{updatedCafes ? updatedCafes.length : cityCafes.length} 間
             </Text>
             <Flex
               wrap="wrap"
               justifyContent="space-between"
               alignItems="flex-start"
             >
-              {updatedCafes.length > 0
+              {updatedCafes
                 ? updatedCafes.map(cafe => (
                     <CafeCard key={cafe.id} cafe={cafe} />
                   ))

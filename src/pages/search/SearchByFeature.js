@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   useCheckbox,
   chakra,
@@ -146,6 +145,7 @@ function SearchByFeature() {
           px="6"
           h="8"
           onClick={submitSearch}
+          isDisabled={value.length === 0 ? true : false}
         >
           進階篩選
         </Button>

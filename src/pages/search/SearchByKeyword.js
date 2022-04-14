@@ -39,6 +39,8 @@ function SearchByKeyword() {
   // 用 custom hook 避免第一次 render 就打 api
 
   const submitSearch = () => {
+    if (searchKeywords === '') alert('')
+
     setIsLoading(true)
     getSearchResults(searchKeywords)
   }
@@ -56,10 +58,15 @@ function SearchByKeyword() {
           <Input
             placeholder="Search..."
             value={searchKeywords}
-            onChange={e => setSearchKeywords(e.target.value)}
+            onChange={e => setSearchKeywords(e.target.value.trim())}
           />
         </InputGroup>
-        <Button onClick={submitSearch}>搜尋</Button>
+        <Button
+          onClick={submitSearch}
+          isDisabled={searchKeywords === '' ? true : false}
+        >
+          搜尋
+        </Button>
       </Flex>
       {isLoading ? (
         <Spinner
