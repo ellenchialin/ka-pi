@@ -19,6 +19,7 @@ import ForHangout from './pages/collections/ForHangout'
 import Picks from './pages/Picks'
 import User from './pages/User'
 import City from './pages/City'
+import Cafe from './pages/Cafe'
 import SearchByKeyword from './pages/search/SearchByKeyword'
 import NoMatch from './pages/NoMatch'
 import SearchByFeature from './pages/search/SearchByFeature'
@@ -62,6 +63,9 @@ function App() {
                 <Route path="search">
                   <Route index element={<SearchByKeyword />} />
                   <Route path="features" element={<SearchByFeature />} />
+                </Route>
+                <Route path="cafe">
+                  <Route path=":cafeId" element={<Cafe />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route path="user" element={<User />} />
