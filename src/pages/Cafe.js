@@ -33,12 +33,18 @@ function Cafe() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    nomad.getAllCafes().then(data => {
-      const cafe = data.filter(item => item.id === cafeId)[0]
-      setCafe(cafe)
-      setIsLoading(false)
-      console.log(cafe)
-    })
+    nomad
+      .getAllCafes()
+      .then(data => {
+        const cafe = data.filter(item => item.id === cafeId)[0]
+        setCafe(cafe)
+        console.log(cafe)
+      })
+      .catch(error => {
+        console.error(error)
+        alert('暫無法取得咖啡廳資料庫')
+      })
+      .finally(() => setIsLoading(false))
   }, [])
 
   // Google maps search url

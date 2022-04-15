@@ -30,7 +30,10 @@ function Home(props) {
         nomad
           .getCafesByCity(currentCity)
           .then(data => setUserNearbyCafes(data.slice(0, 10)))
-          .catch(error => alert('無法取得資料庫'))
+          .catch(error => {
+            alert('無法取得資料庫')
+            console.error(error)
+          })
       })
       .catch(error =>
         alert(
