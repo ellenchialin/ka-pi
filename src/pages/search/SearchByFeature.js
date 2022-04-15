@@ -73,7 +73,7 @@ function SearchByFeature() {
   const submitSearch = () => {
     setIsLoading(true)
 
-    fetch('/allcafes')
+    fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
         const defaultMatched = data.filter(

@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
-import nomad from '../../utils/nomadApi'
+// import nomad from '../../utils/nomadApi'
 
 function ForWork() {
   const [cafesForWork, setCafesForWork] = useState([])
@@ -19,7 +19,7 @@ function ForWork() {
   const labels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
 
   useEffect(() => {
-    fetch('/allcafes')
+    fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
         const filteredCafes = data.filter(

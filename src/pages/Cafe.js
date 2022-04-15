@@ -33,7 +33,7 @@ function Cafe() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    fetch('/allcafes')
+    fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
         console.log('From Cafe Page: ', data)

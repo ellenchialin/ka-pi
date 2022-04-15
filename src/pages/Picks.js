@@ -34,7 +34,9 @@ function Picks() {
           .split(' ')[0]
           .toLowerCase()
 
-        fetch(`/citycafes?city=${currentCity}`)
+        fetch(
+          `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
+        )
           .then(res => res.json())
           .then(data => {
             // console.log(data)

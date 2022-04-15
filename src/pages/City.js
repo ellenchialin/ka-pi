@@ -34,7 +34,7 @@ function City() {
   useEffect(() => {
     convertCityName(cityName)
 
-    fetch(`/citycafes?city=${cityName}`)
+    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${cityName}`)
       .then(res => res.json())
       .then(data => {
         console.log('From City: ', data)

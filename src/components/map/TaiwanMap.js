@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Flex, Text, Box } from '@chakra-ui/react'
-import nomad from '../../utils/nomadApi'
+// import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
@@ -25,7 +25,7 @@ function TaiwanMap(props) {
   }
 
   const getCafes = (cityName, fetchCity, setCityState) => {
-    fetch(`/citycafes?city=${fetchCity}`)
+    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
       .then(res => res.json())
       .then(data => {
         console.log('From Taiwan Map: ', data)

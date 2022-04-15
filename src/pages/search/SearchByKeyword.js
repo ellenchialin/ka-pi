@@ -22,7 +22,7 @@ function SearchByKeyword() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const getSearchResults = searchWords => {
-    fetch('/allcafes')
+    fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
         const matched = data.filter(cafe =>

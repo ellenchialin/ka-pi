@@ -30,7 +30,9 @@ function Home(props) {
         console.log(currentCity)
         // console.log(currentCity[0].slice(0, -1).toLowerCase())
 
-        fetch(`/citycafes?city=${currentCity}`)
+        fetch(
+          `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
+        )
           .then(res => res.json())
           .then(data => {
             setUserNearbyCafes(data.slice(0, 20))
