@@ -22,17 +22,20 @@ function SearchByKeyword() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const getSearchResults = searchWords => {
-    nomad
-      .getAllCafes()
+    fetch('/allcafes')
+      .then(res => res.json())
       .then(data => {
         const matched = data.filter(cafe =>
           cafe.name.toLowerCase().includes(searchWords)
         )
-        console.log(matched)
         setMatchedCafes(matched)
         setSearchParams(searchWords)
+        console.log('From SearchKeywords Page: ', matched)
       })
-      .catch(() => alert('搜尋出現問題，請重新嘗試，或通知開發人員'))
+      .catch(error => {
+        alert('搜尋發生錯誤，請確認網路連線，或聯繫開發人員')
+        console.error(error)
+      })
       .finally(() => setIsLoading(false))
   }
 

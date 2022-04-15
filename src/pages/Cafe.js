@@ -33,6 +33,20 @@ function Cafe() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
+    fetch('/allcafes')
+      .then(res => res.json())
+      .then(data => {
+        console.log('From Cafe Page: ', data)
+        const cafe = data.filter(item => item.id === cafeId)[0]
+        setCafe(cafe)
+      })
+      .catch(error => {
+        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
+
+    /*
     nomad
       .getAllCafes()
       .then(data => {
@@ -45,6 +59,7 @@ function Cafe() {
         alert('暫無法取得咖啡廳資料庫')
       })
       .finally(() => setIsLoading(false))
+    */
   }, [])
 
   // Google maps search url
@@ -233,7 +248,10 @@ function Cafe() {
               </Flex>
               <Flex>
                 <Flex align="center">
-                  <Link href={`${cafe.url}`} isExternal>
+                  <Link
+                    href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
+                    isExternal
+                  >
                     <Icon as={RiDirectionFill} color="white" />
                   </Link>
                 </Flex>
