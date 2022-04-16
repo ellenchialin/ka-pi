@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useCheckbox,chakra,Box,Text,useCheckboxGroup,Heading,Flex,Button,Spinner,Tag,TagLeftIcon,TagLabel } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
-import nomad from '../../utils/nomadApi'
 import Pagination from '../../components/Pagination'
 
 function SearchByFeature() {
@@ -93,26 +92,6 @@ function SearchByFeature() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-
-    /*
-    nomad
-      .getAllCafes()
-      .then(data => {
-        const defaultMatched = data.filter(
-          cafe => cafe.limited_time === 'no' && cafe.socket === 'yes'
-        )
-
-        let results = []
-        value.forEach(feature => {
-          const cafes = defaultMatched.filter(cafe => cafe[feature] >= 5)
-          results.push(cafes)
-        })
-        console.log(results.flat())
-        setFilteredCafes(results.flat())
-      })
-      .catch(() => alert('篩選發生錯誤，請嘗試重新操作，或通知開發人員'))
-      .finally(() => setIsLoading(false))
-    */
   }
 
   return (

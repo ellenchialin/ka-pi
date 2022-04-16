@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import CafeCard from '../components/cafe/CafeCard'
-import nomad from '../utils/nomadApi'
 import Map from '../components/map/Map'
 import Pagination from '../components/Pagination'
 
@@ -11,7 +10,6 @@ function Picks() {
   const [pickedCafes, setPickedCafes] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(10)
-
   const [isLoading, setIsLoading] = useState(true)
 
   const indexOfLastCafe = currentPage * cafesPerPage
@@ -47,17 +45,6 @@ function Picks() {
             console.error(error)
           })
           .finally(() => setIsLoading(false))
-
-        /*
-        nomad
-          .getCafesByCity(currentCity)
-          .then(data => {
-            // console.log(data)
-            setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
-          })
-          .catch(error => alert('無法取得資料庫'))
-          .finally(() => setIsLoading(false))
-        */
       })
       .catch(error =>
         alert(

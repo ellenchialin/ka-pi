@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
-// import nomad from '../../utils/nomadApi'
 
 function ForHangout() {
   const [cafesForHangout, setCafesForHangout] = useState([])
@@ -34,25 +33,6 @@ function ForHangout() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-
-    /*
-    nomad
-      .getAllCafes()
-      .then(data => {
-        const filteredCafes = data.filter(
-          cafe =>
-            cafe.limited_time === 'no' && cafe.music === 5 && cafe.seat === 5
-        )
-
-        setCafesForHangout(filteredCafes)
-        console.log(filteredCafes)
-      })
-      .catch(error => {
-        console.error(error)
-        alert('暫無法取得咖啡廳資料，請通知開發人員')
-      })
-      .finally(() => setIsLoading(false))
-    */
   }, [])
 
   return (

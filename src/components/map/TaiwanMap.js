@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Flex, Text, Box } from '@chakra-ui/react'
-// import nomad from '../../utils/nomadApi'
 import CityInfoCard from '../CityInfoCard'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
@@ -43,22 +42,6 @@ function TaiwanMap(props) {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-
-    /*
-    nomad
-      .getCafesByCity(fetchCity)
-      .then(data => {
-        if (cityName === 'new_taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('新北')))
-        } else if (cityName === 'taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('台北')))
-        } else {
-          setCityState(data)
-        }
-      })
-      .catch(error => alert('暫無法取得該縣市咖啡廳總數，請通知開發人員'))
-      .finally(() => setIsLoading(false))
-    */
   }
 
   const showCityInfo = e => {

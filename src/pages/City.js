@@ -4,7 +4,6 @@ import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useFilterEffect from '../hooks/useFilterEffect'
-import nomad from '../utils/nomadApi'
 import { cityData } from '../cityData'
 
 function City() {
@@ -45,20 +44,6 @@ function City() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-
-    /*
-    nomad
-      .getCafesByCity(cityName)
-      .then(data => {
-        console.log(data)
-        setCityCafes(data)
-      })
-      .catch(error => {
-        console.error(error)
-        alert('暫無法取得咖啡廳資料，請通知開發人員')
-      })
-      .finally(() => setIsLoading(false))
-    */
   }, [])
 
   const getSelectedCafes = () => {

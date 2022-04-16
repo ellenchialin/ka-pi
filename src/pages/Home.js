@@ -3,7 +3,6 @@ import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
-import nomad from '../utils/nomadApi'
 
 function Home(props) {
   const { cityLinkEndpoint, setCityLinkEndpoint } = props
