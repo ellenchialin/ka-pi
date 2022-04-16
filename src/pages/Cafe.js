@@ -19,11 +19,11 @@ import {
   RiReplyAllFill,
   RiAddFill,
 } from 'react-icons/ri'
-import FileUpload from '../components/FileUpload'
-import nomad from '../utils/nomadApi'
+import IGCard from '../components/cafe/IGCard'
 
 function Cafe() {
   const [cafe, setCafe] = useState({})
+  const [igHashtag, setIgHashtag] = useState('')
   const [user, setUser] = useState({})
   const [comment, setComment] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -39,27 +39,25 @@ function Cafe() {
         console.log('From Cafe Page: ', data)
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
+
+        /*
+        const searchHashtag = cafe.name.split(' ').join('')
+        fetch(`https://ka-pi-server.herokuapp.com/igPosts/${searchHashtag}`)
+          .then(res => {
+            if (!res.ok) throw new Error('無法取得 IG 資料')
+            res.json()
+          })
+          .then(data => console.log(data))
+          .catch(error => {
+            alert(error)
+          })
+        */
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-
-    /*
-    nomad
-      .getAllCafes()
-      .then(data => {
-        const cafe = data.filter(item => item.id === cafeId)[0]
-        setCafe(cafe)
-        console.log(cafe)
-      })
-      .catch(error => {
-        console.error(error)
-        alert('暫無法取得咖啡廳資料庫')
-      })
-      .finally(() => setIsLoading(false))
-    */
   }, [])
 
   // Google maps search url
@@ -128,18 +126,6 @@ function Cafe() {
           </Flex>
         </Flex>
       </Flex>
-    )
-  }
-
-  const IGCard = () => {
-    return (
-      <Box boxSize="250px">
-        <Image
-          src="https://bit.ly/dan-abramov"
-          objectFit="cover"
-          alt="網友分享照"
-        />
-      </Box>
     )
   }
 
@@ -376,10 +362,7 @@ function Cafe() {
             <Heading as="h4" size="1.5rem">
               Instagram Wall
             </Heading>
-            <Flex wrap="wrap" justify="space-between">
-              <IGCard />
-              <IGCard />
-              <IGCard />
+            <Flex w="100%" wrap="wrap" justify="space-between">
               <IGCard />
             </Flex>
           </Flex>
