@@ -25,15 +25,19 @@ import { firebase } from '../utils/firebase'
 
 function Cafe() {
   const [cafe, setCafe] = useState({})
-  const [igHashtag, setIgHashtag] = useState('')
-  const [user, setUser] = useState({})
-  const [comment, setComment] = useState('')
+  // const [igHashtag, setIgHashtag] = useState('')
+  // const [user, setUser] = useState({})
+  const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const getAllComments = cafeId => {
+    firebase.getComments(cafeId).then(data => setComments(data))
+  }
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -43,7 +47,10 @@ function Cafe() {
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
-        /*
+        firebase.getComments(cafe.id).then(data => setComments(data))
+
+        /* BUG
+        // 無法取得 api 傳回來的資料
         const searchHashtag = cafe.name.split(' ').join('')
         fetch(`https://ka-pi-server.herokuapp.com/igPosts/${searchHashtag}`)
           .then(res => {
@@ -61,11 +68,6 @@ function Cafe() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-  }, [])
-
-  useEffect(() => {
-    setComments(firebase.getComments())
-    // console.log('Comments from Cafe page: ', comments)
   }, [])
 
   // Google maps search url
@@ -133,9 +135,9 @@ function Cafe() {
   }
 
   const handleAddComment = () => {
-    console.log('Add comment')
-    firebase.addComment(cafe.id, 'test123', comment)
-    setComment('')
+    console.log('Add new comment')
+    firebase.addComment(cafe.id, 'test123', newComment)
+    setNewComment('')
   }
 
   const dummyComments = [
@@ -364,8 +366,8 @@ function Cafe() {
                   <ModalCloseButton />
                   <ModalBody>
                     <Textarea
-                      value={comment}
-                      onChange={e => setComment(e.target.value)}
+                      value={newComment}
+                      onChange={e => setNewComment(e.target.value)}
                       placeholder="Leave your comment here..."
                       size="md"
                       mt="10"
@@ -387,7 +389,7 @@ function Cafe() {
                   <ModalFooter>
                     <Button
                       variant="ghost"
-                      isDisabled={comment === '' ? true : false}
+                      isDisabled={newComment === '' ? true : false}
                       onClick={handleAddComment}
                     >
                       Submit
@@ -396,9 +398,9 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {dummyComments.map(comment => (
+            {comments.map((comment, i) => (
               <Comment
-                key={comment.createdAt}
+                key={i}
                 userId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}

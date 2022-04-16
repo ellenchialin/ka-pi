@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 // prettier-ignore
-import { getFirestore,collection,getDocs,query,where,onSnapshot,addDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore'
+import { getFirestore,collection,getDocs,query,where,onSnapshot,addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -15,19 +15,18 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export const firebase = {
-  getComments() {
-    getDocs(
-      collection(db, 'cafes/00e21150-8b6d-4a54-b4bb-5fa45099b15e/comments')
+  getComments(cafeId) {
+    return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(
+      docsSnapshot => {
+        const commentArray = docsSnapshot.docs.map(doc => ({
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          userId: doc.data().userId,
+          text: doc.data().text,
+          replies: doc.data().replies,
+        }))
+        return commentArray
+      }
     )
-      .then(docs => {
-        const commentsArray = []
-        docs.forEach(doc => commentsArray.push(doc.data()))
-
-        console.log('Inside getComments, comments Array: ', commentsArray)
-
-        return commentsArray
-      })
-      .catch(error => console.error(error))
   },
   addComment(cafeId, userId, text) {
     const newDocRef = doc(collection(db, `cafes/${cafeId}/comments`))

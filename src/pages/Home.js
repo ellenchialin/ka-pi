@@ -20,13 +20,20 @@ function Home(props) {
     )
       .then(res => res.json())
       .then(data => {
-        const currentCity = data.results[0].formatted_address
-          .split(', ')
-          .slice(-2, -1)[0]
-          .split(' ')[0]
-          .toLowerCase()
-
-        console.log(currentCity)
+        let currentCity = ''
+        if (
+          data.results[0].formatted_address.split(', ').slice(-2, -1)[0] ===
+          'New Taipei City'
+        ) {
+          currentCity = 'taipei'
+        } else {
+          currentCity = data.results[0].formatted_address
+            .split(', ')
+            .slice(-2, -1)[0]
+            .split(' ')[0]
+            .toLowerCase()
+        }
+        console.log('Current city: ', currentCity)
         // console.log(currentCity[0].slice(0, -1).toLowerCase())
 
         fetch(
@@ -40,13 +47,13 @@ function Home(props) {
             alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
             console.error(error)
           })
+          .finally(() => setIsLoading(false))
       })
       .catch(error =>
         alert(
           '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
         )
       )
-      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
