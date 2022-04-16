@@ -34,6 +34,21 @@ function Picks() {
           .split(' ')[0]
           .toLowerCase()
 
+        fetch(
+          `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
+        )
+          .then(res => res.json())
+          .then(data => {
+            // console.log(data)
+            setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
+          })
+          .catch(error => {
+            alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+            console.error(error)
+          })
+          .finally(() => setIsLoading(false))
+
+        /*
         nomad
           .getCafesByCity(currentCity)
           .then(data => {
@@ -42,6 +57,7 @@ function Picks() {
           })
           .catch(error => alert('無法取得資料庫'))
           .finally(() => setIsLoading(false))
+        */
       })
       .catch(error =>
         alert(

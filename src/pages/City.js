@@ -33,6 +33,20 @@ function City() {
 
   useEffect(() => {
     convertCityName(cityName)
+
+    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${cityName}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('From City: ', data)
+        setCityCafes(data.slice(0, 20))
+      })
+      .catch(error => {
+        alert('無法取得咖啡廳資料庫，請聯繫開發人員')
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
+
+    /*
     nomad
       .getCafesByCity(cityName)
       .then(data => {
@@ -44,6 +58,7 @@ function City() {
         alert('暫無法取得咖啡廳資料，請通知開發人員')
       })
       .finally(() => setIsLoading(false))
+    */
   }, [])
 
   const getSelectedCafes = () => {

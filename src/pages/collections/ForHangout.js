@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
-import nomad from '../../utils/nomadApi'
+// import nomad from '../../utils/nomadApi'
 
 function ForHangout() {
   const [cafesForHangout, setCafesForHangout] = useState([])
@@ -19,6 +19,23 @@ function ForHangout() {
   const labels = ['不限時', '裝潢音樂', '通常有位']
 
   useEffect(() => {
+    fetch('https://ka-pi-server.herokuapp.com/allcafes')
+      .then(res => res.json())
+      .then(data => {
+        const filteredCafes = data.filter(
+          cafe =>
+            cafe.limited_time === 'no' && cafe.music === 5 && cafe.seat === 5
+        )
+        setCafesForHangout(filteredCafes)
+        console.log('From Hangout Page: ', filteredCafes)
+      })
+      .catch(error => {
+        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
+
+    /*
     nomad
       .getAllCafes()
       .then(data => {
@@ -35,6 +52,7 @@ function ForHangout() {
         alert('暫無法取得咖啡廳資料，請通知開發人員')
       })
       .finally(() => setIsLoading(false))
+    */
   }, [])
 
   return (

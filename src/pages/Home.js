@@ -26,11 +26,21 @@ function Home(props) {
           .slice(-2, -1)[0]
           .split(' ')[0]
           .toLowerCase()
+
+        console.log(currentCity)
         // console.log(currentCity[0].slice(0, -1).toLowerCase())
-        nomad
-          .getCafesByCity(currentCity)
-          .then(data => setUserNearbyCafes(data.slice(0, 10)))
-          .catch(error => alert('無法取得資料庫'))
+
+        fetch(
+          `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
+        )
+          .then(res => res.json())
+          .then(data => {
+            setUserNearbyCafes(data.slice(0, 20))
+          })
+          .catch(error => {
+            alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+            console.error(error)
+          })
       })
       .catch(error =>
         alert(

@@ -10,15 +10,6 @@ const cafeIcon = new Icon({
 function Map({ userLatitude, userLongitude, cafes }) {
   // console.log(userLatitude, userLongitude)
 
-  /*
-  useEffect(() => {
-    nomad
-      .getCafesByCity('taipei')
-      .then(json => console.log(json))
-      .catch(error => alert('無法取得資料庫'))
-  }, [])
-  */
-
   return (
     <Box w="100%" h="350px" mb="8">
       <MapContainer
