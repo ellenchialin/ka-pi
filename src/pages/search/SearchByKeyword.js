@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import CafeCard from '../../components/cafe/CafeCard'
-import nomad from '../../utils/nomadApi'
 
 function SearchByKeyword() {
   const [matchedCafes, setMatchedCafes] = useState([])
