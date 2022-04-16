@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 // prettier-ignore
-import { getFirestore,collection,getDocs,query,where,onSnapshot,addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -15,10 +15,15 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export const firebase = {
+  getUser(userId) {
+    const docRef = doc(db, 'users', userId)
+    return getDoc(docRef).then(doc => doc.data())
+  },
   getComments(cafeId) {
     return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(
       docsSnapshot => {
         const commentArray = docsSnapshot.docs.map(doc => ({
+          commentId: doc.data().commentId,
           createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
           userId: doc.data().userId,
           text: doc.data().text,

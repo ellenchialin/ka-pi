@@ -21,6 +21,7 @@ import {
 } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import IGCard from '../components/cafe/IGCard'
+import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 
 function Cafe() {
@@ -32,12 +33,7 @@ function Cafe() {
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
-
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const getAllComments = cafeId => {
-    firebase.getComments(cafeId).then(data => setComments(data))
-  }
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -101,57 +97,11 @@ function Cafe() {
     }
   }
 
-  const Comment = ({ userId, text, date }) => {
-    // 透過 userId 去撈 userName & userPhotoUrl
-    return (
-      <Flex w="100%" direction="column" my="2">
-        <Flex w="100%" justify="space-between" align="center">
-          <Flex align="center">
-            <Image
-              borderRadius="full"
-              boxSize="50px"
-              mr="2"
-              src="https://images.unsplash.com/photo-1567880905822-56f8e06fe630?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"
-              // src={userPhotoUrl}
-              // alt={userName}
-            />
-            <Text fontSize="0.875rem">Dan Abramov</Text>
-          </Flex>
-          <IconButton
-            icon={<RiReplyAllFill />}
-            colorScheme="blackAlpha"
-            fontSize="20px"
-            variant="ghost"
-            aria-label="回覆留言"
-          />
-        </Flex>
-        <Flex justify="space-between" fontSize="0.875rem">
-          <Text>{text}</Text>
-          <Text>{date}</Text>
-        </Flex>
-        <Divider mt="2" />
-      </Flex>
-    )
-  }
-
   const handleAddComment = () => {
     console.log('Add new comment')
     firebase.addComment(cafe.id, 'test123', newComment)
     setNewComment('')
   }
-
-  const dummyComments = [
-    {
-      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
-      createdAt: new Date('2022-04-08').getTime(),
-      text: '座位舒適又安靜，下次會再來！',
-    },
-    {
-      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
-      createdAt: new Date('2022-04-14').getTime(),
-      text: '手沖很讚！',
-    },
-  ]
 
   return (
     <Flex
@@ -398,9 +348,9 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {comments.map((comment, i) => (
+            {comments.map(comment => (
               <Comment
-                key={i}
+                key={comment.commentId}
                 userId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}
