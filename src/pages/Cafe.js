@@ -21,12 +21,14 @@ import {
 } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import IGCard from '../components/cafe/IGCard'
+import { firebase } from '../utils/firebase'
 
 function Cafe() {
   const [cafe, setCafe] = useState({})
   const [igHashtag, setIgHashtag] = useState('')
   const [user, setUser] = useState({})
   const [comment, setComment] = useState('')
+  const [comments, setComments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
@@ -37,7 +39,7 @@ function Cafe() {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
-        console.log('From Cafe Page: ', data)
+        // console.log('From Cafe Page: ', data)
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
@@ -59,6 +61,11 @@ function Cafe() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
+  }, [])
+
+  useEffect(() => {
+    setComments(firebase.getComments())
+    // console.log('Comments from Cafe page: ', comments)
   }, [])
 
   // Google maps search url
@@ -95,7 +102,7 @@ function Cafe() {
   const Comment = ({ userId, text, date }) => {
     // 透過 userId 去撈 userName & userPhotoUrl
     return (
-      <Flex w="100%" direction="column">
+      <Flex w="100%" direction="column" my="2">
         <Flex w="100%" justify="space-between" align="center">
           <Flex align="center">
             <Image
@@ -120,8 +127,15 @@ function Cafe() {
           <Text>{text}</Text>
           <Text>{date}</Text>
         </Flex>
+        <Divider mt="2" />
       </Flex>
     )
+  }
+
+  const handleAddComment = () => {
+    console.log('Add comment')
+    firebase.addComment(cafe.id, 'test123', comment)
+    setComment('')
   }
 
   const dummyComments = [
@@ -374,6 +388,7 @@ function Cafe() {
                     <Button
                       variant="ghost"
                       isDisabled={comment === '' ? true : false}
+                      onClick={handleAddComment}
                     >
                       Submit
                     </Button>

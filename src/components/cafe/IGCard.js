@@ -7,6 +7,7 @@ function IGCard() {
         src="https://bit.ly/dan-abramov"
         objectFit="cover"
         alt="網友分享照"
+        borderRadius="lg"
       />
     </AspectRatio>
   )
