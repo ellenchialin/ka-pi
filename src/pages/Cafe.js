@@ -19,6 +19,7 @@ import {
   RiReplyAllFill,
   RiAddFill,
 } from 'react-icons/ri'
+import RatingStat from '../components/cafe/RatingStat'
 import IGCard from '../components/cafe/IGCard'
 
 function Cafe() {
@@ -89,44 +90,6 @@ function Cafe() {
     } else if (standing === 'yes') {
       return '部分'
     }
-  }
-
-  const SecondaryFeatureStat = ({ feature1, feature2 }) => {
-    return (
-      <Flex
-        w="250px"
-        maxW={{ base: '300px', md: '500px' }}
-        h="100%"
-        minH="100px"
-        align="center"
-        justify="center"
-        color="gray.700"
-        p="2"
-        mb="6"
-      >
-        <Flex w="100%" h="50px" justify="space-evenly">
-          <Flex align="center">
-            <Flex direction="column">
-              <Text fontSize="0.875rem">{feature1.name}</Text>
-              <Heading as="h6" size="sm">
-                {feature1.value}
-              </Heading>
-            </Flex>
-          </Flex>
-
-          <Divider size="1em" orientation="vertical" colorScheme="blackAlpha" />
-
-          <Flex align="center">
-            <Flex direction="column">
-              <Text fontSize="0.875rem">{feature2.name}</Text>
-              <Heading as="h6" size="sm">
-                {feature2.value}
-              </Heading>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
-    )
   }
 
   const Comment = ({ userId, text, date }) => {
@@ -341,14 +304,14 @@ function Cafe() {
           </Flex>
 
           <Flex direction={{ base: 'column', sm: 'row' }}>
-            <SecondaryFeatureStat
+            <RatingStat
               feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
               feature2={{
                 name: '價格親民',
                 value: cafe.cheap,
               }}
             />
-            <SecondaryFeatureStat
+            <RatingStat
               feature1={{ name: '安靜程度', value: cafe.quiet }}
               feature2={{
                 name: '裝潢音樂',
