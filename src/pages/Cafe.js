@@ -19,28 +19,34 @@ import {
   RiReplyAllFill,
   RiAddFill,
 } from 'react-icons/ri'
+import RatingStat from '../components/cafe/RatingStat'
 import IGCard from '../components/cafe/IGCard'
+import Comment from '../components/cafe/Comment'
+import { firebase } from '../utils/firebase'
 
 function Cafe() {
   const [cafe, setCafe] = useState({})
-  const [igHashtag, setIgHashtag] = useState('')
-  const [user, setUser] = useState({})
-  const [comment, setComment] = useState('')
+  // const [igHashtag, setIgHashtag] = useState('')
+  // const [user, setUser] = useState({})
+  const [newComment, setNewComment] = useState('')
+  const [comments, setComments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
-        console.log('From Cafe Page: ', data)
+        // console.log('From Cafe Page: ', data)
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
-        /*
+        firebase.getComments(cafe.id).then(data => setComments(data))
+
+        /* BUG
+        // 無法取得 api 傳回來的資料
         const searchHashtag = cafe.name.split(' ').join('')
         fetch(`https://ka-pi-server.herokuapp.com/igPosts/${searchHashtag}`)
           .then(res => {
@@ -91,88 +97,11 @@ function Cafe() {
     }
   }
 
-  const SecondaryFeatureStat = ({ feature1, feature2 }) => {
-    return (
-      <Flex
-        w="250px"
-        maxW={{ base: '300px', md: '500px' }}
-        h="100%"
-        minH="100px"
-        align="center"
-        justify="center"
-        color="gray.700"
-        p="2"
-        mb="6"
-      >
-        <Flex w="100%" h="50px" justify="space-evenly">
-          <Flex align="center">
-            <Flex direction="column">
-              <Text fontSize="0.875rem">{feature1.name}</Text>
-              <Heading as="h6" size="sm">
-                {feature1.value}
-              </Heading>
-            </Flex>
-          </Flex>
-
-          <Divider size="1em" orientation="vertical" colorScheme="blackAlpha" />
-
-          <Flex align="center">
-            <Flex direction="column">
-              <Text fontSize="0.875rem">{feature2.name}</Text>
-              <Heading as="h6" size="sm">
-                {feature2.value}
-              </Heading>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
-    )
+  const handleAddComment = () => {
+    console.log('Add new comment')
+    firebase.addComment(cafe.id, 'test123', newComment)
+    setNewComment('')
   }
-
-  const Comment = ({ userId, text, date }) => {
-    // 透過 userId 去撈 userName & userPhotoUrl
-    return (
-      <Flex w="100%" direction="column">
-        <Flex w="100%" justify="space-between" align="center">
-          <Flex align="center">
-            <Image
-              borderRadius="full"
-              boxSize="50px"
-              mr="2"
-              src="https://images.unsplash.com/photo-1567880905822-56f8e06fe630?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"
-              // src={userPhotoUrl}
-              // alt={userName}
-            />
-            <Text fontSize="0.875rem">Dan Abramov</Text>
-          </Flex>
-          <IconButton
-            icon={<RiReplyAllFill />}
-            colorScheme="blackAlpha"
-            fontSize="20px"
-            variant="ghost"
-            aria-label="回覆留言"
-          />
-        </Flex>
-        <Flex justify="space-between" fontSize="0.875rem">
-          <Text>{text}</Text>
-          <Text>{date}</Text>
-        </Flex>
-      </Flex>
-    )
-  }
-
-  const dummyComments = [
-    {
-      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
-      createdAt: new Date('2022-04-08').getTime(),
-      text: '座位舒適又安靜，下次會再來！',
-    },
-    {
-      userId: 'T8mrD2k0lueZzGlzjKlPUu3Yzbj1',
-      createdAt: new Date('2022-04-14').getTime(),
-      text: '手沖很讚！',
-    },
-  ]
 
   return (
     <Flex
@@ -341,14 +270,14 @@ function Cafe() {
           </Flex>
 
           <Flex direction={{ base: 'column', sm: 'row' }}>
-            <SecondaryFeatureStat
+            <RatingStat
               feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
               feature2={{
                 name: '價格親民',
                 value: cafe.cheap,
               }}
             />
-            <SecondaryFeatureStat
+            <RatingStat
               feature1={{ name: '安靜程度', value: cafe.quiet }}
               feature2={{
                 name: '裝潢音樂',
@@ -387,8 +316,8 @@ function Cafe() {
                   <ModalCloseButton />
                   <ModalBody>
                     <Textarea
-                      value={comment}
-                      onChange={e => setComment(e.target.value)}
+                      value={newComment}
+                      onChange={e => setNewComment(e.target.value)}
                       placeholder="Leave your comment here..."
                       size="md"
                       mt="10"
@@ -410,7 +339,8 @@ function Cafe() {
                   <ModalFooter>
                     <Button
                       variant="ghost"
-                      isDisabled={comment === '' ? true : false}
+                      isDisabled={newComment === '' ? true : false}
+                      onClick={handleAddComment}
                     >
                       Submit
                     </Button>
@@ -418,9 +348,9 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {dummyComments.map(comment => (
+            {comments.map(comment => (
               <Comment
-                key={comment.createdAt}
+                key={comment.commentId}
                 userId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}
