@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 // prettier-ignore
 import { getFirestore, collection, getDoc, getDocs, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
 
@@ -12,6 +13,7 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+const auth = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export const firebase = {

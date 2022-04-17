@@ -21,23 +21,26 @@ function Map({ userLatitude, userLongitude, cafes }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[userLatitude, userLongitude]}>
-          <Popup>當前位置</Popup>
-        </Marker>
-        {cafes.map(cafe => (
-          <Marker
-            key={cafe.id}
-            position={[cafe.latitude, cafe.longitude]}
-            icon={cafeIcon}
-          >
-            <Popup position={[cafe.latitude, cafe.longitude]}>
-              <div>
-                <h4>{cafe.name}</h4>
-                <p>{cafe.address}</p>
-              </div>
-            </Popup>
+        {userLatitude && userLongitude && (
+          <Marker position={[userLatitude, userLongitude]}>
+            <Popup>當前位置</Popup>
           </Marker>
-        ))}
+        )}
+        {cafes &&
+          cafes.map(cafe => (
+            <Marker
+              key={cafe.id}
+              position={[cafe.latitude, cafe.longitude]}
+              icon={cafeIcon}
+            >
+              <Popup position={[cafe.latitude, cafe.longitude]}>
+                <div>
+                  <h4>{cafe.name}</h4>
+                  <p>{cafe.address}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
       </MapContainer>
     </Box>
   )
