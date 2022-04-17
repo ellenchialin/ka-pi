@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 
 import { firebase } from '../utils/firebase'
 
-function Auth() {
+function Auth({ setIsSignedIn }) {
   const navigate = useNavigate()
 
   const SignTabs = () => {
@@ -40,53 +40,47 @@ function Auth() {
         .required('Password is required'),
     })
 
+    const signIn = (email, password) => {
+      console.log('From auth page, sign in: ', email, password)
+
+      firebase.nativeSignIn(email, password).then(user => {
+        console.log('From auth page, sign in: ', user)
+        setIsSignedIn(true)
+        navigate('/user')
+      })
+    }
+
     return (
       <Flex direction="column" align="center">
         <Flex w="100%" direction="column">
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={SigninSchema}
-            onSubmit={({ setSubmitting }) => {
-              alert('Form is validated! Submitting the form...')
-              setSubmitting(false)
+            onSubmit={(values, { resetForm }) => {
+              console.log('Sign in input: ', values)
+              const { email, password } = values
+              signIn(email, password)
+              resetForm()
             }}
           >
-            {props => (
-              <Form>
+            {({ handleSubmit, errors, touched }) => (
+              <Form onSubmit={handleSubmit}>
                 <Flex direction="column" align="center">
-                  <Field type="email" name="email">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={form.errors.email && form.touched.email}
-                        mb="2"
-                      >
-                        <FormLabel htmlFor="email">Email</FormLabel>
-                        <Input {...field} type="email" id="email" />
-                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Field type="password" name="password">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.password && form.touched.password
-                        }
-                      >
-                        <FormLabel htmlFor="password">Password</FormLabel>
-                        <Input {...field} type="password" id="password" />
-                        <FormErrorMessage>
-                          {form.errors.password}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  <Button
-                    mt={4}
-                    colorScheme="facebook"
-                    isLoading={props.isSubmitting}
-                    type="submit"
+                  <FormControl isInvalid={errors.email && touched.email} mb="2">
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <Field as={Input} type="email" name="email" />
+                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl
+                    isInvalid={errors.password && touched.password}
+                    mb="2"
                   >
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Field as={Input} type="password" name="password" />
+                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                  </FormControl>
+                  <Button mt={4} colorScheme="facebook" type="submit">
                     Sign In
                   </Button>
                 </Flex>
@@ -128,7 +122,9 @@ function Auth() {
     })
 
     const signUp = (name, email, password) => {
-      firebase.nativeSignUp(name, email, password).then(() => navigate('user'))
+      firebase.nativeSignUp(name, email, password)
+      setIsSignedIn(true)
+      // navigate('/user')
     }
 
     return (
@@ -138,7 +134,7 @@ function Auth() {
             initialValues={{ name: '', email: '', password: '' }}
             validationSchema={SignupSchema}
             onSubmit={values => {
-              console.log(values)
+              // console.log(values)
               const { name, email, password } = values
               signUp(name, email, password)
             }}
@@ -148,13 +144,13 @@ function Auth() {
                 <Flex direction="column" align="center">
                   <FormControl isInvalid={errors.name && touched.name} mb="2">
                     <FormLabel htmlFor="name">Name</FormLabel>
-                    <Field as={Input} id="name" name="name" type="text" />
+                    <Field as={Input} name="name" type="text" />
                     <FormErrorMessage>{errors.name}</FormErrorMessage>
                   </FormControl>
 
                   <FormControl isInvalid={errors.email && touched.email} mb="2">
                     <FormLabel htmlFor="email">Email</FormLabel>
-                    <Field as={Input} id="email" name="email" type="email" />
+                    <Field as={Input} name="email" type="email" />
                     <FormErrorMessage>{errors.email}</FormErrorMessage>
                   </FormControl>
 
@@ -163,39 +159,9 @@ function Auth() {
                     mb="2"
                   >
                     <FormLabel htmlFor="password">Password</FormLabel>
-                    <Field
-                      as={Input}
-                      id="password"
-                      name="password"
-                      type="password"
-                    />
+                    <Field as={Input} name="password" type="password" />
                     <FormErrorMessage>{errors.password}</FormErrorMessage>
                   </FormControl>
-
-                  {/*
-                  <Field type="password" name="password">
-                    {({ field, form }) => (
-                      <FormControl
-                        isInvalid={
-                          form.errors.password && form.touched.password
-                        }
-                      >
-                        <FormLabel htmlFor="password">Password</FormLabel>
-                        <Input
-                          {...field}
-                          type="password"
-                          id="password"
-                          value={password}
-                          onChange={e => setPassword(e.target.value)}
-                        />
-                        <FormErrorMessage>
-                          {form.errors.password}
-                        </FormErrorMessage>
-                      </FormControl>
-                    )}
-                  </Field>
-                  */}
-
                   <Button mt={4} type="submit" colorScheme="facebook">
                     Sign up
                   </Button>

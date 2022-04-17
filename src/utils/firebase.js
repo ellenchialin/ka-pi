@@ -8,7 +8,6 @@ import {
 } from 'firebase/auth'
 // prettier-ignore
 import { getFirestore, collection, getDoc, getDocs, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
-import { Navigate } from 'react-router-dom'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -25,57 +24,74 @@ const db = getFirestore(app)
 
 export const firebase = {
   checkAuthState() {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        return user
-      }
+    return new Promise(resolve => {
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          console.log('From Check state: ', user)
+          console.log('From Check state: ', user.uid)
+          resolve(user.uid)
+        }
+      })
     })
   },
   nativeSignUp(name, email, password) {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        const user = userCredential.user
-        console.log(user)
-        setDoc(doc(db, 'users', user.uid), {
-          email: user.email,
-          name,
-          favCafes: [],
-          photo: '',
+    return new Promise(resolve => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user
+          console.log('Signed Up', user.uid)
+
+          setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            name,
+            favCafes: [],
+            photo: '',
+          })
+
+          resolve(user.uid)
         })
-      })
-      .catch(error => alert(error.message))
+        .catch(error => alert(error.message))
+    })
   },
   nativeSignIn(email, password) {
-    return signInWithEmailAndPassword(auth, email, password).then(
-      userCredential => {
-        const user = userCredential.user
-        getDoc(doc(db, 'users', user.uid))
-          .then(docsnap => {
-            if (!docsnap.exists()) {
-              alert('尚未擁有帳號，請先註冊')
-              return
-            }
-            console.log(docsnap)
-            return docsnap
-          })
-          .catch(error => alert(error.message))
-      }
-    )
-  },
-  signout() {
-    signOut(auth)
-      .then(() => console.log('Logged out'))
-      .catch(error => alert(error))
+    return new Promise(resolve => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user
+
+          resolve(user)
+        })
+        .catch(error => alert(error.message))
+    })
   },
   getUser(id) {
-    const docRef = doc(db, 'users', id)
-    getDoc(docRef)
-      .then(docsnap => {
-        if (docsnap.exists()) {
-          console.log(docsnap.data())
-        }
-      })
-      .catch(error => console.error(error))
+    return new Promise(resolve => {
+      // console.log('Inside getUser func')
+      getDoc(doc(db, 'users', id))
+        .then(docsnap => {
+          if (docsnap.exists()) {
+            // console.log('Get User: ', docsnap.data())
+            resolve(docsnap.data())
+          } else {
+            alert('尚未擁有帳號，請先註冊')
+            return
+          }
+        })
+        .catch(error => alert(error.message))
+    })
+  },
+  signout() {
+    return new Promise(resolve => {
+      signOut(auth)
+        .then(() => {
+          console.log('Logged out')
+          resolve()
+        })
+        .catch(error => {
+          alert('登出失敗，請重新嘗試')
+          console.error(error)
+        })
+    })
   },
   getComments(cafeId) {
     return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(

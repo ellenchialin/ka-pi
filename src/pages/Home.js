@@ -79,6 +79,7 @@ function Home(props) {
           來點 ka-pi
         </Heading>
         <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
+
         {isLoading ? (
           <Spinner
             thickness="4px"

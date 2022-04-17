@@ -32,18 +32,15 @@ function App() {
   const [userId, setUserId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  console.log('Sign in state: ', isSignedIn)
-
   useEffect(() => {
-    const user = firebase.checkAuthState()
-    if (user) {
-      console.log(user)
+    firebase.checkAuthState().then(userId => {
+      setUserId(userId)
       setIsSignedIn(true)
-      setUserId(user.uid)
-    } else {
-      setIsSignedIn(false)
-    }
+      console.log('From App Effect: ', userId)
+    })
   }, [])
+
+  console.log('Sign in state: ', isSignedIn)
 
   return (
     <BrowserRouter>
@@ -88,13 +85,25 @@ function App() {
                 <Route
                   path="/user"
                   element={
-                    isSignedIn ? <User /> : <Navigate to="/auth" replace />
+                    isSignedIn ? (
+                      <User
+                        userId={userId}
+                        setUserId={setUserId}
+                        setIsSignedIn={setIsSignedIn}
+                      />
+                    ) : (
+                      <Navigate to="/auth" replace />
+                    )
                   }
                 />
                 <Route
                   path="/auth"
                   element={
-                    isSignedIn ? <Navigate to="/user" replace /> : <Auth />
+                    isSignedIn ? (
+                      <Navigate to="/user" replace />
+                    ) : (
+                      <Auth setIsSignedIn={setIsSignedIn} />
+                    )
                   }
                 />
                 <Route path="*" element={<NoMatch />} />
