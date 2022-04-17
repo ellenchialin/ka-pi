@@ -1,32 +1,16 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, FormControl, FormLabel, FormErrorMessage, Image, Text, Spinner, Icon, IconButton, Button, Tabs, TabList, Tab, TabPanels, TabPanel, useDisclosure, Modal, ModalOverlay, ModalContent, ModalFooter, ModalBody, ModalCloseButton, Input, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react'
-import { AiOutlineMessage } from 'react-icons/ai'
-// import { FaFacebookF, FaGoogle } from 'react-icons/fa'
-// import { useFormik, Formik, Form, Field } from 'formik'
-// import * as Yup from 'yup'
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, IconButton, Text } from "@chakra-ui/react"
+import { FaFacebookF, FaGoogle } from 'react-icons/fa'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+
 import { firebase } from '../utils/firebase'
 
-function User({ userId }) {
-  const [currentUser, setCurrentUser] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
-  // const { isOpen, onOpen, onClose } = useDisclosure()
-
+function Auth() {
   const navigate = useNavigate()
 
-  useEffect(() => {
-    setIsLoading(false)
-    // firebase.getUser(userId)
-  }, [])
-
-  const handleSignout = () => {
-    firebase.signout()
-    navigate('/auth')
-  }
-
-  /*
-  const SignTabs = ({ setIsSignedIn }) => {
+  const SignTabs = () => {
     return (
       <Tabs align="center">
         <TabList>
@@ -36,17 +20,17 @@ function User({ userId }) {
 
         <TabPanels>
           <TabPanel>
-            <SignInForm setIsSignedIn={setIsSignedIn} setCurrentUser={setCurrentUser} />
+            <SignInForm />
           </TabPanel>
           <TabPanel>
-            <SignUpForm setIsSignedIn={setIsSignedIn} setCurrentUser={setCurrentUser} />
+            <SignUpForm />
           </TabPanel>
         </TabPanels>
       </Tabs>
     )
   }
 
-  const SignInForm = ({ setIsSignedIn }) => {
+  const SignInForm = () => {
     const SigninSchema = Yup.object().shape({
       email: Yup.string()
         .email('Invalid email address format')
@@ -132,7 +116,7 @@ function User({ userId }) {
     )
   }
 
-  const SignUpForm = ({ setIsSignedIn }) => {
+  const SignUpForm = () => {
     const SignupSchema = Yup.object().shape({
       name: Yup.string().required('Name is required'),
       email: Yup.string()
@@ -144,11 +128,7 @@ function User({ userId }) {
     })
 
     const signUp = (name, email, password) => {
-      firebase
-        .nativeSignUp(name, email, password)
-        .then((user) => {
-          setIsSignedIn(true)
-        })
+      firebase.nativeSignUp(name, email, password).then(() => navigate('user'))
     }
 
     return (
@@ -192,6 +172,7 @@ function User({ userId }) {
                     <FormErrorMessage>{errors.password}</FormErrorMessage>
                   </FormControl>
 
+                  {/*
                   <Field type="password" name="password">
                     {({ field, form }) => (
                       <FormControl
@@ -213,6 +194,7 @@ function User({ userId }) {
                       </FormControl>
                     )}
                   </Field>
+                  */}
 
                   <Button mt={4} type="submit" colorScheme="facebook">
                     Sign up
@@ -225,52 +207,8 @@ function User({ userId }) {
       </Flex>
     )
   }
-  */
 
-  return (
-    <Flex direction="column">
-      {isLoading ? (
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.600"
-          siz="xl"
-          mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-        />
-      ) : (
-        <>
-          <Flex w="100%" align="center" justify="space-between">
-            <Image
-              borderRadius="full"
-              boxSize="90px"
-              src="https://bit.ly/dan-abramov"
-              alt="ellen"
-            />
-            <IconButton
-              colorScheme="blackAlpha"
-              aria-label="查看訊息"
-              fontSize="20px"
-              icon={<AiOutlineMessage />}
-              isRound
-            />
-          </Flex>
-          <Flex align="center" my="2">
-            <Heading as="h4" size="lg" mr="4">
-              ellen
-            </Heading>
-            <Text>ellen@ee.com</Text>
-          </Flex>
-          <Text>共蒐藏 X 間咖啡廳</Text>
-          <Button onClick={handleSignout}>Sign out</Button>
-        </>
-      )}
-    </Flex>
-  )
+  return <SignTabs />
 }
 
-export default User
+export default Auth

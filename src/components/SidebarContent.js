@@ -96,10 +96,10 @@ function SidebarContent({ onClose, ...rest }) {
           />
         </NavItem>
         <Collapse in={integrations.isOpen}>
-          <NavItem as={NavLink} to="/search" pl="12" py="2">
+          <NavItem as={NavLink} to="search" pl="12" py="2">
             by Keywords
           </NavItem>
-          <NavItem as={NavLink} to="/search/features" pl="12" py="2">
+          <NavItem as={NavLink} to="search/features" pl="12" py="2">
             by Features
           </NavItem>
         </Collapse>
@@ -112,17 +112,17 @@ function SidebarContent({ onClose, ...rest }) {
           />
         </NavItem>
         <Collapse in={integrations.isOpen}>
-          <NavItem as={NavLink} to="/collections/work" pl="12" py="2">
+          <NavItem as={NavLink} to="collections/work" pl="12" py="2">
             for Work
           </NavItem>
-          <NavItem as={NavLink} to="/collections/hangout" pl="12" py="2">
+          <NavItem as={NavLink} to="collections/hangout" pl="12" py="2">
             for HangOut
           </NavItem>
         </Collapse>
-        <NavItem as={NavLink} to="/picks" icon={RiStarSmileLine}>
+        <NavItem as={NavLink} to="picks" icon={RiStarSmileLine}>
           Picks For you
         </NavItem>
-        <NavItem as={NavLink} to="/user" icon={CgCoffee}>
+        <NavItem as={NavLink} to="user" icon={CgCoffee}>
           Your Cafe Map
         </NavItem>
         <Box mt="auto" px="4" pb="5">
