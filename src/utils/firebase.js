@@ -80,18 +80,18 @@ export const firebase = {
         .catch(error => alert(error.message))
     })
   },
-  addFavCafe(userId, cafeId) {
+  saveCafe(userId, cafeId) {
     return new Promise(resolve => {
       updateDoc(doc(db, 'users', userId), {
         favCafes: arrayUnion(cafeId),
       }).then(() => resolve())
     })
   },
-  deleteSavedCafe(userId, updatedCafes) {
+  deleteSavedCafe(userId, cafeId) {
     return new Promise(resolve => {
-      updateDoc(doc(db, 'users', userId), { favCafes: updatedCafes }).then(() =>
-        resolve()
-      )
+      updateDoc(doc(db, 'users', userId), {
+        favCafes: arrayRemove(cafeId),
+      }).then(() => resolve())
     })
   },
   signout() {

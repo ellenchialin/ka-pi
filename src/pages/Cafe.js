@@ -28,6 +28,7 @@ function Cafe({ userId }) {
   console.log('Inside Cafe Page, user ID: ', userId)
 
   const [cafe, setCafe] = useState({})
+  const [toggleSaved, setToggleSaved] = useState(false)
   // const [igHashtag, setIgHashtag] = useState('')
   // const [user, setUser] = useState({})
   const [newComment, setNewComment] = useState('')
@@ -68,6 +69,14 @@ function Cafe({ userId }) {
       .finally(() => setIsLoading(false))
   }, [])
 
+  // Check this cafe is saved by user or not, not to render different icon
+  useEffect(() => {
+    firebase.getUser(userId).then(data => {
+      console.log(data.favCafes.includes(cafe.id))
+      setToggleSaved(data.favCafes.includes(cafe.id))
+    })
+  }, [])
+
   // Google maps search url
   // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z
 
@@ -105,10 +114,17 @@ function Cafe({ userId }) {
     setNewComment('')
   }
 
-  const addCafe = cafeId => {
-    firebase
-      .addFavCafe(userId, cafeId)
-      .then(() => console.log('Cafe added to : ', userId, cafeId))
+  const handleToggleSaved = () => {
+    if (toggleSaved) {
+      firebase
+        .deleteSavedCafe(userId, cafe.id)
+        .then(() => setToggleSaved(prev => !prev))
+    } else {
+      firebase.saveCafe(userId, cafe.id).then(() => {
+        console.log('Cafe added to : ', userId, cafeId)
+        setToggleSaved(prev => !prev)
+      })
+    }
   }
 
   return (
@@ -192,8 +208,14 @@ function Cafe({ userId }) {
               colorScheme="telegram"
               isRound={true}
               aria-label="收藏到我的咖啡廳地圖"
-              icon={<BsBookmark size="22px" />}
-              onClick={() => addCafe(cafe.id)}
+              icon={
+                toggleSaved ? (
+                  <BsFillBookmarkFill size="22px" />
+                ) : (
+                  <BsBookmark size="22px" />
+                )
+              }
+              onClick={handleToggleSaved}
             ></IconButton>
           </Flex>
 
