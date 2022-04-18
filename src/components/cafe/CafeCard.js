@@ -7,11 +7,13 @@ import {
   Badge,
   Heading,
   Text,
+  IconButton,
 } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
+import { RiDeleteBin5Line } from 'react-icons/ri'
 
-function CafeCard({ cafe }) {
+function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
   return (
     <>
       <Box
@@ -23,10 +25,10 @@ function CafeCard({ cafe }) {
         borderWidth="1px"
         rounded="lg"
         shadow="lg"
-        position="relative"
         mb="6"
+        position="relative"
       >
-        <AspectRatio maxW="100%" ratio={1 / 1}>
+        <AspectRatio maxW="100%" ratio={1}>
           <Image
             src="https://images.unsplash.com/photo-1534201569625-ed4662d8be97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=411&q=80"
             alt={`${cafe.name} 店內照片`}
@@ -34,6 +36,20 @@ function CafeCard({ cafe }) {
             objectFit="cover"
           />
         </AspectRatio>
+        {canDeleteCafe && (
+          <IconButton
+            icon={<RiDeleteBin5Line />}
+            aria-label="刪除此蒐藏"
+            fontSize="20px"
+            position="absolute"
+            top="10px"
+            right="10px"
+            variant="solid"
+            colorScheme="blackAlpha"
+            size="sm"
+            onClick={handleDelete}
+          />
+        )}
 
         <Box p="4">
           <Flex alignItems="center" justifyContent="space-between">

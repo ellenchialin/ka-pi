@@ -50,9 +50,7 @@ function Home(props) {
           .finally(() => setIsLoading(false))
       })
       .catch(error =>
-        alert(
-          '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
-        )
+        alert('無法取得當前位置，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖')
       )
   }
 
@@ -79,6 +77,7 @@ function Home(props) {
           來點 ka-pi
         </Heading>
         <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
+
         {isLoading ? (
           <Spinner
             thickness="4px"

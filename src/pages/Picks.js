@@ -26,18 +26,25 @@ function Picks() {
     )
       .then(res => res.json())
       .then(data => {
-        const currentCity = data.results[0].formatted_address
-          .split(', ')
-          .slice(-2, -1)[0]
-          .split(' ')[0]
-          .toLowerCase()
+        let currentCity = ''
+        if (
+          data.results[0].formatted_address.split(', ').slice(-2, -1)[0] ===
+          'New Taipei City'
+        ) {
+          currentCity = 'taipei'
+        } else {
+          currentCity = data.results[0].formatted_address
+            .split(', ')
+            .slice(-2, -1)[0]
+            .split(' ')[0]
+            .toLowerCase()
+        }
 
         fetch(
           `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
         )
           .then(res => res.json())
           .then(data => {
-            // console.log(data)
             setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
           })
           .catch(error => {

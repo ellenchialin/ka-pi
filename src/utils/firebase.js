@@ -1,6 +1,13 @@
 import { initializeApp } from 'firebase/app'
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -12,12 +19,93 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
 const db = getFirestore(app)
 
 export const firebase = {
-  getUser(userId) {
-    const docRef = doc(db, 'users', userId)
-    return getDoc(docRef).then(doc => doc.data())
+  checkAuthState() {
+    return new Promise(resolve => {
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          console.log('From Check state: ', user)
+          console.log('From Check state: ', user.uid)
+          resolve(user.uid)
+        }
+      })
+    })
+  },
+  nativeSignUp(name, email, password) {
+    return new Promise(resolve => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user
+          console.log('Signed Up', user.uid)
+
+          setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            name,
+            favCafes: [],
+            photo: '',
+          })
+
+          resolve(user.uid)
+        })
+        .catch(error => alert(error.message))
+    })
+  },
+  nativeSignIn(email, password) {
+    return new Promise(resolve => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user
+
+          resolve(user)
+        })
+        .catch(error => alert(error.message))
+    })
+  },
+  getUser(id) {
+    return new Promise(resolve => {
+      // console.log('Inside getUser func')
+      getDoc(doc(db, 'users', id))
+        .then(docsnap => {
+          if (docsnap.exists()) {
+            // console.log('Get User: ', docsnap.data())
+            resolve(docsnap.data())
+          } else {
+            alert('尚未擁有帳號，請先註冊')
+            return
+          }
+        })
+        .catch(error => alert(error.message))
+    })
+  },
+  addFavCafe(userId, cafeId) {
+    return new Promise(resolve => {
+      updateDoc(doc(db, 'users', userId), {
+        favCafes: arrayUnion(cafeId),
+      }).then(() => resolve())
+    })
+  },
+  deleteSavedCafe(userId, updatedCafes) {
+    return new Promise(resolve => {
+      updateDoc(doc(db, 'users', userId), { favCafes: updatedCafes }).then(() =>
+        resolve()
+      )
+    })
+  },
+  signout() {
+    return new Promise(resolve => {
+      signOut(auth)
+        .then(() => {
+          console.log('Logged out')
+          resolve()
+        })
+        .catch(error => {
+          alert('登出失敗，請重新嘗試')
+          console.error(error)
+        })
+    })
   },
   getComments(cafeId) {
     return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(

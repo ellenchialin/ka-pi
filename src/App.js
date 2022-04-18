@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import {
   ChakraProvider,
   Box,
@@ -11,22 +11,36 @@ import {
 } from '@chakra-ui/react'
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
+import { firebase } from './utils/firebase'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
 import ForWork from './pages/collections/ForWork'
 import ForHangout from './pages/collections/ForHangout'
 import Picks from './pages/Picks'
+import Auth from './pages/Auth'
 import User from './pages/User'
 import City from './pages/City'
 import Cafe from './pages/Cafe'
 import SearchByKeyword from './pages/search/SearchByKeyword'
-import NoMatch from './pages/NoMatch'
 import SearchByFeature from './pages/search/SearchByFeature'
+import NoMatch from './pages/NoMatch'
 
 function App() {
   const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
+  const [isSignedIn, setIsSignedIn] = useState(false)
+  const [userId, setUserId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    firebase.checkAuthState().then(userId => {
+      setUserId(userId)
+      setIsSignedIn(true)
+      console.log('From App Effect: ', userId)
+    })
+  }, [isSignedIn])
+
+  console.log('Sign in state: ', isSignedIn)
 
   return (
     <BrowserRouter>
@@ -53,7 +67,7 @@ function App() {
                     />
                   }
                 />
-                <Route path="/collections">
+                <Route path="collections">
                   <Route path="work" element={<ForWork />} />
                   <Route path="hangout" element={<ForHangout />} />
                 </Route>
@@ -65,10 +79,33 @@ function App() {
                   <Route path="features" element={<SearchByFeature />} />
                 </Route>
                 <Route path="cafe">
-                  <Route path=":cafeId" element={<Cafe />} />
+                  <Route path=":cafeId" element={<Cafe userId={userId} />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
-                <Route path="user" element={<User />} />
+                <Route
+                  path="/user"
+                  element={
+                    isSignedIn ? (
+                      <User
+                        userId={userId}
+                        setUserId={setUserId}
+                        setIsSignedIn={setIsSignedIn}
+                      />
+                    ) : (
+                      <Navigate to="/auth" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/auth"
+                  element={
+                    isSignedIn ? (
+                      <Navigate to="/user" replace />
+                    ) : (
+                      <Auth setIsSignedIn={setIsSignedIn} />
+                    )
+                  }
+                />
                 <Route path="*" element={<NoMatch />} />
               </Routes>
             </Box>
