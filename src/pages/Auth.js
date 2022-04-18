@@ -46,7 +46,6 @@ function Auth({ setIsSignedIn }) {
       firebase.nativeSignIn(email, password).then(user => {
         console.log('From auth page, sign in: ', user)
         setIsSignedIn(true)
-        // navigate('/user')
       })
     }
 
@@ -122,9 +121,9 @@ function Auth({ setIsSignedIn }) {
     })
 
     const signUp = (name, email, password) => {
-      firebase.nativeSignUp(name, email, password)
-      setIsSignedIn(true)
-      // navigate('/user')
+      firebase
+        .nativeSignUp(name, email, password)
+        .then(() => setIsSignedIn(true))
     }
 
     return (
