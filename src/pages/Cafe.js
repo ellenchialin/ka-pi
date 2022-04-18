@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import {
-  Flex,Heading,Box,Image,Text,Spinner,Icon,IconButton, Button,Link,Divider,useDisclosure,Modal,ModalOverlay,ModalContent,Textarea,ModalFooter,ModalBody,ModalCloseButton,Input,InputLeftElement,InputGroup,
-} from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure,Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import {
   BsBookmark,
@@ -33,10 +31,17 @@ function Cafe({ userId }) {
   // const [user, setUser] = useState({})
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
+  const [showAlert, setShowAlert] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
+  const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -115,6 +120,14 @@ function Cafe({ userId }) {
   }
 
   const handleToggleSaved = () => {
+    if (!userId) {
+      // alert('Oops! 目前尚未登入，請先前往登入或註冊，')
+      // setShowAlert(true)
+      onAlertOpen()
+      console.log('Show alert')
+      return
+    }
+
     if (toggleSaved) {
       firebase
         .deleteSavedCafe(userId, cafe.id)
@@ -388,6 +401,26 @@ function Cafe({ userId }) {
               />
             ))}
           </Flex>
+
+          <Modal
+            onClose={onAlertClose}
+            size="md"
+            isOpen={isAlertOpen}
+            isCentered
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Oops! 尚未登入</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>請先登入或註冊，即可開始蒐藏咖啡廳：）</ModalBody>
+              <ModalFooter>
+                <Button onClick={() => navigate('/auth')}>前往登入</Button>
+                <Button onClick={onAlertClose} ml="3">
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </>
       )}
     </Flex>
