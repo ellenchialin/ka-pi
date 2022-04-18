@@ -82,13 +82,8 @@ function User({ userId, setUserId, setIsSignedIn }) {
 
     setUpdatedCafeList(updatedList)
     getFavCafes(updatedList)
+    firebase.deleteSavedCafe(userId, deletedCafeId)
   }
-
-  const updateDBCafes = () => {
-    firebase.deleteSavedCafe(userId, updatedCafeList)
-  }
-
-  useUpdateEffect(updateDBCafes, updatedCafeList)
 
   return (
     <Flex direction="column" position="relative">

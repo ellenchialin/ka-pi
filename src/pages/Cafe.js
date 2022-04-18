@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import {
-  Flex,Heading,Box,Image,Text,Spinner,Icon,IconButton, Button,Link,Divider,useDisclosure,Modal,ModalOverlay,ModalContent,Textarea,ModalFooter,ModalBody,ModalCloseButton,Input,InputLeftElement,InputGroup,
-} from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure,Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import {
   BsBookmark,
@@ -28,14 +26,19 @@ function Cafe({ userId }) {
   console.log('Inside Cafe Page, user ID: ', userId)
 
   const [cafe, setCafe] = useState({})
-  // const [igHashtag, setIgHashtag] = useState('')
-  // const [user, setUser] = useState({})
+  const [toggleSaved, setToggleSaved] = useState(false)
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
+  const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -66,6 +69,14 @@ function Cafe({ userId }) {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
+  }, [])
+
+  // Check this cafe is saved by user or not and render init icon
+  useEffect(() => {
+    firebase.getUser(userId).then(data => {
+      console.log(data.favCafes.includes(cafe.id))
+      setToggleSaved(data.favCafes.includes(cafe.id))
+    })
   }, [])
 
   // Google maps search url
@@ -105,10 +116,23 @@ function Cafe({ userId }) {
     setNewComment('')
   }
 
-  const addCafe = cafeId => {
-    firebase
-      .addFavCafe(userId, cafeId)
-      .then(() => console.log('Cafe added to : ', userId, cafeId))
+  const handleToggleSaved = () => {
+    if (!userId) {
+      onAlertOpen()
+      console.log('Show alert')
+      return
+    }
+
+    if (toggleSaved) {
+      firebase
+        .deleteSavedCafe(userId, cafe.id)
+        .then(() => setToggleSaved(prev => !prev))
+    } else {
+      firebase.saveCafe(userId, cafe.id).then(() => {
+        console.log('Cafe added to : ', userId, cafeId)
+        setToggleSaved(prev => !prev)
+      })
+    }
   }
 
   return (
@@ -192,8 +216,14 @@ function Cafe({ userId }) {
               colorScheme="telegram"
               isRound={true}
               aria-label="收藏到我的咖啡廳地圖"
-              icon={<BsBookmark size="22px" />}
-              onClick={() => addCafe(cafe.id)}
+              icon={
+                toggleSaved ? (
+                  <BsFillBookmarkFill size="22px" />
+                ) : (
+                  <BsBookmark size="22px" />
+                )
+              }
+              onClick={handleToggleSaved}
             ></IconButton>
           </Flex>
 
@@ -366,6 +396,26 @@ function Cafe({ userId }) {
               />
             ))}
           </Flex>
+
+          <Modal
+            onClose={onAlertClose}
+            size="md"
+            isOpen={isAlertOpen}
+            isCentered
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Oops! 尚未登入</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>請先登入或註冊，即可開始蒐藏咖啡廳：）</ModalBody>
+              <ModalFooter>
+                <Button onClick={() => navigate('/auth')}>前往登入</Button>
+                <Button onClick={onAlertClose} ml="3">
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </>
       )}
     </Flex>
