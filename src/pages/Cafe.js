@@ -27,11 +27,8 @@ function Cafe({ userId }) {
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
-  // const [igHashtag, setIgHashtag] = useState('')
-  // const [user, setUser] = useState({})
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
-  const [showAlert, setShowAlert] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
@@ -74,7 +71,7 @@ function Cafe({ userId }) {
       .finally(() => setIsLoading(false))
   }, [])
 
-  // Check this cafe is saved by user or not, not to render different icon
+  // Check this cafe is saved by user or not and render init icon
   useEffect(() => {
     firebase.getUser(userId).then(data => {
       console.log(data.favCafes.includes(cafe.id))
@@ -121,8 +118,6 @@ function Cafe({ userId }) {
 
   const handleToggleSaved = () => {
     if (!userId) {
-      // alert('Oops! 目前尚未登入，請先前往登入或註冊，')
-      // setShowAlert(true)
       onAlertOpen()
       console.log('Show alert')
       return
