@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
-import useFilterEffect from '../hooks/useFilterEffect'
+import useUpdateEffect from '../hooks/useUpdateEffect'
 import { cityData } from '../cityData'
 
 function City() {
@@ -60,7 +60,7 @@ function City() {
     }
   }
 
-  useFilterEffect(getSelectedCafes, selectedAreas)
+  useUpdateEffect(getSelectedCafes, selectedAreas)
 
   return (
     <Flex as="section" direction="column" align="center">

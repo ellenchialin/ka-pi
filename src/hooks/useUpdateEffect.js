@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-function useFilterEffect(callback, dependencies) {
+function useUpdateEffect(callback, dependencies) {
   const firstRenderRef = useRef(true)
 
   useEffect(() => {
@@ -12,4 +12,4 @@ function useFilterEffect(callback, dependencies) {
   }, [dependencies])
 }
 
-export default useFilterEffect
+export default useUpdateEffect

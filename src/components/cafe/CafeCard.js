@@ -13,7 +13,7 @@ import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 
-function CafeCard({ cafe, canDeleteCafe }) {
+function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
   return (
     <>
       <Box
@@ -47,6 +47,7 @@ function CafeCard({ cafe, canDeleteCafe }) {
             variant="solid"
             colorScheme="blackAlpha"
             size="sm"
+            onClick={handleDelete}
           />
         )}
 

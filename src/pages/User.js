@@ -6,6 +6,7 @@ import { AiOutlineMessage } from 'react-icons/ai'
 import { firebase } from '../utils/firebase'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
+import useUpdateEffect from '../hooks/useUpdateEffect'
 
 function User({ userId, setUserId, setIsSignedIn }) {
   console.log('In User Page, current user id: ', userId)
@@ -14,6 +15,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
   const [userLongitude, setUserLongitude] = useState(null)
   const [currentUser, setCurrentUser] = useState({})
   const [savedCafes, setSavedCafes] = useState([])
+  const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -71,6 +73,23 @@ function User({ userId, setUserId, setIsSignedIn }) {
     })
   }
 
+  const deleteCafe = deletedCafeId => {
+    const updatedList = savedCafes
+      .filter(cafe => cafe.id !== deletedCafeId)
+      .map(cafe => cafe.id)
+
+    // console.log('Updated cafe id List: ', updatedList)
+
+    setUpdatedCafeList(updatedList)
+    getFavCafes(updatedList)
+  }
+
+  const updateDBCafes = () => {
+    firebase.deleteSavedCafe(userId, updatedCafeList)
+  }
+
+  useUpdateEffect(updateDBCafes, updatedCafeList)
+
   return (
     <Flex direction="column" position="relative">
       {isLoading ? (
@@ -111,9 +130,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
             <Text>{currentUser.email}</Text>
           </Flex>
           <Text>
-            共蒐藏{' '}
-            {currentUser.favCafes.length > 0 ? currentUser.favCafes.length : 0}{' '}
-            間咖啡廳
+            共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間咖啡廳
           </Text>
           <Flex
             w="100%"
@@ -135,6 +152,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
                     key={cafe.id}
                     cafe={cafe}
                     canDeleteCafe={canDeleteCafe}
+                    handleDelete={() => deleteCafe(cafe.id)}
                   />
                 ))}
               </>
