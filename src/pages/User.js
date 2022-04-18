@@ -14,6 +14,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
   const [userLongitude, setUserLongitude] = useState(null)
   const [currentUser, setCurrentUser] = useState({})
   const [savedCafes, setSavedCafes] = useState([])
+  const [canDeleteCafe] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
   const navigate = useNavigate()
@@ -24,7 +25,6 @@ function User({ userId, setUserId, setIsSignedIn }) {
     }
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log('Position: ', position)
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
       },
@@ -44,7 +44,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
           })
         })
         setSavedCafes(cafeList)
-        console.log('User cafes list: ', cafeList)
+        // console.log('User cafes list: ', cafeList)
       })
       .catch(error =>
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
@@ -131,7 +131,11 @@ function User({ userId, setUserId, setIsSignedIn }) {
                 />
 
                 {savedCafes.map(cafe => (
-                  <CafeCard key={cafe.id} cafe={cafe} />
+                  <CafeCard
+                    key={cafe.id}
+                    cafe={cafe}
+                    canDeleteCafe={canDeleteCafe}
+                  />
                 ))}
               </>
             )}
