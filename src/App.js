@@ -38,7 +38,7 @@ function App() {
       setIsSignedIn(true)
       console.log('From App Effect: ', userId)
     })
-  }, [])
+  }, [isSignedIn])
 
   console.log('Sign in state: ', isSignedIn)
 

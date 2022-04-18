@@ -46,7 +46,7 @@ function Auth({ setIsSignedIn }) {
       firebase.nativeSignIn(email, password).then(user => {
         console.log('From auth page, sign in: ', user)
         setIsSignedIn(true)
-        navigate('/user')
+        // navigate('/user')
       })
     }
 
