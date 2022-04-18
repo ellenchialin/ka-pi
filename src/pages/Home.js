@@ -50,9 +50,7 @@ function Home(props) {
           .finally(() => setIsLoading(false))
       })
       .catch(error =>
-        alert(
-          '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
-        )
+        alert('無法取得當前位置，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖')
       )
   }
 

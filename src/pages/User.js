@@ -4,16 +4,35 @@ import { useNavigate } from 'react-router-dom'
 import { Flex, Heading, Image, Text, Spinner, IconButton, Button } from '@chakra-ui/react'
 import { AiOutlineMessage } from 'react-icons/ai'
 import { firebase } from '../utils/firebase'
+import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
 
 function User({ userId, setUserId, setIsSignedIn }) {
   console.log('In User Page, current user id: ', userId)
 
+  const [userLatitude, setUserLatitude] = useState(null)
+  const [userLongitude, setUserLongitude] = useState(null)
   const [currentUser, setCurrentUser] = useState({})
   const [savedCafes, setSavedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+    }
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log('Position: ', position)
+        setUserLatitude(position.coords.latitude)
+        setUserLongitude(position.coords.longitude)
+      },
+      () => {
+        alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
+      }
+    )
+  }, [])
 
   const getFavCafes = cafesId => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -30,6 +49,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
       .catch(error =>
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
       )
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -41,7 +61,6 @@ function User({ userId, setUserId, setIsSignedIn }) {
         getFavCafes(data.favCafes)
       })
       .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
-      .finally(() => setIsLoading(false))
   }, [])
 
   const handleSignout = () => {
@@ -53,7 +72,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" position="relative">
       {isLoading ? (
         <Spinner
           thickness="4px"
@@ -103,9 +122,19 @@ function User({ userId, setUserId, setIsSignedIn }) {
             alignItems="flex-start"
             as="section"
           >
-            {savedCafes.map(cafe => (
-              <CafeCard key={cafe.id} cafe={cafe} />
-            ))}
+            {userLatitude && userLongitude && (
+              <>
+                <Map
+                  userLatitude={userLatitude}
+                  userLongitude={userLongitude}
+                  cafes={savedCafes}
+                />
+
+                {savedCafes.map(cafe => (
+                  <CafeCard key={cafe.id} cafe={cafe} />
+                ))}
+              </>
+            )}
           </Flex>
           <Button onClick={handleSignout}>Sign out</Button>
         </>

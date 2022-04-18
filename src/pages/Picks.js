@@ -45,7 +45,6 @@ function Picks() {
         )
           .then(res => res.json())
           .then(data => {
-            // console.log(data)
             setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
           })
           .catch(error => {

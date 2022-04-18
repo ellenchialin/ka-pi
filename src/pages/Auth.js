@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Tabs, TabList, Tab, TabPanels, TabPanel, Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, IconButton, Text } from "@chakra-ui/react"
 import { FaFacebookF, FaGoogle } from 'react-icons/fa'
@@ -8,8 +7,6 @@ import * as Yup from 'yup'
 import { firebase } from '../utils/firebase'
 
 function Auth({ setIsSignedIn }) {
-  const navigate = useNavigate()
-
   const SignTabs = () => {
     return (
       <Tabs align="center">
