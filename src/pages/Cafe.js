@@ -24,7 +24,9 @@ import IGCard from '../components/cafe/IGCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 
-function Cafe() {
+function Cafe({ userId }) {
+  console.log('Inside Cafe Page, user ID: ', userId)
+
   const [cafe, setCafe] = useState({})
   // const [igHashtag, setIgHashtag] = useState('')
   // const [user, setUser] = useState({})
@@ -101,6 +103,12 @@ function Cafe() {
     console.log('Add new comment')
     firebase.addComment(cafe.id, 'test123', newComment)
     setNewComment('')
+  }
+
+  const addCafe = cafeId => {
+    firebase
+      .addFavCafe(userId, cafeId)
+      .then(() => console.log('Cafe added to : ', userId, cafeId))
   }
 
   return (
@@ -185,6 +193,7 @@ function Cafe() {
               isRound={true}
               aria-label="收藏到我的咖啡廳地圖"
               icon={<BsBookmark size="22px" />}
+              onClick={() => addCafe(cafe.id)}
             ></IconButton>
           </Flex>
 

@@ -7,7 +7,7 @@ import {
   signOut,
 } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -78,6 +78,13 @@ export const firebase = {
           }
         })
         .catch(error => alert(error.message))
+    })
+  },
+  addFavCafe(userId, cafeId) {
+    return new Promise(resolve => {
+      updateDoc(doc(db, 'users', userId), {
+        favCafes: arrayUnion(cafeId),
+      }).then(() => resolve())
     })
   },
   deleteSavedCafe(userId, updatedCafes) {

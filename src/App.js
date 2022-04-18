@@ -79,7 +79,7 @@ function App() {
                   <Route path="features" element={<SearchByFeature />} />
                 </Route>
                 <Route path="cafe">
-                  <Route path=":cafeId" element={<Cafe />} />
+                  <Route path=":cafeId" element={<Cafe userId={userId} />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route
