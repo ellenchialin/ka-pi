@@ -4,8 +4,7 @@ import CityInfoCard from '../CityInfoCard'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
 
-function TaiwanMap(props) {
-  const { cityLinkEndpoint, setCityLinkEndpoint } = props
+function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [taipeiCafes, setTaipeiCafes] = useState([])
@@ -13,8 +12,8 @@ function TaiwanMap(props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const convertFetchCityName = city => {
-    console.log(city)
-    if (city.includes('taipei')) {
+    // console.log('Click city: ', city)
+    if (city === 'taipei') {
       setCityLinkEndpoint('taipei')
       return 'taipei'
     } else {
@@ -27,7 +26,7 @@ function TaiwanMap(props) {
     fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
       .then(res => res.json())
       .then(data => {
-        console.log('From Taiwan Map: ', data)
+        // console.log('From Taiwan Map: ', data)
 
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
@@ -47,11 +46,11 @@ function TaiwanMap(props) {
   const showCityInfo = e => {
     // console.log(e.target.getAttribute('data-name'))
     const cityEngName = e.target.getAttribute('data-name')
-    // console.log('Hovered EN name: ', cityEngName)
 
     const cityChName = cityData.filter(city => city.tag === cityEngName)[0]
       .place
 
+    // console.log('Hovered EN name: ', cityEngName)
     // console.log('Hovered CH name: ', cityChName)
 
     setHoveredCity(cityChName)
@@ -59,9 +58,11 @@ function TaiwanMap(props) {
 
     if (cityEngName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setNewTaipeiCafes)
+      convertFetchCityName(cityEngName)
       setTaipeiCafes([])
     } else if (cityEngName === 'taipei') {
       getCafes('taipei', 'taipei', setTaipeiCafes)
+      convertFetchCityName(cityEngName)
       setNewTaipeiCafes([])
     } else {
       getCafes(
