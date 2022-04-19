@@ -18,7 +18,7 @@ import {
   RiAddFill,
 } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
-import IGCard from '../components/cafe/IGCard'
+import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 
@@ -29,6 +29,7 @@ function Cafe({ userId }) {
   const [toggleSaved, setToggleSaved] = useState(false)
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
+  const [photoRefs, setPhotoRefs] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
@@ -50,17 +51,20 @@ function Cafe({ userId }) {
 
         firebase.getComments(cafe.id).then(data => setComments(data))
 
-        /* BUG
-        // 無法取得 api 傳回來的資料
-        const searchHashtag = cafe.name.split(' ').join('')
-        fetch(`https://ka-pi-server.herokuapp.com/igPosts/${searchHashtag}`)
-          .then(res => {
-            if (!res.ok) throw new Error('無法取得 IG 資料')
-            res.json()
-          })
-          .then(data => console.log(data))
-          .catch(error => {
-            alert(error)
+        console.log('Cafe Name: ', cafe.name)
+
+        // TODO
+        // 為了不要一直打 google maps api 先關掉，之後demo時打開
+        /*
+        fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
+          .then(res => res.json())
+          .then(data => {
+            const references = data
+              .slice(0, 6)
+              .map(photo => photo.photo_reference)
+            setPhotoRefs(references)
+
+            console.log('From google api: ', references)
           })
         */
       })
@@ -325,13 +329,19 @@ function Cafe({ userId }) {
             />
           </Flex>
 
-          {/* IG Wall section */}
+          {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column">
             <Heading as="h4" size="1.5rem">
-              Instagram Wall
+              Google Reviews
             </Heading>
             <Flex w="100%" wrap="wrap" justify="space-between">
-              <IGCard />
+              {photoRefs.length > 0 ? (
+                photoRefs.map(ref => (
+                  <GooglePlaceCard key={ref} photoRef={ref} />
+                ))
+              ) : (
+                <Text>暫關閉 Google Review 照片</Text>
+              )}
             </Flex>
           </Flex>
 
