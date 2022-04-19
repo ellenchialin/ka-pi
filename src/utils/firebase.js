@@ -107,6 +107,22 @@ export const firebase = {
         })
     })
   },
+  checkSavedNumber(cafeId) {
+    console.log(cafeId)
+
+    const q = query(
+      collection(db, 'users'),
+      where('favCafes', 'array-contains', cafeId)
+    )
+
+    return new Promise(resolve => {
+      getDocs(q).then(querySnapshot => {
+        const savedUserArray = []
+        querySnapshot.forEach(doc => savedUserArray.push(doc.id))
+        resolve(savedUserArray)
+      })
+    })
+  },
   getComments(cafeId) {
     return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(
       docsSnapshot => {

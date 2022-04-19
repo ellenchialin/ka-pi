@@ -27,6 +27,7 @@ function Cafe({ userId }) {
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
+  const [savedNumber, setSavedNumber] = useState([])
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
   const [photoRefs, setPhotoRefs] = useState([])
@@ -52,6 +53,9 @@ function Cafe({ userId }) {
         firebase.getComments(cafe.id).then(data => setComments(data))
 
         console.log('Cafe Name: ', cafe.name)
+
+        // Check how many users save this cafe
+        firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
 
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
@@ -229,6 +233,14 @@ function Cafe({ userId }) {
               }
               onClick={handleToggleSaved}
             ></IconButton>
+          </Flex>
+
+          {/* Calculate saved numbers & page views section */}
+          <Flex my="3">
+            <Text>
+              目前有 {savedNumber.length > 0 ? savedNumber.length : 0}{' '}
+              人收藏此咖啡廳
+            </Text>
           </Flex>
 
           <Flex
