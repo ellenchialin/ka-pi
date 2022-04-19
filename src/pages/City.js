@@ -4,9 +4,11 @@ import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useUpdateEffect from '../hooks/useUpdateEffect'
+import usePageTracking from '../usePageTracking'
 import { cityData } from '../cityData'
 
 function City() {
+  usePageTracking()
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   // const [taipeiCafes, setTaipeiCafes] = useState([])

@@ -9,9 +9,11 @@ import {
   TagLabel,
 } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
+import usePageTracking from '../../usePageTracking'
 import CafeCard from '../../components/cafe/CafeCard'
 
 function ForHangout() {
+  usePageTracking()
   const [cafesForHangout, setCafesForHangout] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 

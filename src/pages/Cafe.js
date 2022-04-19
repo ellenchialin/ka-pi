@@ -21,9 +21,11 @@ import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
+import usePageTracking from '../usePageTracking'
 
 function Cafe({ userId }) {
   console.log('Inside Cafe Page, user ID: ', userId)
+  usePageTracking()
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)

@@ -3,10 +3,12 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel, Flex, FormControl, FormLabel, 
 import { FaFacebookF, FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-
+import usePageTracking from '../usePageTracking'
 import { firebase } from '../utils/firebase'
 
 function Auth({ setIsSignedIn }) {
+  usePageTracking()
+
   const SignTabs = () => {
     return (
       <Tabs align="center">

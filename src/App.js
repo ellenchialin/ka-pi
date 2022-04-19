@@ -5,7 +5,6 @@ import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, Drawe
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
 import { firebase } from './utils/firebase'
-import usePageTracking from './usePageTracking'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
@@ -21,8 +20,6 @@ import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
 
 function App() {
-  usePageTracking()
-
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()

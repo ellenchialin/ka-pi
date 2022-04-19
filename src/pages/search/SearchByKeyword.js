@@ -12,8 +12,10 @@ import {
 } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import CafeCard from '../../components/cafe/CafeCard'
+import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {
+  usePageTracking()
   const [matchedCafes, setMatchedCafes] = useState([])
   const [searchKeywords, setSearchKeywords] = useState('')
   const [isLoading, setIsLoading] = useState(false)
