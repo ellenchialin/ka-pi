@@ -27,7 +27,6 @@ import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
 
 function App() {
-  const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -58,15 +57,7 @@ function App() {
 
             <Box as="main" py="8" px="6">
               <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <Home
-                      setCityLinkEndpoint={setCityLinkEndpoint}
-                      cityLinkEndpoint={cityLinkEndpoint}
-                    />
-                  }
-                />
+                <Route path="/" element={<Home />} />
                 <Route path="collections">
                   <Route path="work" element={<ForWork />} />
                   <Route path="hangout" element={<ForHangout />} />

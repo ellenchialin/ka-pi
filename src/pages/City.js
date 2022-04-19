@@ -9,30 +9,58 @@ import { cityData } from '../cityData'
 function City() {
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
+  // const [taipeiCafes, setTaipeiCafes] = useState([])
+  // const [newTaipeiCafes, setNewTaipeiCafes] = useState([])
   const [selectedAreas, setSelectedAreas] = useState([])
   const [updatedCafes, setUpdatedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+
   const { cityName } = useParams()
 
   const convertCityName = city => {
-    // console.log('From city page: ', city)
-    // console.log(cityData.filter(c => c.tag === city))
     setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
+  }
 
-    /*
-    if (city === 'taipei' || city === 'new_taipei') {
-      setTranslatedCityName('台北 / 新北')
-      return
-    } else {
-      console.log(cityData.filter(c => c.tag === city))
-      setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
-    }
-    */
+  const getCafes = (cityName, fetchCity, setCityState) => {
+    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
+      .then(res => res.json())
+      .then(data => {
+        // console.log('From Taiwan Map: ', data)
+
+        if (cityName === 'new_taipei') {
+          setCityState(data.filter(cafe => cafe.address.includes('新北')))
+        } else if (cityName === 'taipei') {
+          setCityState(data.filter(cafe => cafe.address.includes('台北')))
+        } else {
+          setCityState(data)
+        }
+      })
+      .catch(error => {
+        alert('暫無法取得該縣市咖啡廳總數，請通知開發人員')
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
+    // 城市頁標題，把城市英文轉中文
     convertCityName(cityName)
 
+    // console.log('City Page, fetch city endpoint: ', cityName)
+
+    if (cityName === 'new_taipei') {
+      getCafes('new_taipei', 'taipei', setCityCafes)
+      // setTaipeiCafes([])
+    } else if (cityName === 'taipei') {
+      getCafes('taipei', 'taipei', setCityCafes)
+      // setNewTaipeiCafes([])
+    } else {
+      getCafes(cityName, cityName, setCityCafes)
+      // setTaipeiCafes([])
+      // setNewTaipeiCafes([])
+    }
+
+    /*
     fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${cityName}`)
       .then(res => res.json())
       .then(data => {
@@ -44,6 +72,7 @@ function City() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
+    */
   }, [])
 
   const getSelectedCafes = () => {
@@ -86,7 +115,8 @@ function City() {
           />
           <Flex w="100%" direction="column" as="section">
             <Text>
-              共{updatedCafes ? updatedCafes.length : cityCafes.length} 間
+              搜尋結果：{updatedCafes ? updatedCafes.length : cityCafes.length}{' '}
+              間
             </Text>
             <Flex
               wrap="wrap"

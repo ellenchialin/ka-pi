@@ -5,8 +5,9 @@ import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 
 function Home(props) {
-  const { cityLinkEndpoint, setCityLinkEndpoint } = props
+  // const { cityLinkEndpoint, setCityLinkEndpoint } = props
 
+  const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])

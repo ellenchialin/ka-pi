@@ -1,10 +1,10 @@
 import { Image, AspectRatio } from '@chakra-ui/react'
 
-function IGCard() {
+function GooglePlaceCard({ photoRef }) {
   return (
     <AspectRatio w="100%" maxW="250px" ratio={1}>
       <Image
-        src="https://bit.ly/dan-abramov"
+        src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`}
         objectFit="cover"
         alt="網友分享照"
         borderRadius="lg"
@@ -13,4 +13,4 @@ function IGCard() {
   )
 }
 
-export default IGCard
+export default GooglePlaceCard
