@@ -3,8 +3,10 @@ import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
 import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
 import Pagination from '../components/Pagination'
+import usePageTracking from '../usePageTracking'
 
 function Picks() {
+  usePageTracking()
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])

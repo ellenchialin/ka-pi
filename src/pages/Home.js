@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
+import usePageTracking from '../usePageTracking'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 
 function Home(props) {
+  usePageTracking()
   // const { cityLinkEndpoint, setCityLinkEndpoint } = props
 
   const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')

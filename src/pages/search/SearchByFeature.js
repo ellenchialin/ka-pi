@@ -4,8 +4,10 @@ import { useCheckbox,chakra,Box,Text,useCheckboxGroup,Heading,Flex,Button,Spinne
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
 import Pagination from '../../components/Pagination'
+import usePageTracking from '../../usePageTracking'
 
 function SearchByFeature() {
+  usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(30)

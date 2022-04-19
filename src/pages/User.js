@@ -6,10 +6,12 @@ import { AiOutlineMessage } from 'react-icons/ai'
 import { firebase } from '../utils/firebase'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
+import usePageTracking from '../usePageTracking'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
 function User({ userId, setUserId, setIsSignedIn }) {
   console.log('In User Page, current user id: ', userId)
+  usePageTracking()
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)

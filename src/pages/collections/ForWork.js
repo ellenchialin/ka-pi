@@ -10,8 +10,10 @@ import {
 } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
+import usePageTracking from '../../usePageTracking'
 
 function ForWork() {
+  usePageTracking()
   const [cafesForWork, setCafesForWork] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
