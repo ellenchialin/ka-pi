@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+// import { getAnalytics } from "firebase/analytics"
 import {
   getAuth,
   onAuthStateChanged,
@@ -16,11 +17,13 @@ const firebaseConfig = {
   storageBucket: 'ka-pi-7c760.appspot.com',
   messagingSenderId: '182101821737',
   appId: '1:182101821737:web:ec28f6e364380c0d2fcf38',
+  measurementId: 'G-CZ2VH2LVPP',
 }
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
+// const analytics = getAnalytics(app)
 
 export const firebase = {
   checkAuthState() {
