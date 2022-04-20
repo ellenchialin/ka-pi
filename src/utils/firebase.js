@@ -151,8 +151,13 @@ export const firebase = {
     })
   },
   getComments(cafeId) {
-    return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(
-      docsSnapshot => {
+    return new Promise(resolve => {
+      const q = query(
+        collection(db, `cafes/${cafeId}/comments`),
+        orderBy('createdAt', 'desc')
+      )
+
+      getDocs(q).then(docsSnapshot => {
         const commentArray = docsSnapshot.docs.map(doc => ({
           commentId: doc.data().commentId,
           createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
@@ -160,19 +165,68 @@ export const firebase = {
           text: doc.data().text,
           replies: doc.data().replies,
         }))
-        return commentArray
-      }
-    )
+        resolve(commentArray)
+      })
+    })
   },
   addComment(cafeId, userId, text) {
     const newDocRef = doc(collection(db, `cafes/${cafeId}/comments`))
 
-    setDoc(newDocRef, {
-      commentId: newDocRef.id,
-      createdAt: serverTimestamp(),
-      userId,
-      text,
-      replies: [],
+    return new Promise(resolve => {
+      setDoc(newDocRef, {
+        commentId: newDocRef.id,
+        createdAt: serverTimestamp(),
+        userId,
+        text,
+      })
+      resolve()
+    })
+  },
+  listenCommentsChanges(cafeId) {
+    return new Promise(resolve => {
+      const q = query(
+        collection(db, `cafes/${cafeId}/comments`),
+        orderBy('createdAt', 'desc')
+      )
+      onSnapshot(q, querySnapshot => {
+        const commentArray = querySnapshot.docs.map(doc => ({
+          commentId: doc.data().commentId,
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          userId: doc.data().userId,
+          text: doc.data().text,
+          replies: doc.data().replies,
+        }))
+        resolve(commentArray)
+      })
+    })
+  },
+  getReplyList(cafeId, commentId) {
+    return new Promise(resolve => {
+      getDocs(
+        collection(db, `cafes/${cafeId}/comments/${commentId}/replies`)
+      ).then(querySnapshot => {
+        const replyList = []
+        querySnapshot.forEach(doc => {
+          // console.log(doc.data())
+          replyList.push(doc.data())
+          resolve(replyList)
+        })
+      })
+    })
+  },
+  addReply(data) {
+    return new Promise(resolve => {
+      const newDocRef = doc(
+        collection(
+          db,
+          `cafes/${data.cafeId}/comments/${data.commentId}/replies`
+        )
+      )
+      setDoc(newDocRef, {
+        userId: data.userId,
+        text: data.text,
+        repliedAt: serverTimestamp(),
+      }).then(() => resolve())
     })
   },
 }
