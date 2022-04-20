@@ -21,12 +21,11 @@ import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
-import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 
 function Cafe({ userId }) {
-  // console.log('Inside Cafe Page, user ID: ', userId)
   usePageTracking()
+  // console.log('Inside Cafe Page, user ID: ', userId)
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
@@ -45,13 +44,11 @@ function Cafe({ userId }) {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
-  // const cafeRef = useRef()
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
-        // console.log('From Cafe Page: ', data)
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
@@ -60,9 +57,7 @@ function Cafe({ userId }) {
         console.log('Cafe Name: ', cafe.name)
 
         // Create a cafe doc
-        firebase.addCafeDoc(cafe.id, {
-          mainPhoto: '',
-        })
+        // firebase.addCafeDoc(cafe.id, { mainPhoto: ''))
 
         firebase.updatePageViews(cafe.id)
         firebase.getPageViews(cafe.id).then(views => setPageViews(views))
@@ -99,8 +94,6 @@ function Cafe({ userId }) {
       setToggleSaved(data.favCafes.includes(cafe.id))
     })
   }, [])
-
-  // useUpdateEffect(firebase.addPageView(cafe.id), cafe)
 
   // Google maps search url
   // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z

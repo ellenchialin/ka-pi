@@ -1,15 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Button,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, Spinner, InputGroup, InputLeftElement, Input, Button } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import CafeCard from '../../components/cafe/CafeCard'
 import usePageTracking from '../../usePageTracking'
@@ -31,7 +23,6 @@ function SearchByKeyword() {
         )
         setMatchedCafes(matched)
         setSearchParams(searchWords)
-        console.log('From SearchKeywords Page: ', matched)
       })
       .catch(error => {
         alert('搜尋發生錯誤，請確認網路連線，或聯繫開發人員')
@@ -43,8 +34,6 @@ function SearchByKeyword() {
   // 用 custom hook 避免第一次 render 就打 api
 
   const submitSearch = () => {
-    if (searchKeywords === '') alert('')
-
     setIsLoading(true)
     getSearchResults(searchKeywords)
   }

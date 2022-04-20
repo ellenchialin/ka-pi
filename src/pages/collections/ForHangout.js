@@ -28,7 +28,6 @@ function ForHangout() {
             cafe.limited_time === 'no' && cafe.music === 5 && cafe.seat === 5
         )
         setCafesForHangout(filteredCafes)
-        console.log('From Hangout Page: ', filteredCafes)
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')

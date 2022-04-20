@@ -87,7 +87,6 @@ function SearchByFeature() {
           results.push(cafes)
         })
         setFilteredCafes(results.flat())
-        console.log('From SearchFeature Page: ', results.flat())
       })
       .catch(error => {
         alert('篩選發生錯誤，請確認網路連線，或聯繫開發人員')
