@@ -139,6 +139,17 @@ export const firebase = {
       }
     })
   },
+  getPageViews(cafeId) {
+    return new Promise(resolve => {
+      getDoc(doc(db, `pageViews/${cafeId}`)).then(docSnap => {
+        if (docSnap.exists()) {
+          resolve(docSnap.data().pageViews)
+        } else {
+          resolve(1)
+        }
+      })
+    })
+  },
   getComments(cafeId) {
     return getDocs(collection(db, `cafes/${cafeId}/comments`)).then(
       docsSnapshot => {

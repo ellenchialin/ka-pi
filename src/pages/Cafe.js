@@ -34,7 +34,7 @@ function Cafe({ userId }) {
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
   const [photoRefs, setPhotoRefs] = useState([])
-  const [pageViews, setPageViews] = useState(1)
+  const [pageViews, setPageViews] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
@@ -65,6 +65,7 @@ function Cafe({ userId }) {
         })
 
         firebase.updatePageViews(cafe.id)
+        firebase.getPageViews(cafe.id).then(views => setPageViews(views))
 
         // Check how many users save this cafe
         firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
@@ -250,11 +251,11 @@ function Cafe({ userId }) {
           </Flex>
 
           {/* Calculate saved numbers & page views section */}
-          <Flex my="3">
+          <Flex my="3" direction="column">
             <Text>
-              目前有 {savedNumber.length > 0 ? savedNumber.length : 0}{' '}
-              人收藏此咖啡廳
+              共有 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏
             </Text>
+            <Text>共被瀏覽 {pageViews} 次</Text>
           </Flex>
 
           <Flex
