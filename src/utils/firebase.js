@@ -200,6 +200,20 @@ export const firebase = {
       })
     })
   },
+  getReplyList(cafeId, commentId) {
+    return new Promise(resolve => {
+      getDocs(
+        collection(db, `cafes/${cafeId}/comments/${commentId}/replies`)
+      ).then(querySnapshot => {
+        const replyList = []
+        querySnapshot.forEach(doc => {
+          // console.log(doc.data())
+          replyList.push(doc.data())
+          resolve(replyList)
+        })
+      })
+    })
+  },
   addReply(data) {
     return new Promise(resolve => {
       const newDocRef = doc(

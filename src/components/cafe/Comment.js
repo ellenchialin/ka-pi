@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react'
 import { Flex, Image, Text, IconButton, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, InputGroup, InputLeftElement, Input, ModalFooter, Button, useDisclosure } from '@chakra-ui/react'
 import { RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
+import Reply from './Reply'
 
 function Comment({ cafeId, commentId, userId, text, date }) {
   const [userInfo, setUserInfo] = useState({})
-  const [newReply, setNewReply] = useState('')
+  const [newReplyText, setNewReplyText] = useState('')
+  const [replyList, setReplyList] = useState([])
 
   const {
     isOpen: isReplyOpen,
@@ -21,16 +23,32 @@ function Comment({ cafeId, commentId, userId, text, date }) {
     })
   }, [])
 
+  useEffect(() => {
+    firebase.getReplyList(cafeId, commentId).then(list => {
+      console.log('Reply List: ', list)
+      setReplyList(list)
+    })
+  }, [])
+
   const submitReply = () => {
     console.log('Reply to comment: ', commentId)
-    // cafeId, commentId, userId, text
+    if (!userId) {
+      alert('請先登入才可以回覆留言')
+      return
+    }
+
     const repliedDetails = {
       cafeId,
       commentId,
       userId,
-      text: newReply,
+      text: newReplyText,
     }
-    firebase.addReply(repliedDetails).then(() => console.log('Reply Added'))
+
+    firebase.addReply(repliedDetails).then(() => {
+      console.log('Reply Added')
+      setNewReplyText('')
+      onReplyClose()
+    })
   }
 
   return (
@@ -39,10 +57,11 @@ function Comment({ cafeId, commentId, userId, text, date }) {
         <Flex align="center">
           <Image
             borderRadius="full"
-            boxSize="50px"
+            boxSize="35px"
             mr="2"
             src={userInfo.photo}
             alt={userInfo.name}
+            objectFit="cover"
           />
           <Text fontSize="0.875rem">{userInfo.name}</Text>
         </Flex>
@@ -65,8 +84,8 @@ function Comment({ cafeId, commentId, userId, text, date }) {
             <ModalCloseButton />
             <ModalBody>
               <Textarea
-                value={newReply}
-                onChange={e => setNewReply(e.target.value)}
+                value={newReplyText}
+                onChange={e => setNewReplyText(e.target.value)}
                 placeholder="Leave your reply here..."
                 size="md"
                 mt="10"
@@ -86,7 +105,7 @@ function Comment({ cafeId, commentId, userId, text, date }) {
             <ModalFooter>
               <Button
                 variant="ghost"
-                isDisabled={newReply === '' ? true : false}
+                isDisabled={newReplyText === '' ? true : false}
                 onClick={submitReply}
               >
                 Submit
@@ -100,7 +119,15 @@ function Comment({ cafeId, commentId, userId, text, date }) {
         <Text>{date}</Text>
       </Flex>
       {/* Replies */}
-      <Flex></Flex>
+      {replyList.length > 0 &&
+        replyList.map(reply => (
+          <Reply
+            key={reply.text}
+            replyUserId={reply.userId}
+            replyText={reply.text}
+            replyDate={reply.repliedAt}
+          />
+        ))}
       <Divider mt="2" />
     </Flex>
   )
