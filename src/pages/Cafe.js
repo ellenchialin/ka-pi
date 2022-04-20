@@ -21,6 +21,7 @@ import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
+import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 
 function Cafe({ userId }) {
@@ -38,7 +39,11 @@ function Cafe({ userId }) {
 
   const { cafeId } = useParams()
   const navigate = useNavigate()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isCommentOpen,
+    onOpen: onCommentOpen,
+    onClose: onCommentClose,
+  } = useDisclosure()
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -127,9 +132,21 @@ function Cafe({ userId }) {
   }
 
   const handleAddComment = () => {
+    if (userId === '') {
+      alert('留言前須先登入，請前往登入或註冊帳號')
+      return
+    }
+
     console.log('Add new comment')
-    firebase.addComment(cafe.id, 'test123', newComment)
-    setNewComment('')
+    firebase.addComment(cafe.id, userId, newComment).then(() => {
+      setNewComment('')
+      onCommentClose()
+
+      firebase.listenCommentsChanges(cafe.id).then(data => {
+        console.log('Latest comments from DB: ', data)
+        setComments(data)
+      })
+    })
   }
 
   const handleToggleSaved = () => {
@@ -371,12 +388,16 @@ function Cafe({ userId }) {
               <Heading as="h4" size="1.5rem">
                 Comments
               </Heading>
-              <Button onClick={onOpen} leftIcon={<RiAddFill />} size="xs">
+              <Button
+                onClick={onCommentOpen}
+                leftIcon={<RiAddFill />}
+                size="xs"
+              >
                 Add Comment
               </Button>
               <Modal
-                isOpen={isOpen}
-                onClose={onClose}
+                isOpen={isCommentOpen}
+                onClose={onCommentClose}
                 size="md"
                 isCentered={true}
               >
