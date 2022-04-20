@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure,Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import {
   BsBookmark,
@@ -95,7 +95,7 @@ function Cafe({ userId }) {
   // Check this cafe is saved by user or not and render init icon
   useEffect(() => {
     firebase.getUser(userId).then(data => {
-      console.log(data.favCafes.includes(cafe.id))
+      // console.log(data.favCafes.includes(cafe.id))
       setToggleSaved(data.favCafes.includes(cafe.id))
     })
   }, [])
@@ -137,13 +137,13 @@ function Cafe({ userId }) {
       return
     }
 
-    console.log('Add new comment')
+    // console.log('Add new comment')
     firebase.addComment(cafe.id, userId, newComment).then(() => {
       setNewComment('')
       onCommentClose()
 
       firebase.listenCommentsChanges(cafe.id).then(data => {
-        console.log('Latest comments from DB: ', data)
+        // console.log('Latest comments from DB: ', data)
         setComments(data)
       })
     })
@@ -162,7 +162,7 @@ function Cafe({ userId }) {
         .then(() => setToggleSaved(prev => !prev))
     } else {
       firebase.saveCafe(userId, cafe.id).then(() => {
-        console.log('Cafe added to : ', userId, cafeId)
+        // console.log('Cafe added to : ', userId, cafeId)
         setToggleSaved(prev => !prev)
       })
     }
@@ -441,6 +441,8 @@ function Cafe({ userId }) {
             {comments.map(comment => (
               <Comment
                 key={comment.commentId}
+                cafeId={cafe.id}
+                commentId={comment.commentId}
                 userId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}

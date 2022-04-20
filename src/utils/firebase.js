@@ -178,7 +178,6 @@ export const firebase = {
         createdAt: serverTimestamp(),
         userId,
         text,
-        replies: [],
       })
       resolve()
     })
@@ -199,6 +198,21 @@ export const firebase = {
         }))
         resolve(commentArray)
       })
+    })
+  },
+  addReply(data) {
+    return new Promise(resolve => {
+      const newDocRef = doc(
+        collection(
+          db,
+          `cafes/${data.cafeId}/comments/${data.commentId}/replies`
+        )
+      )
+      setDoc(newDocRef, {
+        userId: data.userId,
+        text: data.text,
+        repliedAt: serverTimestamp(),
+      }).then(() => resolve())
     })
   },
 }
