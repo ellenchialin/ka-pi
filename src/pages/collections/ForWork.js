@@ -32,7 +32,6 @@ function ForWork() {
         )
 
         setCafesForWork(filteredCafes)
-        console.log('From Work Page: ', filteredCafes)
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
