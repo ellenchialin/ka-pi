@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure,Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
@@ -21,10 +21,11 @@ import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
+import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 
 function Cafe({ userId }) {
-  console.log('Inside Cafe Page, user ID: ', userId)
+  // console.log('Inside Cafe Page, user ID: ', userId)
   usePageTracking()
 
   const [cafe, setCafe] = useState({})
@@ -33,6 +34,7 @@ function Cafe({ userId }) {
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
   const [photoRefs, setPhotoRefs] = useState([])
+  const [pageViews, setPageViews] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
 
   const { cafeId } = useParams()
@@ -43,6 +45,7 @@ function Cafe({ userId }) {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
+  // const cafeRef = useRef()
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -55,6 +58,13 @@ function Cafe({ userId }) {
         firebase.getComments(cafe.id).then(data => setComments(data))
 
         console.log('Cafe Name: ', cafe.name)
+
+        // Create a cafe doc
+        firebase.addCafeDoc(cafe.id, {
+          mainPhoto: '',
+        })
+
+        firebase.updatePageViews(cafe.id)
 
         // Check how many users save this cafe
         firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
@@ -88,6 +98,8 @@ function Cafe({ userId }) {
       setToggleSaved(data.favCafes.includes(cafe.id))
     })
   }, [])
+
+  // useUpdateEffect(firebase.addPageView(cafe.id), cafe)
 
   // Google maps search url
   // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z

@@ -8,7 +8,7 @@ import {
   signOut,
 } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -124,6 +124,19 @@ export const firebase = {
         querySnapshot.forEach(doc => savedUserArray.push(doc.id))
         resolve(savedUserArray)
       })
+    })
+  },
+  addCafeDoc(cafeId, initData) {
+    const cafeDocRef = doc(db, `cafes/${cafeId}`)
+    setDoc(cafeDocRef, initData)
+  },
+  updatePageViews(cafeId) {
+    getDoc(doc(db, `pageViews/${cafeId}`)).then(docSnap => {
+      if (docSnap.exists()) {
+        updateDoc(doc(db, `pageViews/${cafeId}`), { pageViews: increment(1) })
+      } else {
+        setDoc(doc(db, `pageViews/${cafeId}`), { pageViews: 1 })
+      }
     })
   },
   getComments(cafeId) {
