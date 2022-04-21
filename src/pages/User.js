@@ -23,7 +23,7 @@ function User() {
 
   const { currentUser, signout } = useAuth()
 
-  console.log('Current User in user page from context: ', currentUser.uid)
+  // console.log('Current User in user page from context: ', currentUser.uid)
 
   const navigate = useNavigate()
 
@@ -110,6 +110,7 @@ function User() {
               objectFit="cover"
               src={userInfo.photo}
               alt={userInfo.name}
+              fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
             />
             <IconButton
               colorScheme="blackAlpha"

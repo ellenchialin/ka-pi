@@ -25,6 +25,7 @@ function Reply({ replyUserId, replyText, replyDate }) {
           src={userInfo.photo}
           alt={userInfo.name}
           objectFit="cover"
+          fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
         />
         <Text fontSize="0.875rem" color="blue.500">
           {userInfo.name}

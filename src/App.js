@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, DrawerContent } from '@chakra-ui/react'
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
-import { firebase } from './utils/firebase'
 import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
@@ -22,19 +20,8 @@ import NoMatch from './pages/NoMatch'
 
 function App() {
   const { currentUser } = useAuth()
-  console.log('current User in app: ', currentUser)
-
+  // console.log('current User in app: ', currentUser)
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  /*
-  useEffect(() => {
-    firebase.checkAuthState().then(userId => {
-      setUserId(userId)
-      setIsSignedIn(true)
-      console.log('From App Effect: ', userId)
-    })
-  }, [isSignedIn])
-  */
 
   return (
     <BrowserRouter>

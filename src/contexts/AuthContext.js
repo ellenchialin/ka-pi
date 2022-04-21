@@ -23,10 +23,6 @@ export function AuthProvider({ children }) {
     return firebase.nativeSignUp(name, email, password)
   }
 
-  const getUser = () => {
-    return firebase.getUser()
-  }
-
   useEffect(() => {
     firebase.checkAuthState(user => {
       console.log('current user from checkAuthState: ', user)
@@ -37,7 +33,6 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    getUser,
     signin,
     signout,
     signup,

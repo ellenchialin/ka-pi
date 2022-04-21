@@ -21,7 +21,7 @@ import { useAuth } from '../contexts/AuthContext'
 function Cafe() {
   usePageTracking()
   const { currentUser } = useAuth()
-  console.log('current user in cafe page: ', currentUser)
+  // console.log('current user in cafe page: ', currentUser)
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
@@ -65,6 +65,13 @@ function Cafe() {
         // Check how many users save this cafe
         firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
 
+        // Check this cafe is saved by user or not and render init icon
+        firebase.getUser(currentUser.uid).then(data => {
+          // console.log(data.favCafes.includes(cafe.id))
+          console.log(data.favCafes)
+          setToggleSaved(data.favCafes.includes(cafe.id))
+        })
+
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
         /*
@@ -86,16 +93,6 @@ function Cafe() {
       })
       .finally(() => setIsLoading(false))
   }, [])
-
-  // Check this cafe is saved by user or not and render init icon
-  useEffect(() => {
-    firebase.getUser(currentUser.uid).then(data => {
-      // console.log(data.favCafes.includes(cafe.id))
-      setToggleSaved(data.favCafes.includes(cafe.id))
-    })
-  }, [])
-
-  console.log('Toggle saved status: ', toggleSaved)
 
   // Google maps search url
   // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z
@@ -440,9 +437,10 @@ function Cafe() {
                 key={comment.commentId}
                 cafeId={cafe.id}
                 commentId={comment.commentId}
-                userId={currentUser.uid}
+                commentUserId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}
+                currentUser={currentUser}
               />
             ))}
           </Flex>
