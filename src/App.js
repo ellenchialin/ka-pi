@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, DrawerContent } from '@chakra-ui/react'
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
-import { firebase } from './utils/firebase'
+import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
@@ -20,19 +19,9 @@ import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false)
-  const [userId, setUserId] = useState('')
+  const { currentUser } = useAuth()
+  // console.log('current User in app: ', currentUser)
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  useEffect(() => {
-    firebase.checkAuthState().then(userId => {
-      setUserId(userId)
-      setIsSignedIn(true)
-      console.log('From App Effect: ', userId)
-    })
-  }, [isSignedIn])
-
-  console.log('Sign in state: ', isSignedIn)
 
   return (
     <BrowserRouter>
@@ -63,31 +52,19 @@ function App() {
                   <Route path="features" element={<SearchByFeature />} />
                 </Route>
                 <Route path="cafe">
-                  <Route path=":cafeId" element={<Cafe userId={userId} />} />
+                  <Route path=":cafeId" element={<Cafe />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route
-                  path="/user"
+                  path="user"
                   element={
-                    isSignedIn ? (
-                      <User
-                        userId={userId}
-                        setUserId={setUserId}
-                        setIsSignedIn={setIsSignedIn}
-                      />
-                    ) : (
-                      <Navigate to="/auth" replace />
-                    )
+                    currentUser ? <User /> : <Navigate to="/auth" replace />
                   }
                 />
                 <Route
                   path="/auth"
                   element={
-                    isSignedIn ? (
-                      <Navigate to="/user" replace />
-                    ) : (
-                      <Auth setIsSignedIn={setIsSignedIn} />
-                    )
+                    currentUser ? <Navigate to="/user" replace /> : <Auth />
                   }
                 />
                 <Route path="*" element={<NoMatch />} />

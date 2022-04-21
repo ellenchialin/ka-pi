@@ -21,20 +21,18 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
+export const auth = getAuth(app)
 const db = getFirestore(app)
 // const analytics = getAnalytics(app)
 
 export const firebase = {
-  checkAuthState() {
-    return new Promise(resolve => {
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          console.log('From Check state: ', user)
-          console.log('From Check state: ', user.uid)
-          resolve(user.uid)
-        }
-      })
+  checkAuthState(func) {
+    onAuthStateChanged(auth, user => {
+      // if (user) {
+      //   console.log('From Check state: ', user)
+      //   console.log('From Check state: ', user.uid)
+      // }
+      func(user)
     })
   },
   nativeSignUp(name, email, password) {
@@ -51,7 +49,7 @@ export const firebase = {
             photo: '',
           })
 
-          resolve(user.uid)
+          resolve(user)
         })
         .catch(error => alert(error.message))
     })

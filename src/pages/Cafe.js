@@ -1,32 +1,27 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
-import {
-  BsBookmark,
-  BsFillBookmarkFill,
-  BsFillExclamationTriangleFill,
-} from 'react-icons/bs'
+// prettier-ignore
+import { BsBookmark, BsFillBookmarkFill, BsFillExclamationTriangleFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-import {
-  RiDirectionFill,
-  RiGlobalFill,
-  RiReplyAllFill,
-  RiAddFill,
-} from 'react-icons/ri'
+// prettier-ignore
+import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
+import { useAuth } from '../contexts/AuthContext'
 
-function Cafe({ userId }) {
+function Cafe() {
   usePageTracking()
-  // console.log('Inside Cafe Page, user ID: ', userId)
+  const { currentUser } = useAuth()
+  // console.log('current user in cafe page: ', currentUser)
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
@@ -70,6 +65,13 @@ function Cafe({ userId }) {
         // Check how many users save this cafe
         firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
 
+        // Check this cafe is saved by user or not and render init icon
+        firebase.getUser(currentUser.uid).then(data => {
+          // console.log(data.favCafes.includes(cafe.id))
+          console.log(data.favCafes)
+          setToggleSaved(data.favCafes.includes(cafe.id))
+        })
+
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
         /*
@@ -90,14 +92,6 @@ function Cafe({ userId }) {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-  }, [])
-
-  // Check this cafe is saved by user or not and render init icon
-  useEffect(() => {
-    firebase.getUser(userId).then(data => {
-      // console.log(data.favCafes.includes(cafe.id))
-      setToggleSaved(data.favCafes.includes(cafe.id))
-    })
   }, [])
 
   // Google maps search url
@@ -132,13 +126,13 @@ function Cafe({ userId }) {
   }
 
   const handleAddComment = () => {
-    if (userId === '') {
+    if (!currentUser) {
       alert('留言前須先登入，請前往登入或註冊帳號')
       return
     }
 
     // console.log('Add new comment')
-    firebase.addComment(cafe.id, userId, newComment).then(() => {
+    firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
       setNewComment('')
       onCommentClose()
 
@@ -150,7 +144,7 @@ function Cafe({ userId }) {
   }
 
   const handleToggleSaved = () => {
-    if (!userId) {
+    if (!currentUser) {
       onAlertOpen()
       console.log('Show alert')
       return
@@ -158,10 +152,10 @@ function Cafe({ userId }) {
 
     if (toggleSaved) {
       firebase
-        .deleteSavedCafe(userId, cafe.id)
+        .deleteSavedCafe(currentUser.uid, cafe.id)
         .then(() => setToggleSaved(prev => !prev))
     } else {
-      firebase.saveCafe(userId, cafe.id).then(() => {
+      firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
         // console.log('Cafe added to : ', userId, cafeId)
         setToggleSaved(prev => !prev)
       })
@@ -443,9 +437,10 @@ function Cafe({ userId }) {
                 key={comment.commentId}
                 cafeId={cafe.id}
                 commentId={comment.commentId}
-                userId={comment.userId}
+                commentUserId={comment.userId}
                 date={comment.createdAt}
                 text={comment.text}
+                currentUser={currentUser}
               />
             ))}
           </Flex>

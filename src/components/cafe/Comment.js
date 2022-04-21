@@ -5,7 +5,16 @@ import { RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 import Reply from './Reply'
 
-function Comment({ cafeId, commentId, userId, text, date }) {
+function Comment({
+  currentUser,
+  cafeId,
+  commentId,
+  commentUserId,
+  text,
+  date,
+}) {
+  // console.log('In Comment Page Current User: ', currentUser)
+
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
   const [replyList, setReplyList] = useState([])
@@ -17,9 +26,8 @@ function Comment({ cafeId, commentId, userId, text, date }) {
   } = useDisclosure()
 
   useEffect(() => {
-    firebase.getUser(userId).then(data => {
+    firebase.getUser(commentUserId).then(data => {
       setUserInfo(data)
-      // console.log('Current User info: ', data)
     })
   }, [])
 
@@ -32,7 +40,8 @@ function Comment({ cafeId, commentId, userId, text, date }) {
 
   const submitReply = () => {
     console.log('Reply to comment: ', commentId)
-    if (!userId) {
+
+    if (!currentUser) {
       alert('請先登入才可以回覆留言')
       return
     }
@@ -40,7 +49,7 @@ function Comment({ cafeId, commentId, userId, text, date }) {
     const repliedDetails = {
       cafeId,
       commentId,
-      userId,
+      userId: currentUser.uid,
       text: newReplyText,
     }
 
@@ -48,6 +57,11 @@ function Comment({ cafeId, commentId, userId, text, date }) {
       console.log('Reply Added')
       setNewReplyText('')
       onReplyClose()
+
+      firebase.getReplyList(cafeId, commentId).then(list => {
+        console.log('Latest Reply List: ', list)
+        setReplyList(list)
+      })
     })
   }
 
@@ -62,6 +76,7 @@ function Comment({ cafeId, commentId, userId, text, date }) {
             src={userInfo.photo}
             alt={userInfo.name}
             objectFit="cover"
+            fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
           />
           <Text fontSize="0.875rem">{userInfo.name}</Text>
         </Flex>
