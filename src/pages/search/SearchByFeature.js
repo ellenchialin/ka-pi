@@ -6,11 +6,51 @@ import CafeCard from '../../components/cafe/CafeCard'
 import Pagination from '../../components/Pagination'
 import usePageTracking from '../../usePageTracking'
 
+function CustomCheckbox(props) {
+  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
+    useCheckbox(props)
+
+  return (
+    <chakra.label
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="center"
+      gridColumnGap={2}
+      maxW="28"
+      bg="transparent"
+      border="1px solid"
+      borderColor="gray.500"
+      rounded="lg"
+      px={3}
+      py={1}
+      cursor="pointer"
+      {...htmlProps}
+    >
+      <input {...getInputProps()} />
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        border="2px solid"
+        borderColor="gray.500"
+        w={4}
+        h={4}
+        {...getCheckboxProps()}
+      >
+        {state.isChecked && <Box w={2} h={2} bg="gray.500" />}
+      </Flex>
+      <Text fontSize="0.875rem" {...getLabelProps()}>
+        {props.text}
+      </Text>
+    </chakra.label>
+  )
+}
+
 function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(30)
+  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(false)
 
   const indexOfLastCafe = currentPage * cafesPerPage
@@ -28,47 +68,7 @@ function SearchByFeature() {
     { text: '裝潢音樂', tag: 'music' },
   ]
 
-  function CustomCheckbox(props) {
-    const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
-      useCheckbox(props)
-
-    return (
-      <chakra.label
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="center"
-        gridColumnGap={2}
-        maxW="28"
-        bg="transparent"
-        border="1px solid"
-        borderColor="gray.500"
-        rounded="lg"
-        px={3}
-        py={1}
-        cursor="pointer"
-        {...htmlProps}
-      >
-        <input {...getInputProps()} />
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          border="2px solid"
-          borderColor="gray.500"
-          w={4}
-          h={4}
-          {...getCheckboxProps()}
-        >
-          {state.isChecked && <Box w={2} h={2} bg="gray.500" />}
-        </Flex>
-        <Text fontSize="0.875rem" {...getLabelProps()}>
-          {props.text}
-        </Text>
-      </chakra.label>
-    )
-  }
-
-  const { value, getCheckboxProps } = useCheckboxGroup()
+  const { value, getCheckboxProps, setValue } = useCheckboxGroup()
   console.log(value)
 
   const submitSearch = () => {
@@ -95,6 +95,8 @@ function SearchByFeature() {
       })
       .finally(() => setIsLoading(false))
   }
+
+  const handleReset = () => setValue([])
 
   return (
     <Flex as="section" direction="column" alignItems="center">
@@ -139,6 +141,7 @@ function SearchByFeature() {
             px="6"
             h="8"
             isDisabled={value.length === 0 ? true : false}
+            onClick={handleReset}
           >
             清除全部
           </Button>
