@@ -6,7 +6,7 @@ import { firebase } from '../../utils/firebase'
 import Reply from './Reply'
 
 function Comment({ cafeId, commentId, userId, text, date }) {
-  console.log('Comment User Id: ', userId)
+  console.log('In Comment Page User Id: ', userId)
 
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')

@@ -12,7 +12,7 @@ import { useAuth } from '../../contexts/AuthContext'
 const SignInForm = () => {
   // const [currentUserId, setCurrentUserId] = useState('')
   const navigate = useNavigate()
-  const { signin, currentUser } = useAuth()
+  const { signin } = useAuth()
 
   const SigninSchema = Yup.object().shape({
     email: Yup.string()

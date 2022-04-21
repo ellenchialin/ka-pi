@@ -5,7 +5,7 @@ import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, Drawe
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
 import { firebase } from './utils/firebase'
-import { AuthProvider } from './contexts/AuthContext'
+import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
@@ -19,12 +19,15 @@ import Cafe from './pages/Cafe'
 import SearchByKeyword from './pages/search/SearchByKeyword'
 import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
+import { replace } from 'formik'
 
 function App() {
+  const { currentUser } = useAuth()
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [userId, setUserId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  /*
   useEffect(() => {
     firebase.checkAuthState().then(userId => {
       setUserId(userId)
@@ -32,78 +35,71 @@ function App() {
       console.log('From App Effect: ', userId)
     })
   }, [isSignedIn])
+  */
 
-  console.log('Sign in state: ', isSignedIn)
+  // console.log('Sign in state: ', isSignedIn)
 
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ChakraProvider theme={theme}>
-          <Box minH="100vh">
-            <SidebarContent display={{ base: 'none', md: 'unset' }} />
-            <Drawer
-              isOpen={isOpen}
-              onClose={onClose}
-              placement="left"
-              size="xs"
-            >
-              <DrawerOverlay />
-              <DrawerContent>
-                <SidebarContent onClose={onClose} w="full" borderRight="none" />
-              </DrawerContent>
-            </Drawer>
-            <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
-              <Header onOpen={onOpen} />
+      <ChakraProvider theme={theme}>
+        <Box minH="100vh">
+          <SidebarContent display={{ base: 'none', md: 'unset' }} />
+          <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
+            <DrawerOverlay />
+            <DrawerContent>
+              <SidebarContent onClose={onClose} w="full" borderRight="none" />
+            </DrawerContent>
+          </Drawer>
+          <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
+            <Header onOpen={onOpen} />
 
-              <Box as="main" py="8" px="6">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="collections">
-                    <Route path="work" element={<ForWork />} />
-                    <Route path="hangout" element={<ForHangout />} />
-                  </Route>
-                  <Route path="city">
-                    <Route path=":cityName" element={<City />} />
-                  </Route>
-                  <Route path="search">
-                    <Route index element={<SearchByKeyword />} />
-                    <Route path="features" element={<SearchByFeature />} />
-                  </Route>
-                  <Route path="cafe">
-                    <Route path=":cafeId" element={<Cafe userId={userId} />} />
-                  </Route>
-                  <Route path="picks" element={<Picks />} />
-                  <Route
-                    path="/user"
-                    element={
-                      isSignedIn ? (
-                        <User
-                          userId={userId}
-                          setUserId={setUserId}
-                          setIsSignedIn={setIsSignedIn}
-                        />
-                      ) : (
-                        <Navigate to="/auth" replace />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/auth"
-                    element={
-                      isSignedIn ? (
-                        <Navigate to="/user" replace />
-                      ) : (
-                        <Auth setIsSignedIn={setIsSignedIn} />
-                      )
-                    }
-                  />
-                  <Route path="*" element={<NoMatch />} />
-                </Routes>
-              </Box>
+            <Box as="main" py="8" px="6">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="collections">
+                  <Route path="work" element={<ForWork />} />
+                  <Route path="hangout" element={<ForHangout />} />
+                </Route>
+                <Route path="city">
+                  <Route path=":cityName" element={<City />} />
+                </Route>
+                <Route path="search">
+                  <Route index element={<SearchByKeyword />} />
+                  <Route path="features" element={<SearchByFeature />} />
+                </Route>
+                <Route path="cafe">
+                  <Route path=":cafeId" element={<Cafe userId={userId} />} />
+                </Route>
+                <Route path="picks" element={<Picks />} />
+                <Route
+                  path="user"
+                  element={
+                    currentUser ? (
+                      <User
+                        setUserId={setUserId}
+                        setIsSignedIn={setIsSignedIn}
+                      />
+                    ) : (
+                      <Navigate to="/auth" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/auth"
+                  element={
+                    currentUser ? (
+                      <Navigate to="/user" replace />
+                    ) : (
+                      <Auth setIsSignedIn={setIsSignedIn} />
+                    )
+                  }
+                />
+                <Route path="*" element={<NoMatch />} />
+              </Routes>
             </Box>
           </Box>
-        </ChakraProvider>
-      </AuthProvider>
+        </Box>
+      </ChakraProvider>
     </BrowserRouter>
   )
 }

@@ -23,10 +23,11 @@ import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
+import { useAuth } from '../contexts/AuthContext'
 
 function Cafe({ userId }) {
   usePageTracking()
-  // console.log('Inside Cafe Page, user ID: ', userId)
+  const { currentUser } = useAuth()
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
@@ -94,7 +95,7 @@ function Cafe({ userId }) {
 
   // Check this cafe is saved by user or not and render init icon
   useEffect(() => {
-    firebase.getUser(userId).then(data => {
+    firebase.getUser(currentUser.uid).then(data => {
       // console.log(data.favCafes.includes(cafe.id))
       setToggleSaved(data.favCafes.includes(cafe.id))
     })
@@ -132,13 +133,13 @@ function Cafe({ userId }) {
   }
 
   const handleAddComment = () => {
-    if (userId === '') {
+    if (!currentUser) {
       alert('留言前須先登入，請前往登入或註冊帳號')
       return
     }
 
     // console.log('Add new comment')
-    firebase.addComment(cafe.id, userId, newComment).then(() => {
+    firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
       setNewComment('')
       onCommentClose()
 
@@ -150,7 +151,7 @@ function Cafe({ userId }) {
   }
 
   const handleToggleSaved = () => {
-    if (!userId) {
+    if (!currentUser) {
       onAlertOpen()
       console.log('Show alert')
       return
@@ -158,10 +159,10 @@ function Cafe({ userId }) {
 
     if (toggleSaved) {
       firebase
-        .deleteSavedCafe(userId, cafe.id)
+        .deleteSavedCafe(currentUser.uid, cafe.id)
         .then(() => setToggleSaved(prev => !prev))
     } else {
-      firebase.saveCafe(userId, cafe.id).then(() => {
+      firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
         // console.log('Cafe added to : ', userId, cafeId)
         setToggleSaved(prev => !prev)
       })
@@ -443,7 +444,7 @@ function Cafe({ userId }) {
                 key={comment.commentId}
                 cafeId={cafe.id}
                 commentId={comment.commentId}
-                userId={comment.userId}
+                userId={currentUser.uid}
                 date={comment.createdAt}
                 text={comment.text}
               />

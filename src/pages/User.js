@@ -10,16 +10,15 @@ import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
-function User({ userId, setUserId, setIsSignedIn }) {
-  console.log('In User Page, current user id: ', userId)
+function User({ setUserId, setIsSignedIn }) {
   usePageTracking()
 
-  const { currentUser } = useAuth()
-  console.log('Current User from context: ', currentUser)
+  const { currentUser, signout } = useAuth()
+  console.log('Current User in user page from context: ', currentUser.uid)
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  // const [currentUser, setCurrentUser] = useState({})
+  const [userInfo, setUserInfo] = useState({})
   const [savedCafes, setSavedCafes] = useState([])
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
@@ -52,7 +51,6 @@ function User({ userId, setUserId, setIsSignedIn }) {
           })
         })
         setSavedCafes(cafeList)
-        // console.log('User cafes list: ', cafeList)
       })
       .catch(error =>
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
@@ -60,25 +58,26 @@ function User({ userId, setUserId, setIsSignedIn }) {
       .finally(() => setIsLoading(false))
   }
 
-  /*
   useEffect(() => {
     firebase
       .getUser(currentUser.uid)
       .then(data => {
         console.log('Get user data: ', data)
-        // setCurrentUser(data)
+        setUserInfo(data)
         getFavCafes(data.favCafes)
       })
       .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
   }, [])
-  */
 
   const handleSignout = () => {
+    signout().then(() => navigate('/'))
+    /*
     firebase.signout().then(() => {
-      setUserId('')
+      // setUserId('')
       setIsSignedIn(false)
       navigate('/')
     })
+    */
   }
 
   const deleteCafe = deletedCafeId => {
@@ -90,7 +89,7 @@ function User({ userId, setUserId, setIsSignedIn }) {
 
     setUpdatedCafeList(updatedList)
     getFavCafes(updatedList)
-    firebase.deleteSavedCafe(userId, deletedCafeId)
+    firebase.deleteSavedCafe(currentUser.uid, deletedCafeId)
   }
 
   return (
@@ -115,8 +114,8 @@ function User({ userId, setUserId, setIsSignedIn }) {
               borderRadius="full"
               boxSize="90px"
               objectFit="cover"
-              src={currentUser.photo}
-              alt={currentUser.name}
+              src={userInfo.photo}
+              alt={userInfo.name}
             />
             <IconButton
               colorScheme="blackAlpha"
@@ -128,9 +127,9 @@ function User({ userId, setUserId, setIsSignedIn }) {
           </Flex>
           <Flex align="center" my="2">
             <Heading as="h4" size="lg" mr="4">
-              {currentUser.name}
+              {userInfo.name}
             </Heading>
-            <Text>{currentUser.email}</Text>
+            <Text>{userInfo.email}</Text>
           </Flex>
           <Text>
             共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間咖啡廳

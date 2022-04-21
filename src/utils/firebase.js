@@ -26,15 +26,13 @@ const db = getFirestore(app)
 // const analytics = getAnalytics(app)
 
 export const firebase = {
-  checkAuthState() {
-    return new Promise(resolve => {
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          console.log('From Check state: ', user)
-          console.log('From Check state: ', user.uid)
-          resolve(user.uid)
-        }
-      })
+  checkAuthState(func) {
+    onAuthStateChanged(auth, user => {
+      // if (user) {
+      //   console.log('From Check state: ', user)
+      //   console.log('From Check state: ', user.uid)
+      // }
+      func(user)
     })
   },
   nativeSignUp(name, email, password) {
