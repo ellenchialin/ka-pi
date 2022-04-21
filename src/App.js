@@ -19,12 +19,11 @@ import Cafe from './pages/Cafe'
 import SearchByKeyword from './pages/search/SearchByKeyword'
 import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
-import { replace } from 'formik'
 
 function App() {
   const { currentUser } = useAuth()
-  const [isSignedIn, setIsSignedIn] = useState(false)
-  const [userId, setUserId] = useState('')
+  console.log('current User in app: ', currentUser)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   /*
@@ -36,8 +35,6 @@ function App() {
     })
   }, [isSignedIn])
   */
-
-  // console.log('Sign in state: ', isSignedIn)
 
   return (
     <BrowserRouter>
@@ -68,30 +65,19 @@ function App() {
                   <Route path="features" element={<SearchByFeature />} />
                 </Route>
                 <Route path="cafe">
-                  <Route path=":cafeId" element={<Cafe userId={userId} />} />
+                  <Route path=":cafeId" element={<Cafe />} />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route
                   path="user"
                   element={
-                    currentUser ? (
-                      <User
-                        setUserId={setUserId}
-                        setIsSignedIn={setIsSignedIn}
-                      />
-                    ) : (
-                      <Navigate to="/auth" replace />
-                    )
+                    currentUser ? <User /> : <Navigate to="/auth" replace />
                   }
                 />
                 <Route
                   path="/auth"
                   element={
-                    currentUser ? (
-                      <Navigate to="/user" replace />
-                    ) : (
-                      <Auth setIsSignedIn={setIsSignedIn} />
-                    )
+                    currentUser ? <Navigate to="/user" replace /> : <Auth />
                   }
                 />
                 <Route path="*" element={<NoMatch />} />

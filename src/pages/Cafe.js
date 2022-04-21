@@ -1,22 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
-import {
-  BsBookmark,
-  BsFillBookmarkFill,
-  BsFillExclamationTriangleFill,
-} from 'react-icons/bs'
+// prettier-ignore
+import { BsBookmark, BsFillBookmarkFill, BsFillExclamationTriangleFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-import {
-  RiDirectionFill,
-  RiGlobalFill,
-  RiReplyAllFill,
-  RiAddFill,
-} from 'react-icons/ri'
+// prettier-ignore
+import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import Comment from '../components/cafe/Comment'
@@ -25,9 +18,10 @@ import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
 
-function Cafe({ userId }) {
+function Cafe() {
   usePageTracking()
   const { currentUser } = useAuth()
+  console.log('current user in cafe page: ', currentUser)
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
@@ -100,6 +94,8 @@ function Cafe({ userId }) {
       setToggleSaved(data.favCafes.includes(cafe.id))
     })
   }, [])
+
+  console.log('Toggle saved status: ', toggleSaved)
 
   // Google maps search url
   // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z

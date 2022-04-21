@@ -9,6 +9,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
+  const [isUserLoading, setIsUserLoading] = useState(true)
 
   const signin = (email, password) => {
     return firebase.nativeSignIn(email, password)
@@ -27,14 +28,12 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    // firebase.checkAuthState(user => setCurrentUser(user))
     firebase.checkAuthState(user => {
-      console.log(user)
+      console.log('current user from checkAuthState: ', user)
       setCurrentUser(user)
+      setIsUserLoading(false)
     })
   }, [])
-
-  console.log('current user, ', currentUser)
 
   const value = {
     currentUser,
@@ -44,5 +43,9 @@ export function AuthProvider({ children }) {
     signup,
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {!isUserLoading && children}
+    </AuthContext.Provider>
+  )
 }

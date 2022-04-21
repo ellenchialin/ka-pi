@@ -10,11 +10,8 @@ import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
-function User({ setUserId, setIsSignedIn }) {
+function User() {
   usePageTracking()
-
-  const { currentUser, signout } = useAuth()
-  console.log('Current User in user page from context: ', currentUser.uid)
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
@@ -23,6 +20,10 @@ function User({ setUserId, setIsSignedIn }) {
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+
+  const { currentUser, signout } = useAuth()
+
+  console.log('Current User in user page from context: ', currentUser.uid)
 
   const navigate = useNavigate()
 
@@ -71,13 +72,6 @@ function User({ setUserId, setIsSignedIn }) {
 
   const handleSignout = () => {
     signout().then(() => navigate('/'))
-    /*
-    firebase.signout().then(() => {
-      // setUserId('')
-      setIsSignedIn(false)
-      navigate('/')
-    })
-    */
   }
 
   const deleteCafe = deletedCafeId => {

@@ -49,7 +49,7 @@ export const firebase = {
             photo: '',
           })
 
-          resolve(user.uid)
+          resolve(user)
         })
         .catch(error => alert(error.message))
     })
