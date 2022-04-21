@@ -81,12 +81,13 @@ function SearchByFeature() {
           cafe => cafe.limited_time === 'no' && cafe.socket === 'yes'
         )
 
-        let results = []
-        value.forEach(feature => {
-          const cafes = defaultMatched.filter(cafe => cafe[feature] >= 5)
-          results.push(cafes)
+        const filterResults = defaultMatched.filter(cafe => {
+          return value.some(feature => {
+            return cafe[feature] >= 5
+          })
         })
-        setFilteredCafes(results.flat())
+
+        setFilteredCafes(filterResults)
       })
       .catch(error => {
         alert('篩選發生錯誤，請確認網路連線，或聯繫開發人員')
@@ -100,7 +101,7 @@ function SearchByFeature() {
       <Heading as="h2" size="lg" mb="3">
         透過條件進階搜尋
       </Heading>
-      <Flex w="400px" justify="center" align="center" direction="column">
+      <Flex w="400px" justify="center" align="center" direction="column" mb="3">
         <Text>預設必備條件</Text>
         <Flex>
           {defaultFeatures.map((feature, i) => (
@@ -129,18 +130,31 @@ function SearchByFeature() {
             />
           ))}
         </Flex>
-        <Button
-          colorScheme="blackAlpha"
-          variant="solid"
-          fontSize="0.875rem"
-          fontWeight="normal"
-          px="6"
-          h="8"
-          onClick={submitSearch}
-          isDisabled={value.length === 0 ? true : false}
-        >
-          進階篩選
-        </Button>
+        <Flex w="60%" justify="space-evenly">
+          <Button
+            colorScheme="pink"
+            variant="solid"
+            fontSize="0.875rem"
+            fontWeight="normal"
+            px="6"
+            h="8"
+            isDisabled={value.length === 0 ? true : false}
+          >
+            清除全部
+          </Button>
+          <Button
+            colorScheme="blackAlpha"
+            variant="solid"
+            fontSize="0.875rem"
+            fontWeight="normal"
+            px="6"
+            h="8"
+            onClick={submitSearch}
+            isDisabled={value.length === 0 ? true : false}
+          >
+            進階搜尋
+          </Button>
+        </Flex>
       </Flex>
       {isLoading ? (
         <Spinner
