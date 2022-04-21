@@ -7,15 +7,19 @@ import { firebase } from '../utils/firebase'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
 import usePageTracking from '../usePageTracking'
+import { useAuth } from '../contexts/AuthContext'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
 function User({ userId, setUserId, setIsSignedIn }) {
   console.log('In User Page, current user id: ', userId)
   usePageTracking()
 
+  const { currentUser } = useAuth()
+  console.log('Current User from context: ', currentUser)
+
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
-  const [currentUser, setCurrentUser] = useState({})
+  // const [currentUser, setCurrentUser] = useState({})
   const [savedCafes, setSavedCafes] = useState([])
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
@@ -56,16 +60,18 @@ function User({ userId, setUserId, setIsSignedIn }) {
       .finally(() => setIsLoading(false))
   }
 
+  /*
   useEffect(() => {
     firebase
-      .getUser(userId)
+      .getUser(currentUser.uid)
       .then(data => {
         console.log('Get user data: ', data)
-        setCurrentUser(data)
+        // setCurrentUser(data)
         getFavCafes(data.favCafes)
       })
       .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
   }, [])
+  */
 
   const handleSignout = () => {
     firebase.signout().then(() => {

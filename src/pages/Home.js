@@ -5,7 +5,7 @@ import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 
-function Home(props) {
+function Home() {
   usePageTracking()
   // const { cityLinkEndpoint, setCityLinkEndpoint } = props
 

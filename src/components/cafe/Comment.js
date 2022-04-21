@@ -6,6 +6,8 @@ import { firebase } from '../../utils/firebase'
 import Reply from './Reply'
 
 function Comment({ cafeId, commentId, userId, text, date }) {
+  console.log('Comment User Id: ', userId)
+
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
   const [replyList, setReplyList] = useState([])
@@ -48,6 +50,11 @@ function Comment({ cafeId, commentId, userId, text, date }) {
       console.log('Reply Added')
       setNewReplyText('')
       onReplyClose()
+
+      firebase.getReplyList(cafeId, commentId).then(list => {
+        console.log('Latest Reply List: ', list)
+        setReplyList(list)
+      })
     })
   }
 

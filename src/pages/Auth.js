@@ -3,6 +3,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel, Flex, FormControl, FormLabel, 
 import { FaFacebookF, FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+import SignInForm from '../components/auth/SignInForm'
 import usePageTracking from '../usePageTracking'
 import { firebase } from '../utils/firebase'
 
@@ -29,6 +30,7 @@ function Auth({ setIsSignedIn }) {
     )
   }
 
+  /*
   const SignInForm = () => {
     const SigninSchema = Yup.object().shape({
       email: Yup.string()
@@ -107,6 +109,7 @@ function Auth({ setIsSignedIn }) {
       </Flex>
     )
   }
+  */
 
   const SignUpForm = () => {
     const SignupSchema = Yup.object().shape({

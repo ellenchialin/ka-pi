@@ -4,6 +4,8 @@ import { Flex, Image, Text } from '@chakra-ui/react'
 import { firebase } from '../../utils/firebase'
 
 function Reply({ replyUserId, replyText, replyDate }) {
+  console.log('Reply user Id: ', replyUserId)
+
   const [userInfo, setUserInfo] = useState({})
   const convertedReplyDate = replyDate.toDate().toLocaleDateString()
 
