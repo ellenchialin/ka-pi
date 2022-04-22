@@ -5,6 +5,7 @@ import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
 import Pagination from '../../components/Pagination'
 import usePageTracking from '../../usePageTracking'
+import { cityData } from '../../cityData'
 
 const CustomCheckbox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
@@ -47,7 +48,8 @@ const CustomCheckbox = props => {
 }
 
 const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
-  const cities = ['台北', '台南', '新竹']
+  const cities = cityData.map(city => city.place)
+
   const { value: filterCityValue, getCheckboxProps } = useCheckboxGroup()
   // console.log('selected city: ', filterCityValue)
 
@@ -89,18 +91,18 @@ const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
           進階搜尋
         </Button>
       </PopoverTrigger>
-      <PopoverContent w="130px" px={5} py={8} bg="gray.800" color="white">
+      <PopoverContent w="200px" px={5} py={8} bg="gray.800" color="white">
         <PopoverArrow />
         <PopoverCloseButton />
 
-        <Stack>
+        <Flex wrap="wrap">
           {cities.map(city => (
             <CustomCheckbox
               key={city}
               {...getCheckboxProps({ value: city, text: city })}
             />
           ))}
-        </Stack>
+        </Flex>
         <Button
           variant="solid"
           fontSize="0.875rem"
