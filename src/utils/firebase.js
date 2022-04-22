@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { getStorage } from 'firebase/storage'
 // import { getAnalytics } from "firebase/analytics"
 import {
   getAuth,
@@ -23,6 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 const db = getFirestore(app)
+const storage = getStorage(app)
 // const analytics = getAnalytics(app)
 
 export const firebase = {
@@ -79,6 +81,13 @@ export const firebase = {
           }
         })
         .catch(error => alert(error.message))
+    })
+  },
+  updateUserName(userId, newName) {
+    return new Promise(resolve => {
+      updateDoc(doc(db, `users/${userId}`), {
+        name: newName,
+      }).then(() => resolve())
     })
   },
   saveCafe(userId, cafeId) {

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Image, Text, Spinner, IconButton, Button } from '@chakra-ui/react'
+import { Flex, Heading, Image, Text, Spinner, IconButton, Button, ButtonGroup, useEditableControls, Editable, EditablePreview, EditableInput, Input, InputGroup, InputRightElement  } from '@chakra-ui/react'
+import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
 import { AiOutlineMessage } from 'react-icons/ai'
 import { firebase } from '../utils/firebase'
 import Map from '../components/map/Map'
@@ -10,16 +11,55 @@ import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
+function EditableText({
+  text,
+  type,
+  placeholder,
+  children,
+  childRef,
+  ...props
+}) {
+  const [isEditing, setEditing] = useState(false)
+
+  useEffect(() => {
+    if (childRef && childRef.current && isEditing === true) {
+      childRef.current.focus()
+    }
+  }, [isEditing, childRef])
+
+  return (
+    <Flex {...props}>
+      {isEditing ? (
+        <div onBlur={() => setEditing(false)}>{children}</div>
+      ) : (
+        <Flex align="center">
+          <Text fontSize="xl" fontWeight="bold" mr="3">
+            {text || placeholder}
+          </Text>
+          <IconButton
+            aria-label="更改顯示名稱"
+            icon={<EditIcon />}
+            size="sm"
+            onClick={() => setEditing(true)}
+          />
+        </Flex>
+      )}
+    </Flex>
+  )
+}
+
 function User() {
   usePageTracking()
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [userInfo, setUserInfo] = useState({})
+  const [updatedUserName, setUpdatedUserName] = useState('')
   const [savedCafes, setSavedCafes] = useState([])
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const nameRef = useRef()
 
   const { currentUser, signout } = useAuth()
 
@@ -86,6 +126,11 @@ function User() {
     firebase.deleteSavedCafe(currentUser.uid, deletedCafeId)
   }
 
+  const updateUserName = e => {
+    setUpdatedUserName(e.target.value)
+    firebase.updateUserName(currentUser.uid, e.target.value)
+  }
+
   return (
     <Flex direction="column" position="relative">
       {isLoading ? (
@@ -120,12 +165,22 @@ function User() {
               isRound
             />
           </Flex>
-          <Flex align="center" my="2">
-            <Heading as="h4" size="lg" mr="4">
-              {userInfo.name}
-            </Heading>
-            <Text>{userInfo.email}</Text>
-          </Flex>
+          <EditableText
+            text={updatedUserName}
+            type="input"
+            placeholder={userInfo.name}
+            childRef={nameRef}
+          >
+            <Input
+              ref={nameRef}
+              type="text"
+              name="username"
+              value={updatedUserName}
+              placeholder={userInfo.name}
+              onChange={e => updateUserName(e)}
+            />
+          </EditableText>
+          <Text>{userInfo.email}</Text>
           <Text>
             共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間咖啡廳
           </Text>
