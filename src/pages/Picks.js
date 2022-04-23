@@ -11,7 +11,7 @@ function Picks() {
   const [userLongitude, setUserLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(10)
+  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(true)
 
   const indexOfLastCafe = currentPage * cafesPerPage

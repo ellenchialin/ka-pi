@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  Tag,
-  TagLeftIcon,
-  TagLabel,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
+import Pagination from '../../components/Pagination'
 import usePageTracking from '../../usePageTracking'
 import CafeCard from '../../components/cafe/CafeCard'
 
 function ForHangout() {
   usePageTracking()
   const [cafesForHangout, setCafesForHangout] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(true)
 
   const labels = ['不限時', '裝潢音樂', '通常有位']
+
+  const indexOfLastCafe = currentPage * cafesPerPage
+  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
+  const currentCafes = cafesForHangout.slice(indexOfFirstCafe, indexOfLastCafe)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -70,10 +71,15 @@ function ForHangout() {
             alignItems="flex-start"
             as="section"
           >
-            {cafesForHangout.map(cafe => (
+            {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </Flex>
+          <Pagination
+            cafesPerPage={cafesPerPage}
+            totalCafes={cafesForHangout.length}
+            paginate={paginate}
+          />
         </>
       )}
     </Flex>
