@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
-import { Box } from '@chakra-ui/react'
+import { Box, Link } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 const cafeIcon = new Icon({
   iconUrl: '/cafeIcon.png',
@@ -37,6 +38,9 @@ function Map({ userLatitude, userLongitude, cafes }) {
                 <div>
                   <h4>{cafe.name}</h4>
                   <p>{cafe.address}</p>
+                  <Link href={`/cafe/${cafe.id}`}>
+                    完整資訊 <ExternalLinkIcon mx="2px" />
+                  </Link>
                 </div>
               </Popup>
             </Marker>
