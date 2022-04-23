@@ -1,54 +1,48 @@
 import { Link as NavLink } from 'react-router-dom'
-import {
-  Box,
-  Flex,
-  Text,
-  Link,
-  Divider,
-  Icon,
-  Collapse,
-  CloseButton,
-  useColorModeValue,
-  useDisclosure,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Box, Flex, Text, Link, Divider, Icon, Collapse, CloseButton, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { HiOutlineHome } from 'react-icons/hi'
+import { BsSearch } from 'react-icons/bs'
 import { CgCoffee } from 'react-icons/cg'
 import { VscLibrary } from 'react-icons/vsc'
 import { RiStarSmileLine } from 'react-icons/ri'
 
-function SidebarContent({ onClose, ...rest }) {
-  const integrations = useDisclosure()
-
-  const NavItem = props => {
-    const { icon, children, ...rest } = props
-    return (
-      <Flex
-        align="center"
-        px="4"
-        pl="4"
-        py="3"
-        cursor="pointer"
-        _hover={{
-          bg: 'gray.400',
-          color: 'white',
-        }}
-        role="group"
-        transition=".15s ease"
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            mx="2"
-            fontSize="20"
-            _groupHover={{ color: 'gray.200' }}
-            as={icon}
-          />
-        )}
-        <Text fontSize="1.2rem">{children}</Text>
+const NavItem = props => {
+  const { icon, children, ...rest } = props
+  return (
+    <Flex
+      align="center"
+      px="4"
+      pl="4"
+      py="3"
+      cursor="pointer"
+      _hover={{
+        bg: 'gray.400',
+        color: 'white',
+      }}
+      role="group"
+      transition=".15s ease"
+      {...rest}
+    >
+      {icon && (
+        <Icon
+          mx="2"
+          fontSize="20"
+          _groupHover={{ color: 'gray.200' }}
+          as={icon}
+        />
+      )}
+      <Flex fontSize="1.2rem" align="center" justify="space-between" w="100%">
+        {children}
       </Flex>
-    )
-  }
+    </Flex>
+  )
+}
+
+function SidebarContent({ onClose, ...rest }) {
+  const discoverIntegrations = useDisclosure()
+  const collectionIntegrations = useDisclosure()
 
   return (
     <Box
@@ -87,15 +81,15 @@ function SidebarContent({ onClose, ...rest }) {
         <NavItem as={NavLink} to="/" icon={HiOutlineHome}>
           Home
         </NavItem>
-        <NavItem icon={VscLibrary} onClick={integrations.onToggle}>
-          Explore
+        <NavItem icon={BsSearch} onClick={discoverIntegrations.onToggle}>
+          Discover
           <Icon
             as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={integrations.isOpen && 'rotate(90deg)'}
+            ml="3"
+            transform={discoverIntegrations.isOpen && 'rotate(90deg)'}
           />
         </NavItem>
-        <Collapse in={integrations.isOpen}>
+        <Collapse in={discoverIntegrations.isOpen}>
           <NavItem as={NavLink} to="search" pl="12" py="2">
             by Keywords
           </NavItem>
@@ -103,15 +97,15 @@ function SidebarContent({ onClose, ...rest }) {
             by Features
           </NavItem>
         </Collapse>
-        <NavItem icon={VscLibrary} onClick={integrations.onToggle}>
+        <NavItem icon={VscLibrary} onClick={collectionIntegrations.onToggle}>
           Collections
           <Icon
             as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={integrations.isOpen && 'rotate(90deg)'}
+            ml="3"
+            transform={collectionIntegrations.isOpen && 'rotate(90deg)'}
           />
         </NavItem>
-        <Collapse in={integrations.isOpen}>
+        <Collapse in={collectionIntegrations.isOpen}>
           <NavItem as={NavLink} to="collections/work" pl="12" py="2">
             for Work
           </NavItem>
