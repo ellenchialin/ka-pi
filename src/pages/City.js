@@ -114,6 +114,7 @@ function City() {
           <FilteredByDist
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
+            setUpdatedCafes={setUpdatedCafes}
           />
           <Flex w="100%" direction="column" as="section">
             <Text>
