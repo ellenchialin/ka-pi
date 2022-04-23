@@ -1,5 +1,11 @@
 import { initializeApp } from 'firebase/app'
-import { getStorage } from 'firebase/storage'
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  upload,
+} from 'firebase/storage'
 // import { getAnalytics } from "firebase/analytics"
 import {
   getAuth,
@@ -88,6 +94,17 @@ export const firebase = {
       updateDoc(doc(db, `users/${userId}`), {
         name: newName,
       }).then(() => resolve())
+    })
+  },
+  getPhotoUrl(userId, file) {
+    return new Promise(resolve => {
+      const imageRef = ref(storage, `users/${file.name}`)
+      uploadBytes(imageRef, file).then(() => {
+        getDownloadURL(imageRef).then(url => {
+          updateDoc(doc(db, `users/${userId}`), { photo: url })
+          resolve(url)
+        })
+      })
     })
   },
   saveCafe(userId, cafeId) {

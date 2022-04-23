@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Image, Text, Spinner, IconButton, Button, ButtonGroup, useEditableControls, Editable, EditablePreview, EditableInput, Input, InputGroup, InputRightElement  } from '@chakra-ui/react'
-import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
-import { AiOutlineMessage } from 'react-icons/ai'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar } from '@chakra-ui/react'
+import { EditIcon } from '@chakra-ui/icons'
+import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
@@ -55,11 +55,14 @@ function User() {
   const [userLongitude, setUserLongitude] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
+  const [userPhotoUrl, setUserPhotoUrl] = useState(null)
   const [savedCafes, setSavedCafes] = useState([])
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+
   const nameRef = useRef()
+  const fileRef = useRef()
 
   const { currentUser, signout } = useAuth()
 
@@ -131,6 +134,17 @@ function User() {
     firebase.updateUserName(currentUser.uid, e.target.value)
   }
 
+  const handlePhotoChange = e => {
+    if (e.target.files[0]) {
+      firebase
+        .getPhotoUrl(currentUser.uid, e.target.files[0])
+        .then(url => setUserPhotoUrl(url))
+        .catch(error => {
+          alert('頭貼上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          console.error(error)
+        })
+    }
+  }
   return (
     <Flex direction="column" position="relative">
       {isLoading ? (
@@ -149,21 +163,33 @@ function User() {
       ) : (
         <>
           <Flex w="100%" align="center" justify="space-between">
-            <Image
-              borderRadius="full"
-              boxSize="90px"
-              objectFit="cover"
-              src={userInfo.photo}
-              alt={userInfo.name}
-              fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-            />
-            <IconButton
-              colorScheme="blackAlpha"
-              aria-label="查看訊息"
-              fontSize="20px"
-              icon={<AiOutlineMessage />}
-              isRound
-            />
+            <Flex align="center" position="relative">
+              <Avatar
+                src={userPhotoUrl ? userPhotoUrl : userInfo.photo}
+                name={userInfo.name}
+                size="xl"
+              />
+              <IconButton
+                colorScheme="blackAlpha"
+                aria-label="上傳頭貼"
+                fontSize="20px"
+                icon={<RiAddFill />}
+                isRound
+                size="xs"
+                position="absolute"
+                bottom="0"
+                right="10px"
+                onClick={() => fileRef.current.click()}
+              />
+              <Input
+                ref={fileRef}
+                type="file"
+                name="userPhoto"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                hidden
+              />
+            </Flex>
           </Flex>
           <EditableText
             text={updatedUserName}
