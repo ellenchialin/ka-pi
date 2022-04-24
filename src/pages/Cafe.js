@@ -12,6 +12,7 @@ import { GiPerson } from 'react-icons/gi'
 import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
+import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
@@ -131,13 +132,11 @@ function Cafe() {
       return
     }
 
-    // console.log('Add new comment')
     firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
       setNewComment('')
       onCommentClose()
 
       firebase.listenCommentsChanges(cafe.id).then(data => {
-        // console.log('Latest comments from DB: ', data)
         setComments(data)
       })
     })
@@ -146,7 +145,6 @@ function Cafe() {
   const handleToggleSaved = () => {
     if (!currentUser) {
       onAlertOpen()
-      console.log('Show alert')
       return
     }
 
@@ -160,6 +158,11 @@ function Cafe() {
         setToggleSaved(prev => !prev)
       })
     }
+  }
+
+  const handleWriteBlogClick = () => {
+    const blogId = firebase.getBlogDocId(cafe.id)
+    navigate(`/cafe/blog/edit/${blogId}`)
   }
 
   return (
@@ -373,6 +376,26 @@ function Cafe() {
               ) : (
                 <Text>暫關閉 Google Review 照片</Text>
               )}
+            </Flex>
+          </Flex>
+
+          {/* Blogs section */}
+          <Flex w="100%" direction="column" my="6">
+            <Flex w="100%" justify="space-between" align="center" mb="4">
+              <Heading as="h4" size="1.5rem">
+                Blogs
+              </Heading>
+              <Button
+                leftIcon={<RiAddFill />}
+                size="xs"
+                onClick={handleWriteBlogClick}
+              >
+                Write a blog
+              </Button>
+            </Flex>
+            <Flex>
+              <BlogCard cafe={cafe} />
+              <BlogCard cafe={cafe} />
             </Flex>
           </Flex>
 

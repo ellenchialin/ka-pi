@@ -1,14 +1,6 @@
 import { Link } from 'react-router-dom'
-import {
-  Flex,
-  Box,
-  AspectRatio,
-  Image,
-  Badge,
-  Heading,
-  Text,
-  IconButton,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton} from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import { RiDeleteBin5Line } from 'react-icons/ri'

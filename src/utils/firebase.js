@@ -1,11 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  upload,
-} from 'firebase/storage'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // import { getAnalytics } from "firebase/analytics"
 import {
   getAuth,
@@ -67,7 +61,6 @@ export const firebase = {
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user
-
           resolve(user)
         })
         .catch(error => alert(error.message))
@@ -75,11 +68,9 @@ export const firebase = {
   },
   getUser(id) {
     return new Promise(resolve => {
-      // console.log('Inside getUser func')
       getDoc(doc(db, 'users', id))
         .then(docsnap => {
           if (docsnap.exists()) {
-            // console.log('Get User: ', docsnap.data())
             resolve(docsnap.data())
           } else {
             alert('尚未擁有帳號，請先註冊')
@@ -174,6 +165,12 @@ export const firebase = {
       })
     })
   },
+  getBlogDocId(cafeId) {
+    const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
+    const blogId = blogRef.id
+    return blogId
+  },
+  getBlog() {},
   getComments(cafeId) {
     return new Promise(resolve => {
       const q = query(
