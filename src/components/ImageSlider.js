@@ -10,16 +10,16 @@ function ImageSlider({ slides }) {
       stopOnHover
       showStatus={false}
       showThumbs={false}
+      dynamicHeight={false}
     >
       {slides.map((slide, i) => (
-        <AspectRatio key={i} ratio={16 / 9}>
+        <AspectRatio key={i} ratio={21 / 9}>
           <Image
             key={i}
             src={slide}
             alt="食記照片"
             rounded="lg"
             fit="cover"
-            height="auto"
             w="800px"
           />
         </AspectRatio>
