@@ -17,7 +17,7 @@ function BlogCard({
   const coverImage = images[0]
 
   const handleReadmore = () => {
-    const cafeId = cafe.id
+    // const cafeId = cafe.id
     navigate(`blog/${blogId}`)
   }
 
