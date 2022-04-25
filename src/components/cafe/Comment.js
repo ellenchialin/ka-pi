@@ -38,13 +38,16 @@ function Comment({
     })
   }, [])
 
-  const submitReply = () => {
-    console.log('Reply to comment: ', commentId)
-
+  const handleClickReply = () => {
     if (!currentUser) {
       alert('請先登入才可以回覆留言')
       return
     }
+    onReplyOpen()
+  }
+
+  const submitReply = () => {
+    console.log('Reply to comment: ', commentId)
 
     const repliedDetails = {
       cafeId,
@@ -86,7 +89,7 @@ function Comment({
           fontSize="20px"
           variant="ghost"
           aria-label="回覆留言"
-          onClick={onReplyOpen}
+          onClick={handleClickReply}
         />
         <Modal
           isOpen={isReplyOpen}

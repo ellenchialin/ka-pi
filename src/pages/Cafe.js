@@ -68,12 +68,14 @@ function Cafe() {
         // Check how many users save this cafe
         firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
 
-        // Check this cafe is saved by user or not and render init icon
-        firebase.getUser(currentUser.uid).then(data => {
-          // console.log(data.favCafes.includes(cafe.id))
-          console.log(data.favCafes)
-          setToggleSaved(data.favCafes.includes(cafe.id))
-        })
+        if (currentUser) {
+          // Check this cafe is saved by user or not and render init icon
+          firebase.getUser(currentUser.uid).then(data => {
+            // console.log(data.favCafes.includes(cafe.id))
+            console.log(data.favCafes)
+            setToggleSaved(data.favCafes.includes(cafe.id))
+          })
+        }
 
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
@@ -87,12 +89,12 @@ function Cafe() {
 
             console.log('From google api: ', references)
           })
+          .finally(() => setIsLoading(false))
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
         console.error(error)
       })
-      .finally(() => setIsLoading(false))
   }, [])
 
   // Google maps search url
@@ -126,12 +128,15 @@ function Cafe() {
     }
   }
 
-  const handleAddComment = () => {
+  const handleClickAddComment = () => {
     if (!currentUser) {
       alert('留言前須先登入，請前往登入或註冊帳號')
       return
     }
+    onCommentOpen()
+  }
 
+  const handleAddComment = () => {
     firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
       setNewComment('')
       onCommentClose()
@@ -196,7 +201,7 @@ function Cafe() {
             px="2"
             mb="4"
             minH={{ sm: '30vh', md: '40vh' }}
-            bgImage="linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=878&q=80')"
+            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
@@ -369,13 +374,10 @@ function Cafe() {
               More Photos
             </Heading>
             <Flex w="100%" wrap="wrap" justify="space-between">
-              {photoRefs.length > 0 ? (
+              {photoRefs.length > 0 &&
                 photoRefs.map(ref => (
                   <GooglePlaceCard key={ref} photoRef={ref} />
-                ))
-              ) : (
-                <Text>暫關閉 Google Review 照片</Text>
-              )}
+                ))}
             </Flex>
           </Flex>
 
@@ -415,7 +417,7 @@ function Cafe() {
                 Comments
               </Heading>
               <Button
-                onClick={onCommentOpen}
+                onClick={handleClickAddComment}
                 leftIcon={<RiAddFill />}
                 size="xs"
               >
