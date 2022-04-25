@@ -14,13 +14,14 @@ import Auth from './pages/Auth'
 import User from './pages/User'
 import City from './pages/City'
 import Cafe from './pages/Cafe'
+import Blog from './pages/Blog'
+import EditBlog from './pages/EditBlog'
 import SearchByKeyword from './pages/search/SearchByKeyword'
 import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
 
 function App() {
   const { currentUser } = useAuth()
-  // console.log('current User in app: ', currentUser)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -53,6 +54,11 @@ function App() {
                 </Route>
                 <Route path="cafe">
                   <Route path=":cafeId" element={<Cafe />} />
+                  <Route path=":cafeId/blog/:blogId" element={<Blog />} />
+                  <Route
+                    path=":cafeId/blog/edit/:blogId"
+                    element={<EditBlog />}
+                  />
                 </Route>
                 <Route path="picks" element={<Picks />} />
                 <Route

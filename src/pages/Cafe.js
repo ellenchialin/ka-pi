@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Outlet } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
@@ -12,6 +12,7 @@ import { GiPerson } from 'react-icons/gi'
 import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
+import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
@@ -27,6 +28,7 @@ function Cafe() {
   const [toggleSaved, setToggleSaved] = useState(false)
   const [savedNumber, setSavedNumber] = useState([])
   const [newComment, setNewComment] = useState('')
+  const [blogs, setBlogs] = useState([])
   const [comments, setComments] = useState([])
   const [photoRefs, setPhotoRefs] = useState([])
   const [pageViews, setPageViews] = useState(0)
@@ -52,6 +54,7 @@ function Cafe() {
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
+        firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
         firebase.getComments(cafe.id).then(data => setComments(data))
 
         console.log('Cafe Name: ', cafe.name)
@@ -74,7 +77,6 @@ function Cafe() {
 
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
-        /*
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
           .then(res => res.json())
           .then(data => {
@@ -85,7 +87,6 @@ function Cafe() {
 
             console.log('From google api: ', references)
           })
-        */
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
@@ -131,13 +132,11 @@ function Cafe() {
       return
     }
 
-    // console.log('Add new comment')
     firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
       setNewComment('')
       onCommentClose()
 
       firebase.listenCommentsChanges(cafe.id).then(data => {
-        // console.log('Latest comments from DB: ', data)
         setComments(data)
       })
     })
@@ -146,7 +145,6 @@ function Cafe() {
   const handleToggleSaved = () => {
     if (!currentUser) {
       onAlertOpen()
-      console.log('Show alert')
       return
     }
 
@@ -160,6 +158,11 @@ function Cafe() {
         setToggleSaved(prev => !prev)
       })
     }
+  }
+
+  const handleWriteBlogClick = () => {
+    const blogId = firebase.getBlogDocId(cafe.id)
+    navigate(`blog/edit/${blogId}`)
   }
 
   return (
@@ -363,7 +366,7 @@ function Cafe() {
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column">
             <Heading as="h4" size="1.5rem">
-              Google Reviews
+              More Photos
             </Heading>
             <Flex w="100%" wrap="wrap" justify="space-between">
               {photoRefs.length > 0 ? (
@@ -373,6 +376,35 @@ function Cafe() {
               ) : (
                 <Text>暫關閉 Google Review 照片</Text>
               )}
+            </Flex>
+          </Flex>
+
+          {/* Blogs section */}
+          <Flex w="100%" direction="column" my="6">
+            <Flex w="100%" justify="space-between" align="center" mb="4">
+              <Heading as="h4" size="1.5rem">
+                Blogs
+              </Heading>
+              <Button
+                leftIcon={<RiAddFill />}
+                size="xs"
+                onClick={handleWriteBlogClick}
+              >
+                Write a blog
+              </Button>
+            </Flex>
+            <Flex>
+              {blogs.map(blog => (
+                <BlogCard
+                  key={blog.blogId}
+                  cafe={cafe}
+                  blogId={blog.blogId}
+                  content={blog.content}
+                  title={blog.title}
+                  date={blog.createdAt}
+                  images={blog.images}
+                />
+              ))}
             </Flex>
           </Flex>
 
@@ -464,6 +496,7 @@ function Cafe() {
               </ModalFooter>
             </ModalContent>
           </Modal>
+          {/*<Outlet context={{ cafeId: cafe.id }} />*/}
         </>
       )}
     </Flex>
