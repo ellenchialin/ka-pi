@@ -170,7 +170,26 @@ export const firebase = {
     const blogId = blogRef.id
     return blogId
   },
-  getBlog() {},
+  getAllBlogs(cafeId) {
+    return new Promise(resolve => {
+      const q = query(
+        collection(db, `cafes/${cafeId}/blogs`),
+        orderBy('createdAt', 'desc')
+      )
+
+      getDocs(q).then(docsSnapshot => {
+        const blogsArray = docsSnapshot.docs.map(doc => ({
+          blogId: doc.data().blogId,
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          userId: doc.data().userId,
+          title: doc.data().title,
+          content: doc.data().content,
+          images: doc.data().images,
+        }))
+        resolve(blogsArray)
+      })
+    })
+  },
   getComments(cafeId) {
     return new Promise(resolve => {
       const q = query(

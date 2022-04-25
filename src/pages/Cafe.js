@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Outlet } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
@@ -28,6 +28,7 @@ function Cafe() {
   const [toggleSaved, setToggleSaved] = useState(false)
   const [savedNumber, setSavedNumber] = useState([])
   const [newComment, setNewComment] = useState('')
+  const [blogs, setBlogs] = useState([])
   const [comments, setComments] = useState([])
   const [photoRefs, setPhotoRefs] = useState([])
   const [pageViews, setPageViews] = useState(0)
@@ -53,6 +54,7 @@ function Cafe() {
         const cafe = data.filter(item => item.id === cafeId)[0]
         setCafe(cafe)
 
+        firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
         firebase.getComments(cafe.id).then(data => setComments(data))
 
         console.log('Cafe Name: ', cafe.name)
@@ -394,8 +396,17 @@ function Cafe() {
               </Button>
             </Flex>
             <Flex>
-              <BlogCard cafe={cafe} />
-              <BlogCard cafe={cafe} />
+              {blogs.map(blog => (
+                <BlogCard
+                  key={blog.blogId}
+                  cafe={cafe}
+                  blogId={blog.blogId}
+                  content={blog.content}
+                  title={blog.title}
+                  date={blog.createdAt}
+                  images={blog.images}
+                />
+              ))}
             </Flex>
           </Flex>
 
@@ -487,6 +498,7 @@ function Cafe() {
               </ModalFooter>
             </ModalContent>
           </Modal>
+          {/*<Outlet context={{ cafeId: cafe.id }} />*/}
         </>
       )}
     </Flex>

@@ -1,9 +1,15 @@
 import { useParams } from 'react-router-dom'
+import { Flex, Text } from '@chakra-ui/react'
 
 function Blog() {
-  const { blogId } = useParams()
+  const { cafeId, blogId } = useParams()
 
-  return <div>Blog</div>
+  return (
+    <Flex direction="column">
+      <Text>Cafe Id: {cafeId}</Text>
+      <Text>Blog Id: {blogId}</Text>
+    </Flex>
+  )
 }
 
 export default Blog
