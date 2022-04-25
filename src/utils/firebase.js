@@ -190,6 +190,20 @@ export const firebase = {
       })
     })
   },
+  getBlog(cafeId, blogId) {
+    return new Promise(resolve => {
+      const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
+      getDoc(blogRef).then(docsnap => {
+        if (docsnap.exists()) {
+          console.log(docsnap.data())
+          resolve(docsnap.data())
+        } else {
+          alert('找不到此blog')
+          return
+        }
+      })
+    })
+  },
   getComments(cafeId) {
     return new Promise(resolve => {
       const q = query(
