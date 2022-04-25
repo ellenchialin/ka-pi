@@ -77,7 +77,6 @@ function Cafe() {
 
         // TODO
         // 為了不要一直打 google maps api 先關掉，之後demo時打開
-        /*
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
           .then(res => res.json())
           .then(data => {
@@ -88,7 +87,6 @@ function Cafe() {
 
             console.log('From google api: ', references)
           })
-        */
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
@@ -368,7 +366,7 @@ function Cafe() {
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column">
             <Heading as="h4" size="1.5rem">
-              Google Reviews
+              More Photos
             </Heading>
             <Flex w="100%" wrap="wrap" justify="space-between">
               {photoRefs.length > 0 ? (
