@@ -164,7 +164,7 @@ function Cafe() {
 
   const handleWriteBlogClick = () => {
     const blogId = firebase.getBlogDocId(cafe.id)
-    navigate(`/cafe/blog/edit/${blogId}`)
+    navigate(`blog/edit/${blogId}`)
   }
 
   return (
