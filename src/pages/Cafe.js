@@ -141,9 +141,7 @@ function Cafe() {
       setNewComment('')
       onCommentClose()
 
-      firebase.listenCommentsChanges(cafe.id).then(data => {
-        setComments(data)
-      })
+      firebase.getComments(cafe.id).then(data => setComments(data))
     })
   }
 

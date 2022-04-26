@@ -1,13 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-// import { getAnalytics } from "firebase/analytics"
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth'
+// prettier-ignore
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 // prettier-ignore
 import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment } from 'firebase/firestore'
 
@@ -22,27 +16,20 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
+const auth = getAuth(app)
 const db = getFirestore(app)
 const storage = getStorage(app)
-// const analytics = getAnalytics(app)
 
 export const firebase = {
   checkAuthState(func) {
-    onAuthStateChanged(auth, user => {
-      // if (user) {
-      //   console.log('From Check state: ', user)
-      //   console.log('From Check state: ', user.uid)
-      // }
-      func(user)
-    })
+    onAuthStateChanged(auth, user => func(user))
   },
   nativeSignUp(name, email, password) {
     return new Promise(resolve => {
       createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user
-          console.log('Signed Up', user.uid)
+          // console.log('Signed Up', user.uid)
 
           setDoc(doc(db, 'users', user.uid), {
             email: user.email,
@@ -116,7 +103,7 @@ export const firebase = {
     return new Promise(resolve => {
       signOut(auth)
         .then(() => {
-          console.log('Logged out')
+          // console.log('Logged out')
           resolve()
         })
         .catch(error => {
@@ -126,8 +113,7 @@ export const firebase = {
     })
   },
   checkSavedNumber(cafeId) {
-    console.log(cafeId)
-
+    // console.log(cafeId)
     const q = query(
       collection(db, 'users'),
       where('favCafes', 'array-contains', cafeId)
@@ -195,7 +181,7 @@ export const firebase = {
       const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
       getDoc(blogRef).then(docsnap => {
         if (docsnap.exists()) {
-          console.log(docsnap.data())
+          // console.log(docsnap.data())
           resolve(docsnap.data())
         } else {
           alert('找不到此blog')
@@ -214,7 +200,7 @@ export const firebase = {
       getDocs(q).then(docsSnapshot => {
         const commentArray = docsSnapshot.docs.map(doc => ({
           commentId: doc.data().commentId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          createdAt: doc.data().createdAt,
           userId: doc.data().userId,
           text: doc.data().text,
           replies: doc.data().replies,
@@ -234,24 +220,6 @@ export const firebase = {
         text,
       })
       resolve()
-    })
-  },
-  listenCommentsChanges(cafeId) {
-    return new Promise(resolve => {
-      const q = query(
-        collection(db, `cafes/${cafeId}/comments`),
-        orderBy('createdAt', 'desc')
-      )
-      onSnapshot(q, querySnapshot => {
-        const commentArray = querySnapshot.docs.map(doc => ({
-          commentId: doc.data().commentId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
-          userId: doc.data().userId,
-          text: doc.data().text,
-          replies: doc.data().replies,
-        }))
-        resolve(commentArray)
-      })
     })
   },
   getReplyList(cafeId, commentId) {

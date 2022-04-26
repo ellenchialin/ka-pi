@@ -18,6 +18,8 @@ function Comment({
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
   const [replyList, setReplyList] = useState([])
+  console.log(date)
+  const convertedCommentDate = date.toDate().toLocaleDateString()
 
   const {
     isOpen: isReplyOpen,
@@ -134,7 +136,7 @@ function Comment({
       </Flex>
       <Flex justify="space-between" fontSize="0.875rem">
         <Text>{text}</Text>
-        <Text>{date}</Text>
+        <Text>{convertedCommentDate}</Text>
       </Flex>
       {/* Replies */}
       {replyList.length > 0 &&
