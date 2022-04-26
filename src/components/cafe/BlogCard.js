@@ -4,7 +4,7 @@ import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button } from
 import { RiDeleteBin5Line } from 'react-icons/ri'
 
 function BlogCard({
-  cafe,
+  cafeId,
   blogId,
   content,
   title,
@@ -17,8 +17,7 @@ function BlogCard({
   const coverImage = images[0]
 
   const handleReadmore = () => {
-    // const cafeId = cafe.id
-    navigate(`blog/${blogId}`)
+    navigate(`/cafe/${cafeId}/blog/${blogId}`)
   }
 
   return (
@@ -38,7 +37,7 @@ function BlogCard({
         <AspectRatio maxW="100%" ratio={1}>
           <Image
             src={coverImage}
-            alt={`${cafe.name} 食記照片`}
+            alt="食記照片"
             roundedTop="lg"
             objectFit="cover"
           />

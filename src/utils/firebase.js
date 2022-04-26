@@ -3,7 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -166,6 +166,7 @@ export const firebase = {
       getDocs(q).then(docsSnapshot => {
         const blogsArray = docsSnapshot.docs.map(doc => ({
           blogId: doc.data().blogId,
+          cafeId: doc.data().cafeId,
           createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
           userId: doc.data().userId,
           title: doc.data().title,
@@ -187,6 +188,26 @@ export const firebase = {
           alert('找不到此blog')
           return
         }
+      })
+    })
+  },
+  getUserBlogs(userId) {
+    return new Promise(resolve => {
+      const blogs = query(
+        collectionGroup(db, `blogs`),
+        where('userId', '==', `${userId}`)
+      )
+      getDocs(blogs).then(docsSnapshot => {
+        const blogsArray = docsSnapshot.docs.map(doc => ({
+          blogId: doc.data().blogId,
+          cafeId: doc.data().cafeId,
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          userId: doc.data().userId,
+          title: doc.data().title,
+          content: doc.data().content,
+          images: doc.data().images,
+        }))
+        resolve(blogsArray)
       })
     })
   },

@@ -401,7 +401,7 @@ function Cafe() {
               {blogs.map(blog => (
                 <BlogCard
                   key={blog.blogId}
-                  cafe={cafe}
+                  cafeId={blog.cafeId}
                   blogId={blog.blogId}
                   content={blog.content}
                   title={blog.title}
