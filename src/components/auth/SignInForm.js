@@ -28,7 +28,7 @@ const SignInForm = () => {
 
     signin(email, password).then(user => {
       console.log('Current User from Context: ', user)
-      navigate('/user')
+      navigate(-1)
     })
   }
 

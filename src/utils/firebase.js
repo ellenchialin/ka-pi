@@ -200,7 +200,7 @@ export const firebase = {
       getDocs(q).then(docsSnapshot => {
         const commentArray = docsSnapshot.docs.map(doc => ({
           commentId: doc.data().commentId,
-          createdAt: doc.data().createdAt,
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
           userId: doc.data().userId,
           text: doc.data().text,
           replies: doc.data().replies,
@@ -220,6 +220,24 @@ export const firebase = {
         text,
       })
       resolve()
+    })
+  },
+  listenCommentsChanges(cafeId) {
+    return new Promise(resolve => {
+      const q = query(
+        collection(db, `cafes/${cafeId}/comments`),
+        orderBy('createdAt', 'desc')
+      )
+      onSnapshot(q, querySnapshot => {
+        const commentArray = querySnapshot.docs.map(doc => ({
+          commentId: doc.data().commentId,
+          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+          userId: doc.data().userId,
+          text: doc.data().text,
+          replies: doc.data().replies,
+        }))
+        resolve(commentArray)
+      })
     })
   },
   getReplyList(cafeId, commentId) {

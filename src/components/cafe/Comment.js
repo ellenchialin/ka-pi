@@ -18,8 +18,6 @@ function Comment({
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
   const [replyList, setReplyList] = useState([])
-  console.log(date)
-  const convertedCommentDate = date.toDate().toLocaleDateString()
 
   const {
     isOpen: isReplyOpen,
@@ -35,7 +33,7 @@ function Comment({
 
   useEffect(() => {
     firebase.getReplyList(cafeId, commentId).then(list => {
-      console.log('Reply List: ', list)
+      // console.log('Reply List: ', list)
       setReplyList(list)
     })
   }, [])
@@ -49,7 +47,7 @@ function Comment({
   }
 
   const submitReply = () => {
-    console.log('Reply to comment: ', commentId)
+    // console.log('Reply to comment: ', commentId)
 
     const repliedDetails = {
       cafeId,
@@ -81,7 +79,6 @@ function Comment({
             src={userInfo.photo}
             alt={userInfo.name}
             objectFit="cover"
-            fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
           />
           <Text fontSize="0.875rem">{userInfo.name}</Text>
         </Flex>
@@ -136,7 +133,7 @@ function Comment({
       </Flex>
       <Flex justify="space-between" fontSize="0.875rem">
         <Text>{text}</Text>
-        <Text>{convertedCommentDate}</Text>
+        <Text>{date}</Text>
       </Flex>
       {/* Replies */}
       {replyList.length > 0 &&
