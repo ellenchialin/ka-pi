@@ -28,7 +28,7 @@ const SignInForm = () => {
 
     signin(email, password).then(user => {
       console.log('Current User from Context: ', user)
-      navigate('/user')
+      navigate(-1)
     })
   }
 
@@ -69,7 +69,7 @@ const SignInForm = () => {
             </Form>
           )}
         </Formik>
-        <Text my="6">or sign in with...</Text>
+        {/*<Text my="6">or sign in with...</Text>
         <Flex justify="center">
           <IconButton
             colorScheme="facebook"
@@ -86,7 +86,7 @@ const SignInForm = () => {
             icon={<FaGoogle />}
             isRound
           />
-        </Flex>
+        </Flex>*/}
       </Flex>
     </Flex>
   )

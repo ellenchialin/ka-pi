@@ -55,7 +55,9 @@ function Cafe() {
         setCafe(cafe)
 
         firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
-        firebase.getComments(cafe.id).then(data => setComments(data))
+        firebase
+          .getComments(cafe.id)
+          .then(commentList => setComments(commentList))
 
         console.log('Cafe Name: ', cafe.name)
 
@@ -141,9 +143,9 @@ function Cafe() {
       setNewComment('')
       onCommentClose()
 
-      firebase.listenCommentsChanges(cafe.id).then(data => {
-        setComments(data)
-      })
+      firebase
+        .listenCommentsChanges(cafe.id)
+        .then(commentList => setComments(commentList))
     })
   }
 
@@ -399,7 +401,7 @@ function Cafe() {
               {blogs.map(blog => (
                 <BlogCard
                   key={blog.blogId}
-                  cafe={cafe}
+                  cafeId={blog.cafeId}
                   blogId={blog.blogId}
                   content={blog.content}
                   title={blog.title}
@@ -466,17 +468,18 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {comments.map(comment => (
-              <Comment
-                key={comment.commentId}
-                cafeId={cafe.id}
-                commentId={comment.commentId}
-                commentUserId={comment.userId}
-                date={comment.createdAt}
-                text={comment.text}
-                currentUser={currentUser}
-              />
-            ))}
+            {comments.length > 0 &&
+              comments.map(comment => (
+                <Comment
+                  key={comment.commentId}
+                  cafeId={cafe.id}
+                  commentId={comment.commentId}
+                  commentUserId={comment.userId}
+                  date={comment.createdAt}
+                  text={comment.text}
+                  currentUser={currentUser}
+                />
+              ))}
           </Flex>
 
           <Modal
@@ -498,7 +501,6 @@ function Cafe() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-          {/*<Outlet context={{ cafeId: cafe.id }} />*/}
         </>
       )}
     </Flex>

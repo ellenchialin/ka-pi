@@ -9,6 +9,7 @@ import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
 import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
+import BlogCard from '../components/cafe/BlogCard'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
 function EditableText({
@@ -56,6 +57,7 @@ function User() {
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
   const [userPhotoUrl, setUserPhotoUrl] = useState(null)
+  const [blogs, setBlogs] = useState([])
   const [savedCafes, setSavedCafes] = useState([])
   const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
@@ -111,6 +113,10 @@ function User() {
         getFavCafes(data.favCafes)
       })
       .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
+  }, [])
+
+  useEffect(() => {
+    firebase.getUserBlogs(currentUser.uid).then(blogs => setBlogs(blogs))
   }, [])
 
   const handleSignout = () => {
@@ -235,6 +241,22 @@ function User() {
                 ))}
               </>
             )}
+          </Flex>
+          <Flex direction="column">
+            <Text>Blogs</Text>
+            <Flex>
+              {blogs.map(blog => (
+                <BlogCard
+                  key={blog.blogId}
+                  cafeId={blog.cafeId}
+                  blogId={blog.blogId}
+                  content={blog.content}
+                  title={blog.title}
+                  date={blog.createdAt}
+                  images={blog.images}
+                />
+              ))}
+            </Flex>
           </Flex>
           <Button onClick={handleSignout}>Sign out</Button>
         </>
