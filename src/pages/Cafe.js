@@ -29,7 +29,7 @@ function Cafe() {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
   const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
-  const [photoRefs, setPhotoRefs] = useState([])
+  const [googlePhotoRefs, setGooglePhotoRefs] = useState([])
   const [pageViews, setPageViews] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -74,11 +74,9 @@ function Cafe() {
 
         if (currentUser) {
           // Check this cafe is saved by user or not and render init icon
-          firebase.getUser(currentUser.uid).then(data => {
-            // console.log(data.favCafes.includes(cafe.id))
-            console.log(data.favCafes)
-            setToggleSaved(data.favCafes.includes(cafe.id))
-          })
+          firebase
+            .getUser(currentUser.uid)
+            .then(data => setToggleSaved(data.favCafes.includes(cafe.id)))
         }
 
         // TODO
@@ -89,7 +87,7 @@ function Cafe() {
             const references = data
               .slice(0, 6)
               .map(photo => photo.photo_reference)
-            setPhotoRefs(references)
+            setGooglePhotoRefs(references)
 
             console.log('From google api: ', references)
           })
@@ -219,7 +217,7 @@ function Cafe() {
             px="2"
             mb="4"
             minH={{ sm: '30vh', md: '40vh' }}
-            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
+            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
@@ -392,8 +390,8 @@ function Cafe() {
               More Photos
             </Heading>
             <Flex w="100%" wrap="wrap" justify="space-between">
-              {photoRefs.length > 0 &&
-                photoRefs.map(ref => (
+              {googlePhotoRefs.length > 0 &&
+                googlePhotoRefs.map(ref => (
                   <GooglePlaceCard key={ref} photoRef={ref} />
                 ))}
             </Flex>

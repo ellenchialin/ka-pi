@@ -10,18 +10,22 @@ function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogContent, setBlogContent] = useState('')
   const [coverPhotoUrl, setCoverPhotoUrl] = useState('')
+  const [disablePublish, setDisablePublish] = useState(true)
 
   const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
   const { cafeId, blogId } = useParams()
   const navigate = useNavigate()
 
-  console.log(`Cafe Id: ${cafeId}`)
-  console.log(`Blog Id: ${blogId}`)
-
   useEffect(() => {
     titleInputRef.current.focus()
   }, [])
+
+  useEffect(() => {
+    blogTitle && blogContent && coverPhotoUrl
+      ? setDisablePublish(false)
+      : setDisablePublish(true)
+  }, [blogTitle, blogContent, coverPhotoUrl])
 
   const handlePhotoUpload = e => {
     if (e.target.files[0]) {
@@ -35,15 +39,15 @@ function EditBlog() {
     }
   }
 
-  const handleUploadBlog = () => {
-    const data = {
+  const handlePublishBlog = () => {
+    const blogData = {
       title: blogTitle,
       content: blogContent,
       image: coverPhotoUrl,
     }
 
     firebase
-      .uploadBlog(cafeId, blogId, data)
+      .uploadBlog(cafeId, blogId, blogData)
       .then(() => navigate(`/cafe/${cafeId}/blog/${blogId}`))
   }
 
@@ -98,7 +102,12 @@ function EditBlog() {
         height="auto"
         isRequired
       />
-      <Button alignSelf="center" w="150px" onClick={handleUploadBlog}>
+      <Button
+        alignSelf="center"
+        w="150px"
+        onClick={handlePublishBlog}
+        isDisabled={disablePublish}
+      >
         Publish
       </Button>
 
