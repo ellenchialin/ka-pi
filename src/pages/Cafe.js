@@ -61,8 +61,6 @@ function Cafe() {
           .getComments(cafe.id)
           .then(commentList => setComments(commentList))
 
-        console.log('Cafe Name: ', cafe.name)
-
         // Create a cafe doc
         // firebase.addCafeDoc(cafe.id, { mainPhoto: ''))
 
