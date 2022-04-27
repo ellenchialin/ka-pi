@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react'
 // prettier-ignore
-import { Flex, Image, Text } from '@chakra-ui/react'
+import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure } from '@chakra-ui/react'
 import { firebase } from '../../utils/firebase'
 
-function Reply({ replyUserId, replyText, replyDate }) {
+function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   console.log('Reply user Id: ', replyUserId)
 
   const [userInfo, setUserInfo] = useState({})
   const convertedReplyDate = replyDate.toDate().toLocaleDateString()
+
+  const {
+    isOpen: isReplyPhotoOpen,
+    onOpen: onReplyPhotoOpen,
+    onClose: onReplyPhotoClose,
+  } = useDisclosure()
 
   useEffect(() => {
     firebase.getUser(replyUserId).then(data => {
@@ -37,6 +43,33 @@ function Reply({ replyUserId, replyText, replyDate }) {
       <Text color="blue.500" fontSize="0.875rem">
         {convertedReplyDate}
       </Text>
+      {replyImage && (
+        <>
+          <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+            <Image
+              src={replyImage}
+              alt="留言照片"
+              fit="cover"
+              onClick={onReplyPhotoOpen}
+              cursor="pointer"
+            />
+          </AspectRatio>
+
+          <Modal
+            size="full"
+            isOpen={isReplyPhotoOpen}
+            onClose={onReplyPhotoClose}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalCloseButton />
+              <ModalBody p="10">
+                <Image src={replyImage} alt="留言照片" fit="cover" />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
     </Flex>
   )
 }

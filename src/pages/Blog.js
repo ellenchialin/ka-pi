@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Heading, Avatar, Box } from '@chakra-ui/react'
+import { Flex, Text, Spinner, Heading, Avatar, Box, Image, AspectRatio } from '@chakra-ui/react'
 import { firebase } from '../utils/firebase'
 import ImageSlider from '../components/ImageSlider'
 
@@ -57,10 +57,17 @@ function Blog() {
           transform="translate(-50%, -50%)"
         />
       ) : (
-        <Flex direction="column">
-          <Box mb="4">
-            <ImageSlider slides={blog.images} />
-          </Box>
+        <Flex direction="column" h="100%" w="100%">
+          {/*<ImageSlider slides={blog.images} />*/}
+          <AspectRatio w="100%" maxW="800px" ratio={21 / 9}>
+            <Image
+              src={blog.image}
+              alt="食記照片"
+              rounded="lg"
+              fit="cover"
+              w="100%"
+            />
+          </AspectRatio>
           <Heading
             as="h1"
             size="2xl"
