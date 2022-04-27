@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Text, Input, Image, Button, AspectRatio, Textarea } from '@chakra-ui/react'
@@ -11,12 +11,18 @@ function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogContent, setBlogContent] = useState('')
   const [coverPhotoUrl, setCoverPhotoUrl] = useState('')
+
+  const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
   const { cafeId, blogId } = useParams()
   const navigate = useNavigate()
 
   console.log(`Cafe Id: ${cafeId}`)
   console.log(`Blog Id: ${blogId}`)
+
+  useEffect(() => {
+    titleInputRef.current.focus()
+  }, [])
 
   const handlePhotoUpload = e => {
     if (e.target.files[0]) {
@@ -80,6 +86,7 @@ function EditBlog() {
         placeholder="Blog title..."
         value={blogTitle}
         onChange={e => setBlogTitle(e.target.value)}
+        ref={titleInputRef}
         isRequired
       />
       <Textarea
