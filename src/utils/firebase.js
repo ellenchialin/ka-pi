@@ -234,7 +234,7 @@ export const firebase = {
           userId: doc.data().userId,
           title: doc.data().title,
           content: doc.data().content,
-          images: doc.data().images,
+          image: doc.data().image,
         }))
         resolve(blogsArray)
       })
@@ -253,13 +253,22 @@ export const firebase = {
           createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
           userId: doc.data().userId,
           text: doc.data().text,
+          image: doc.data().image,
           replies: doc.data().replies,
         }))
         resolve(commentArray)
       })
     })
   },
-  addComment(cafeId, userId, text) {
+  getCommentPhotoUrl(file) {
+    return new Promise(resolve => {
+      const imageRef = ref(storage, `comments/${file.name}`)
+      uploadBytes(imageRef, file).then(() => {
+        getDownloadURL(imageRef).then(url => resolve(url))
+      })
+    })
+  },
+  addComment(cafeId, userId, text, image) {
     const newDocRef = doc(collection(db, `cafes/${cafeId}/comments`))
 
     return new Promise(resolve => {
@@ -268,6 +277,7 @@ export const firebase = {
         createdAt: serverTimestamp(),
         userId,
         text,
+        image,
       })
       resolve()
     })

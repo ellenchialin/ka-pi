@@ -254,7 +254,7 @@ function User() {
                   content={blog.content}
                   title={blog.title}
                   date={blog.createdAt}
-                  images={blog.images}
+                  image={blog.image}
                 />
               ))}
             </Flex>

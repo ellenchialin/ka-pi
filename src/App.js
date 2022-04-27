@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
-import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, DrawerContent } from '@chakra-ui/react'
+import { ChakraProvider, Box, theme, useDisclosure, Drawer, DrawerOverlay, DrawerContent, Flex } from '@chakra-ui/react'
 // import { ColorModeSwitcher } from './ColorModeSwitcher'
 
 import { useAuth } from './contexts/AuthContext'
@@ -38,7 +38,14 @@ function App() {
           <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
             <Header onOpen={onOpen} />
 
-            <Box as="main" py="8" px="6">
+            <Flex
+              as="main"
+              direction="column"
+              justify="center"
+              align="center"
+              py="8"
+              px="6"
+            >
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="collections">
@@ -75,7 +82,7 @@ function App() {
                 />
                 <Route path="*" element={<NoMatch />} />
               </Routes>
-            </Box>
+            </Flex>
           </Box>
         </Box>
       </ChakraProvider>

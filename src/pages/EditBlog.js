@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Flex, Text, Input, Image, Button, AspectRatio, Textarea } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
-import { useAuth } from '../contexts/AuthContext'
 import TextEditor from '../components/TextEditor'
 
 function EditBlog() {
@@ -83,7 +82,8 @@ function EditBlog() {
       </Flex>
       <Input
         variant="filled"
-        placeholder="Blog title..."
+        placeholder="Blog Title"
+        mb="6"
         value={blogTitle}
         onChange={e => setBlogTitle(e.target.value)}
         ref={titleInputRef}
@@ -94,10 +94,15 @@ function EditBlog() {
         size="lg"
         value={blogContent}
         onChange={e => setBlogContent(e.target.value)}
+        rows={15}
+        height="auto"
         isRequired
       />
+      <Button alignSelf="center" w="150px" onClick={handleUploadBlog}>
+        Publish
+      </Button>
+
       <TextEditor />
-      <Button onClick={handleUploadBlog}>Publish</Button>
     </Flex>
   )
 }

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Outlet } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image } from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 // prettier-ignore
 import { BsBookmark, BsFillBookmarkFill, BsFillExclamationTriangleFill } from 'react-icons/bs'
@@ -21,21 +21,23 @@ import { useAuth } from '../contexts/AuthContext'
 
 function Cafe() {
   usePageTracking()
-  const { currentUser } = useAuth()
-  // console.log('current user in cafe page: ', currentUser)
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
   const [savedNumber, setSavedNumber] = useState([])
-  const [newComment, setNewComment] = useState('')
   const [blogs, setBlogs] = useState([])
   const [comments, setComments] = useState([])
+  const [commentText, setCommentText] = useState('')
+  const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
   const [photoRefs, setPhotoRefs] = useState([])
   const [pageViews, setPageViews] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
+  const { currentUser } = useAuth()
+  const commentPhotoRef = useRef()
   const { cafeId } = useParams()
   const navigate = useNavigate()
+
   const {
     isOpen: isCommentOpen,
     onOpen: onCommentOpen,
@@ -138,15 +140,29 @@ function Cafe() {
     onCommentOpen()
   }
 
-  const handleAddComment = () => {
-    firebase.addComment(cafe.id, currentUser.uid, newComment).then(() => {
-      setNewComment('')
-      onCommentClose()
-
+  const handleCommentPhotoUpload = e => {
+    if (e.target.files[0]) {
       firebase
-        .listenCommentsChanges(cafe.id)
-        .then(commentList => setComments(commentList))
-    })
+        .getCommentPhotoUrl(e.target.files[0])
+        .then(url => setCommentPhotoUrl(url))
+        .catch(error => {
+          alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          console.error(error)
+        })
+    }
+  }
+
+  const handleAddComment = () => {
+    firebase
+      .addComment(cafe.id, currentUser.uid, commentText, commentPhotoUrl)
+      .then(() => {
+        setCommentText('')
+        onCommentClose()
+
+        firebase
+          .listenCommentsChanges(cafe.id)
+          .then(commentList => setComments(commentList))
+      })
   }
 
   const handleToggleSaved = () => {
@@ -161,7 +177,6 @@ function Cafe() {
         .then(() => setToggleSaved(prev => !prev))
     } else {
       firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
-        // console.log('Cafe added to : ', userId, cafeId)
         setToggleSaved(prev => !prev)
       })
     }
@@ -437,30 +452,48 @@ function Cafe() {
                   <ModalCloseButton />
                   <ModalBody>
                     <Textarea
-                      value={newComment}
-                      onChange={e => setNewComment(e.target.value)}
+                      value={commentText}
+                      onChange={e => setCommentText(e.target.value)}
                       placeholder="Leave your comment here..."
                       size="md"
                       mt="10"
                       mb="6"
                     />
-                    <InputGroup>
-                      <InputLeftElement
-                        children={<RiAddFill color="gray.300" />}
-                      />
+                    <Flex mb="6">
+                      <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                        <Image
+                          src={commentPhotoUrl ? commentPhotoUrl : ''}
+                          alt="留言照片"
+                          fit="cover"
+                          fallbackSrc="https://via.placeholder.com/100?text=photo"
+                        />
+                      </AspectRatio>
+                      <Button
+                        colorScheme="blackAlpha"
+                        aria-label="上傳留言照"
+                        leftIcon={<RiAddFill />}
+                        size="xs"
+                        ml="2"
+                        mt="auto"
+                        onClick={() => commentPhotoRef.current.click()}
+                      >
+                        Upload
+                      </Button>
                       <Input
+                        ref={commentPhotoRef}
                         type="file"
-                        border="none"
-                        name="image"
+                        name="coverPhoto"
                         accept="image/*"
+                        onChange={e => handleCommentPhotoUpload(e)}
+                        hidden
                       />
-                    </InputGroup>
+                    </Flex>
                   </ModalBody>
 
                   <ModalFooter>
                     <Button
                       variant="ghost"
-                      isDisabled={newComment === '' ? true : false}
+                      isDisabled={commentText === '' ? true : false}
                       onClick={handleAddComment}
                     >
                       Submit
@@ -478,6 +511,7 @@ function Cafe() {
                   commentUserId={comment.userId}
                   date={comment.createdAt}
                   text={comment.text}
+                  image={comment.image}
                   currentUser={currentUser}
                 />
               ))}

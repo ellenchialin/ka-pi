@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
-import { Flex, Image, Text, IconButton, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, InputGroup, InputLeftElement, Input, ModalFooter, Button, useDisclosure } from '@chakra-ui/react'
+import { Flex, Image, Text, IconButton, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, InputGroup, InputLeftElement, Input, ModalFooter, Button, useDisclosure, AspectRatio } from '@chakra-ui/react'
 import { RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 import Reply from './Reply'
@@ -12,12 +12,20 @@ function Comment({
   commentUserId,
   text,
   date,
+  image,
 }) {
-  // console.log('In Comment Page Current User: ', currentUser)
-
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
+  const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
   const [replyList, setReplyList] = useState([])
+
+  const commentPhotoRef = useRef()
+
+  const {
+    isOpen: isCommentPhotoOpen,
+    onOpen: onCommentPhotoOpen,
+    onClose: onCommentPhotoClose,
+  } = useDisclosure()
 
   const {
     isOpen: isReplyOpen,
@@ -37,6 +45,18 @@ function Comment({
       setReplyList(list)
     })
   }, [])
+
+  const handlePhotoUpload = e => {
+    if (e.target.files[0]) {
+      firebase
+        .getCommentPhotoUrl(e.target.files[0])
+        .then(url => setCommentPhotoUrl(url))
+        .catch(error => {
+          alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          console.error(error)
+        })
+    }
+  }
 
   const handleClickReply = () => {
     if (!currentUser) {
@@ -108,15 +128,37 @@ function Comment({
                 mt="10"
                 mb="6"
               />
-              <InputGroup>
-                <InputLeftElement children={<RiAddFill color="gray.300" />} />
+              <Flex mb="6" maxWidth="100px" position="relative">
+                <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                  <Image
+                    src={commentPhotoUrl ? commentPhotoUrl : ''}
+                    alt="留言照片"
+                    fit="cover"
+                    maxW="100px"
+                    fallbackSrc="https://via.placeholder.com/100?text=add+photo"
+                  />
+                </AspectRatio>
+                <Button
+                  colorScheme="blackAlpha"
+                  aria-label="上傳留言照"
+                  leftIcon={<RiAddFill />}
+                  size="xs"
+                  position="absolute"
+                  top="10px"
+                  right="10px"
+                  onClick={() => commentPhotoRef.current.click()}
+                >
+                  Upload
+                </Button>
                 <Input
+                  ref={commentPhotoRef}
                   type="file"
-                  border="none"
-                  name="image"
+                  name="coverPhoto"
                   accept="image/*"
+                  onChange={e => handlePhotoUpload(e)}
+                  hidden
                 />
-              </InputGroup>
+              </Flex>
             </ModalBody>
 
             <ModalFooter>
@@ -135,6 +177,33 @@ function Comment({
         <Text>{text}</Text>
         <Text>{date}</Text>
       </Flex>
+      {image && (
+        <>
+          <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+            <Image
+              src={image}
+              alt="留言照片"
+              fit="cover"
+              onClick={onCommentPhotoOpen}
+              cursor="pointer"
+            />
+          </AspectRatio>
+
+          <Modal
+            size="full"
+            isOpen={isCommentPhotoOpen}
+            onClose={onCommentPhotoClose}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalCloseButton />
+              <ModalBody p="10">
+                <Image src={image} alt="留言照片" fit="cover" />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
       {/* Replies */}
       {replyList.length > 0 &&
         replyList.map(reply => (
