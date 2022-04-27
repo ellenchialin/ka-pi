@@ -143,7 +143,7 @@ function User() {
   const handlePhotoChange = e => {
     if (e.target.files[0]) {
       firebase
-        .getPhotoUrl(currentUser.uid, e.target.files[0])
+        .getUserPhotoUrl(currentUser.uid, e.target.files[0])
         .then(url => setUserPhotoUrl(url))
         .catch(error => {
           alert('頭貼上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
@@ -151,6 +151,7 @@ function User() {
         })
     }
   }
+
   return (
     <Flex direction="column" position="relative">
       {isLoading ? (
@@ -192,7 +193,7 @@ function User() {
                 type="file"
                 name="userPhoto"
                 accept="image/*"
-                onChange={handlePhotoChange}
+                onChange={e => handlePhotoChange(e)}
                 hidden
               />
             </Flex>

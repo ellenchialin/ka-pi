@@ -168,8 +168,9 @@ function Cafe() {
   }
 
   const handleWriteBlogClick = () => {
-    const blogId = firebase.getBlogDocId(cafe.id)
-    navigate(`blog/edit/${blogId}`)
+    firebase.addBlog(cafe.id, currentUser.uid).then(blogId => {
+      navigate(`blog/edit/${blogId}`)
+    })
   }
 
   return (
@@ -406,7 +407,7 @@ function Cafe() {
                   content={blog.content}
                   title={blog.title}
                   date={blog.createdAt}
-                  images={blog.images}
+                  image={blog.image}
                 />
               ))}
             </Flex>

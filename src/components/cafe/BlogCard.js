@@ -8,13 +8,12 @@ function BlogCard({
   blogId,
   content,
   title,
-  images,
+  image,
   date,
   canDeleteBlog,
   handleBlogDelete,
 }) {
   const navigate = useNavigate()
-  const coverImage = images[0]
 
   const handleReadmore = () => {
     navigate(`/cafe/${cafeId}/blog/${blogId}`)
@@ -35,12 +34,7 @@ function BlogCard({
         position="relative"
       >
         <AspectRatio maxW="100%" ratio={1}>
-          <Image
-            src={coverImage}
-            alt="食記照片"
-            roundedTop="lg"
-            objectFit="cover"
-          />
+          <Image src={image} alt="食記照片" roundedTop="lg" objectFit="cover" />
         </AspectRatio>
         {canDeleteBlog && (
           <IconButton
@@ -56,7 +50,13 @@ function BlogCard({
             onClick={handleBlogDelete}
           />
         )}
-        <Flex direction="column" p="4" h="100%" justify="space-between">
+        <Flex
+          direction="column"
+          p="4"
+          h="100%"
+          minH="105px"
+          justify="space-between"
+        >
           <Flex alignItems="center" justifyContent="space-between">
             <Heading as="h5" size="sm" isTruncated>
               {title}

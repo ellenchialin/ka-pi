@@ -74,7 +74,7 @@ export const firebase = {
       }).then(() => resolve())
     })
   },
-  getPhotoUrl(userId, file) {
+  getUserPhotoUrl(userId, file) {
     return new Promise(resolve => {
       const imageRef = ref(storage, `users/${file.name}`)
       uploadBytes(imageRef, file).then(() => {
@@ -151,10 +151,28 @@ export const firebase = {
       })
     })
   },
-  getBlogDocId(cafeId) {
-    const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
-    const blogId = blogRef.id
-    return blogId
+  addBlog(cafeId, userId) {
+    return new Promise(resolve => {
+      const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
+      setDoc(blogRef, {
+        blogId: blogRef.id,
+        cafeId,
+        userId,
+        title: '',
+        content: '',
+        image: '',
+        createdAt: serverTimestamp(),
+      }).then(() => resolve(blogRef.id))
+    })
+  },
+  uploadBlog(cafeId, blogId, data) {
+    return new Promise(resolve => {
+      updateDoc(doc(db, `cafes/${cafeId}/blogs/${blogId}`), {
+        title: data.title,
+        content: data.content,
+        image: data.image,
+      }).then(() => resolve())
+    })
   },
   getAllBlogs(cafeId) {
     return new Promise(resolve => {
@@ -171,7 +189,7 @@ export const firebase = {
           userId: doc.data().userId,
           title: doc.data().title,
           content: doc.data().content,
-          images: doc.data().images,
+          image: doc.data().image,
         }))
         resolve(blogsArray)
       })
@@ -188,6 +206,17 @@ export const firebase = {
           alert('找不到此blog')
           return
         }
+      })
+    })
+  },
+  getBlogPhotoUrl(cafeId, blogId, file) {
+    return new Promise(resolve => {
+      const imageRef = ref(storage, `blogs/${file.name}`)
+      uploadBytes(imageRef, file).then(() => {
+        getDownloadURL(imageRef).then(url => {
+          updateDoc(doc(db, `cafes/${cafeId}/blogs/${blogId}`), { image: url })
+          resolve(url)
+        })
       })
     })
   },
