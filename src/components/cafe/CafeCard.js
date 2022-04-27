@@ -1,11 +1,19 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton} from '@chakra-ui/react'
 import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import { RiDeleteBin5Line } from 'react-icons/ri'
+import { firebase } from '../../utils/firebase'
 
 function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
+  const [coverPhoto, setCoverPhoto] = useState(null)
+
+  useEffect(() => {
+    firebase.getAllBlogs(cafe.id).then(blogs => setCoverPhoto(blogs[0].image))
+  }, [])
+
   return (
     <>
       <Box
@@ -22,10 +30,11 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
       >
         <AspectRatio maxW="100%" ratio={1}>
           <Image
-            src="https://images.unsplash.com/photo-1534201569625-ed4662d8be97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=411&q=80"
+            src={coverPhoto ? coverPhoto : ''}
             alt={`${cafe.name} 店內照片`}
             roundedTop="lg"
             objectFit="cover"
+            fallbackSrc="https://images.unsplash.com/photo-1534201569625-ed4662d8be97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=411&q=80"
           />
         </AspectRatio>
         {canDeleteCafe && (
