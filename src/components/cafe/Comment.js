@@ -16,10 +16,10 @@ function Comment({
 }) {
   const [userInfo, setUserInfo] = useState({})
   const [newReplyText, setNewReplyText] = useState('')
-  const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
+  const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
   const [replyList, setReplyList] = useState([])
 
-  const commentPhotoRef = useRef()
+  const replyPhotoRef = useRef()
 
   const {
     isOpen: isCommentPhotoOpen,
@@ -46,11 +46,11 @@ function Comment({
     })
   }, [])
 
-  const handlePhotoUpload = e => {
+  const handleReplyPhotoUpload = e => {
     if (e.target.files[0]) {
       firebase
-        .getCommentPhotoUrl(e.target.files[0])
-        .then(url => setCommentPhotoUrl(url))
+        .getReplyPhotoUrl(e.target.files[0])
+        .then(url => setReplyPhotoUrl(url))
         .catch(error => {
           alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
           console.error(error)
@@ -67,12 +67,11 @@ function Comment({
   }
 
   const submitReply = () => {
-    // console.log('Reply to comment: ', commentId)
-
     const repliedDetails = {
       cafeId,
       commentId,
       userId: currentUser.uid,
+      image: replyPhotoUrl,
       text: newReplyText,
     }
 
@@ -128,10 +127,10 @@ function Comment({
                 mt="10"
                 mb="6"
               />
-              <Flex mb="6" maxWidth="100px" position="relative">
+              <Flex mb="6">
                 <AspectRatio w="100%" maxWidth="100px" ratio={1}>
                   <Image
-                    src={commentPhotoUrl ? commentPhotoUrl : ''}
+                    src={replyPhotoUrl ? replyPhotoUrl : ''}
                     alt="留言照片"
                     fit="cover"
                     maxW="100px"
@@ -143,19 +142,18 @@ function Comment({
                   aria-label="上傳留言照"
                   leftIcon={<RiAddFill />}
                   size="xs"
-                  position="absolute"
-                  top="10px"
-                  right="10px"
-                  onClick={() => commentPhotoRef.current.click()}
+                  ml="2"
+                  mt="auto"
+                  onClick={() => replyPhotoRef.current.click()}
                 >
                   Upload
                 </Button>
                 <Input
-                  ref={commentPhotoRef}
+                  ref={replyPhotoRef}
                   type="file"
                   name="coverPhoto"
                   accept="image/*"
-                  onChange={e => handlePhotoUpload(e)}
+                  onChange={e => handleReplyPhotoUpload(e)}
                   hidden
                 />
               </Flex>
@@ -211,6 +209,7 @@ function Comment({
             key={reply.text}
             replyUserId={reply.userId}
             replyText={reply.text}
+            replyImage={reply.image}
             replyDate={reply.repliedAt}
           />
         ))}

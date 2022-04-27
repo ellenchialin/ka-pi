@@ -314,6 +314,14 @@ export const firebase = {
       })
     })
   },
+  getReplyPhotoUrl(file) {
+    return new Promise(resolve => {
+      const imageRef = ref(storage, `replies/${file.name}`)
+      uploadBytes(imageRef, file).then(() => {
+        getDownloadURL(imageRef).then(url => resolve(url))
+      })
+    })
+  },
   addReply(data) {
     return new Promise(resolve => {
       const newDocRef = doc(
@@ -325,6 +333,7 @@ export const firebase = {
       setDoc(newDocRef, {
         userId: data.userId,
         text: data.text,
+        image: data.image,
         repliedAt: serverTimestamp(),
       }).then(() => resolve())
     })
