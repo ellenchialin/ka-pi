@@ -1,55 +1,37 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
+import { Box, HStack, Divider } from '@chakra-ui/react'
 // prettier-ignore
 import { Editor, EditorState, convertToRaw, RichUtils, getDefaultKeyBinding } from 'draft-js'
 
-import { Flex, Button } from '@chakra-ui/react'
+import InlineStyleControls from './editorStyles/InlineStyles'
+import BlockStyleControls from './editorStyles/BlockStyles'
 
-const INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Monospace', style: 'CODE' },
-]
-
-const InlineStyleControls = props => {
-  const currentStyle = props.editorState.getCurrentInlineStyle()
-
-  return (
-    <div className="RichEditor-controls">
-      {INLINE_STYLES.map(type => (
-        <Button
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={props.onToggle}
-          style={type.style}
-        />
-      ))}
-    </div>
-  )
-}
-
-function TextEditor() {
+function TextEditor({ setBlogContent }) {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   const onEditorStateChange = editorState => {
+    const contentState = editorState.getCurrentContent()
+    // console.log('content state', convertToRaw(contentState))
+
     setEditorState(editorState)
+    setBlogContent(convertToRaw(contentState))
   }
 
-  const handleKeyCommand = useCallback((command, editorState) => {
+  const handleKeyCommand = (command, editorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command)
     if (newState) {
       setEditorState(newState)
       return 'handled'
     }
     return 'not-handled'
-  })
+  }
 
   const mapKeyToEditorCommand = e => {
     if (e.keyCode === 9) {
       const newEditorState = RichUtils.onTab(e, editorState, 4)
+
       if (newEditorState !== editorState) {
-        setEditorState(newEditorState)
+        onEditorStateChange(newEditorState)
       }
       return
     }
@@ -57,30 +39,35 @@ function TextEditor() {
   }
 
   const toggleInlineStyle = inlineStyle => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle))
+    onEditorStateChange(RichUtils.toggleInlineStyle(editorState, inlineStyle))
   }
 
-  const onBoldClick = useCallback(() => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'))
-  })
+  const toggleBlockType = blockType => {
+    onEditorStateChange(RichUtils.toggleBlockType(editorState, blockType))
+  }
 
   return (
-    <div>
-      {/*<InlineStyleControls
-        editorState={editorState}
-        onToggle={toggleInlineStyle}
-      />*/}
-      <Flex>
-        <Button onClick={onBoldClick}>B</Button>
-      </Flex>
+    <Box borderWidth="2px" borderRadius="lg" p="4" h="100%" minH="300px" mb="6">
+      <HStack spacing="4">
+        <BlockStyleControls
+          editorState={editorState}
+          onToggle={toggleBlockType}
+        />
+        <InlineStyleControls
+          editorState={editorState}
+          onToggle={toggleInlineStyle}
+        />
+      </HStack>
+      <Divider my="4" />
+
       <Editor
         editorState={editorState}
-        onChange={setEditorState}
+        onChange={onEditorStateChange}
         handleKeyCommand={handleKeyCommand}
         keyBindingFn={mapKeyToEditorCommand}
         spellCheck
       />
-    </div>
+    </Box>
   )
 }
 
