@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button } from '@chakra-ui/react'
 import { RiDeleteBin5Line } from 'react-icons/ri'
+import { EditorState, convertFromRaw } from 'draft-js'
 
 function BlogCard({
   cafeId,
@@ -13,6 +15,12 @@ function BlogCard({
   canDeleteBlog,
   handleBlogDelete,
 }) {
+  const [editorState] = useState(
+    EditorState.createWithContent(convertFromRaw(content))
+      .getCurrentContent()
+      .getPlainText()
+  )
+
   const navigate = useNavigate()
 
   const handleReadmore = () => {
@@ -62,8 +70,8 @@ function BlogCard({
               {title}
             </Heading>
           </Flex>
-          <Text fontSize="0.75em" mb="auto" noOfLines={3}>
-            {content}
+          <Text fontSize="0.75em" isTruncated>
+            {editorState}
           </Text>
         </Flex>
         <Flex alignItems="center" justify="space-between" px="4">

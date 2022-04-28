@@ -11,7 +11,7 @@ function TextEditor({ setBlogContent }) {
 
   const onEditorStateChange = editorState => {
     const contentState = editorState.getCurrentContent()
-    console.log('content state', JSON.stringify(convertToRaw(contentState)))
+    // console.log('content state', convertToRaw(contentState))
 
     setEditorState(editorState)
     setBlogContent(convertToRaw(contentState))

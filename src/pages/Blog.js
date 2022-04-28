@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Text, Spinner, Heading, Avatar, Box, Image, AspectRatio } from '@chakra-ui/react'
+import { Editor, EditorState, convertFromRaw } from 'draft-js'
+
 import { firebase } from '../utils/firebase'
 import ImageSlider from '../components/ImageSlider'
 
@@ -90,7 +92,12 @@ function Blog() {
             <Text>{convertedBlogDate}</Text>
           </Flex>
           <Flex direction="column">
-            <Text>{blog.content}</Text>
+            <Editor
+              readOnly
+              editorState={EditorState.createWithContent(
+                convertFromRaw(blog.content)
+              )}
+            />
           </Flex>
         </Flex>
       )}
