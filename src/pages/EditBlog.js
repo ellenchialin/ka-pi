@@ -93,7 +93,7 @@ function EditBlog() {
         ref={titleInputRef}
         isRequired
       />
-      <Textarea
+      {/*<Textarea
         placeholder="Share your experience"
         size="lg"
         value={blogContent}
@@ -101,7 +101,9 @@ function EditBlog() {
         rows={15}
         height="auto"
         isRequired
-      />
+      />*/}
+      <TextEditor setBlogContent={setBlogContent} />
+
       <Button
         alignSelf="center"
         w="150px"
@@ -110,8 +112,6 @@ function EditBlog() {
       >
         Publish
       </Button>
-
-      <TextEditor />
     </Flex>
   )
 }
