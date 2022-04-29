@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, HStack, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
@@ -31,7 +31,9 @@ function EditableText({
   return (
     <Flex {...props}>
       {isEditing ? (
-        <div onBlur={() => setEditing(false)}>{children}</div>
+        <Box h="32px" onBlur={() => setEditing(false)}>
+          {children}
+        </Box>
       ) : (
         <Flex align="center">
           <Text fontSize="xl" fontWeight="bold" mr="3">
@@ -67,9 +69,6 @@ function User() {
   const fileRef = useRef()
 
   const { currentUser, signout } = useAuth()
-
-  // console.log('Current User in user page from context: ', currentUser.uid)
-
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -108,7 +107,7 @@ function User() {
     firebase
       .getUser(currentUser.uid)
       .then(data => {
-        console.log('Get user data: ', data)
+        // console.log('Get user data: ', data)
         setUserInfo(data)
         getFavCafes(data.favCafes)
       })
@@ -127,8 +126,6 @@ function User() {
     const updatedList = savedCafes
       .filter(cafe => cafe.id !== deletedCafeId)
       .map(cafe => cafe.id)
-
-    // console.log('Updated cafe id List: ', updatedList)
 
     setUpdatedCafeList(updatedList)
     getFavCafes(updatedList)
@@ -153,7 +150,7 @@ function User() {
   }
 
   return (
-    <Flex direction="column" position="relative">
+    <Flex w="100%" direction="column" align="center" position="relative">
       {isLoading ? (
         <Spinner
           thickness="4px"
@@ -169,18 +166,19 @@ function User() {
         />
       ) : (
         <>
-          <Flex w="100%" align="center" justify="space-between">
+          <VStack w="full" align="center" spacing="20px" mb="6">
             <Flex align="center" position="relative">
               <Avatar
                 src={userPhotoUrl ? userPhotoUrl : userInfo.photo}
                 name={userInfo.name}
                 size="xl"
+                showBorder={false}
               />
               <IconButton
-                colorScheme="blackAlpha"
+                colorScheme="yellow"
                 aria-label="上傳頭貼"
                 fontSize="20px"
-                icon={<RiAddFill />}
+                icon={<RiAddFill color="#121212" />}
                 isRound
                 size="xs"
                 position="absolute"
@@ -197,68 +195,91 @@ function User() {
                 hidden
               />
             </Flex>
-          </Flex>
-          <EditableText
-            text={updatedUserName}
-            type="input"
-            placeholder={userInfo.name}
-            childRef={nameRef}
-          >
-            <Input
-              ref={nameRef}
-              type="text"
-              name="username"
-              value={updatedUserName}
+            <EditableText
+              text={updatedUserName}
+              type="input"
               placeholder={userInfo.name}
-              onChange={e => updateUserName(e)}
-            />
-          </EditableText>
-          <Text>{userInfo.email}</Text>
-          <Text>
-            共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間咖啡廳
-          </Text>
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
-          >
-            {userLatitude && userLongitude && (
-              <>
-                <Map
-                  userLatitude={userLatitude}
-                  userLongitude={userLongitude}
-                  cafes={savedCafes}
-                />
-
-                {savedCafes.map(cafe => (
-                  <CafeCard
-                    key={cafe.id}
-                    cafe={cafe}
-                    canDeleteCafe={canDeleteCafe}
-                    handleDelete={() => deleteCafe(cafe.id)}
-                  />
-                ))}
-              </>
-            )}
-          </Flex>
-          <Flex direction="column">
-            <Text>Blogs</Text>
-            <Flex>
-              {blogs.map(blog => (
-                <BlogCard
-                  key={blog.blogId}
-                  cafeId={blog.cafeId}
-                  blogId={blog.blogId}
-                  content={blog.content}
-                  title={blog.title}
-                  date={blog.createdAt}
-                  image={blog.image}
-                />
-              ))}
-            </Flex>
-          </Flex>
+              childRef={nameRef}
+            >
+              <Input
+                ref={nameRef}
+                w="150px"
+                type="text"
+                name="username"
+                value={updatedUserName}
+                placeholder={userInfo.name}
+                onChange={e => updateUserName(e)}
+              />
+            </EditableText>
+            <Text>{userInfo.email}</Text>
+          </VStack>
+          <Tabs variant="soft-rounded" w="full" colorScheme="gray">
+            <TabList>
+              <Tab>咖啡因足跡</Tab>
+              <Tab>咖啡廳食記</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Text mb="3">
+                  共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間
+                </Text>
+                <Flex
+                  w="100%"
+                  wrap="wrap"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  as="section"
+                  mb="6"
+                >
+                  {userLatitude && userLongitude && (
+                    <Map
+                      userLatitude={userLatitude}
+                      userLongitude={userLongitude}
+                      cafes={savedCafes}
+                    />
+                  )}
+                  <SimpleGrid
+                    w="full"
+                    columns={[1, 2, 2, 3]}
+                    spacing="20px"
+                    justifyItems="center"
+                  >
+                    {savedCafes.map(cafe => (
+                      <CafeCard
+                        key={cafe.id}
+                        cafe={cafe}
+                        canDeleteCafe={canDeleteCafe}
+                        handleDelete={() => deleteCafe(cafe.id)}
+                      />
+                    ))}
+                  </SimpleGrid>
+                </Flex>
+              </TabPanel>
+              <TabPanel>
+                <Text mb="3">
+                  共發表 {blogs.length > 0 ? blogs.length : 0} 篇
+                </Text>
+                <SimpleGrid
+                  w="full"
+                  columns={[1, 2, 2, 3]}
+                  spacing="20px"
+                  justifyItems="center"
+                >
+                  {blogs.map(blog => (
+                    <BlogCard
+                      key={blog.blogId}
+                      cafeId={blog.cafeId}
+                      blogId={blog.blogId}
+                      content={blog.content}
+                      title={blog.title}
+                      date={blog.createdAt}
+                      image={blog.image}
+                    />
+                  ))}
+                </SimpleGrid>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
           <Button onClick={handleSignout}>Sign out</Button>
         </>
       )}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button } from '@chakra-ui/react'
+import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button, useColorModeValue, VStack } from '@chakra-ui/react'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { EditorState, convertFromRaw } from 'draft-js'
 
@@ -31,17 +31,17 @@ function BlogCard({
     <>
       <Box
         w="100%"
-        maxW={{ sm: '300px', md: '230px' }}
+        maxW="280px"
         h="100%"
-        minH={{ sm: '430px', md: '360px' }}
+        minH={{ sm: '300px', md: '360px' }}
         bg="white"
-        borderWidth="1px"
+        borderWidth={useColorModeValue('1px', '0px')}
         rounded="lg"
         shadow="lg"
-        mb="6"
+        color="primaryDark"
         position="relative"
       >
-        <AspectRatio maxW="100%" ratio={1}>
+        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3, md: 1 }}>
           <Image src={image} alt="食記照片" roundedTop="lg" objectFit="cover" />
         </AspectRatio>
         {canDeleteBlog && (
@@ -58,25 +58,26 @@ function BlogCard({
             onClick={handleBlogDelete}
           />
         )}
-        <Flex
-          direction="column"
-          p="4"
-          h="100%"
-          minH="105px"
-          justify="space-between"
-        >
+        <VStack spacing="2" p="4" align="flex-start">
           <Flex alignItems="center" justifyContent="space-between">
-            <Heading as="h5" size="sm" isTruncated>
+            <Heading w="full" as="h5" size="sm" isTruncated>
               {title}
             </Heading>
           </Flex>
-          <Text fontSize="0.75em" isTruncated>
+          <Text w="full" fontSize="0.875em" noOfLines={2} isTruncated>
             {editorState}
           </Text>
-        </Flex>
-        <Flex alignItems="center" justify="space-between" px="4">
+        </VStack>
+        <Flex alignItems="center" justify="space-between" p="4">
           <Text fontSize="0.75em">{date}</Text>
-          <Button onClick={handleReadmore} variant="link" fontSize="0.75rem">
+          <Button
+            onClick={handleReadmore}
+            size="sm"
+            bg="secondaryLight"
+            color="primaryDark"
+            fontSize="0.75rem"
+            _hover={{ bg: 'primaryDark', color: 'primaryLight' }}
+          >
             Read More
           </Button>
         </Flex>
