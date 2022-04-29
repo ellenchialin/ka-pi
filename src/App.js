@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { Box, useDisclosure, Drawer, DrawerOverlay, DrawerContent, Flex } from '@chakra-ui/react'
-// import { ColorModeSwitcher } from './ColorModeSwitcher'
 
 import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'

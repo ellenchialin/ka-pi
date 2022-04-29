@@ -1,20 +1,22 @@
-import React from 'react'
-import { IconButton, Flex, Text } from '@chakra-ui/react'
+import { IconButton, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 import { ColorModeSwitcher } from '../ColorModeSwitcher'
 import { CgMenuLeft } from 'react-icons/cg'
 
 function Header({ onOpen }) {
+  const bgColor = useColorModeValue('secondaryLight', 'primaryDark')
+  const textColor = useColorModeValue('primaryDark', 'primaryLight')
+
   return (
     <Flex
       as="header"
       align="center"
       justify="space-between"
       w="full"
-      px="4"
-      bg="gray.800"
-      borderBottomWidth="1px"
-      borderColor="gray.700"
       h="14"
+      px="4"
+      bg={bgColor}
+      color={textColor}
+      boxShadow="base"
       display={{ base: 'flex', md: 'none' }}
     >
       <IconButton
@@ -25,7 +27,7 @@ function Header({ onOpen }) {
         size="md"
       />
 
-      <Text fontSize="3xl" color="white" fontWeight="semibold">
+      <Text fontSize="3xl" color={textColor} fontWeight="semibold">
         ka-pi
       </Text>
       <ColorModeSwitcher />

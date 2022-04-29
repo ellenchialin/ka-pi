@@ -7,9 +7,11 @@ import { BsSearch } from 'react-icons/bs'
 import { CgCoffee } from 'react-icons/cg'
 import { VscLibrary } from 'react-icons/vsc'
 import { RiStarSmileLine } from 'react-icons/ri'
+import { ColorModeSwitcher } from '../ColorModeSwitcher'
 
 const NavItem = props => {
   const { icon, children, ...rest } = props
+
   return (
     <Flex
       align="center"
@@ -44,30 +46,28 @@ function SidebarContent({ onClose, ...rest }) {
   const discoverIntegrations = useDisclosure()
   const collectionIntegrations = useDisclosure()
 
+  const bgColor = useColorModeValue('primaryLight', 'primaryDark')
+  const textColor = useColorModeValue('primaryDark', 'primaryLight')
+
   return (
     <Box
       as="nav"
       pos="fixed"
       zIndex="sticky"
       h="full"
-      bg="white"
-      color="gray.800"
-      borderRight="1px"
-      borderRightColor="gray.200"
+      w="60"
+      bg={bgColor}
+      color={textColor}
+      boxShadow="base"
       overflowX="hidden"
       overflowY="auto"
-      w="60"
       {...rest}
     >
       <Flex px="4" py="5" alignItems="center" justifyContent="space-between">
-        <Text
-          fontSize="3xl"
-          ml="2"
-          color={useColorModeValue('inherit', 'white')}
-          fontWeight="semibold"
-        >
+        <Text fontSize="3xl" ml="2" color={textColor} fontWeight="semibold">
           ka-pi
         </Text>
+        <ColorModeSwitcher display={{ base: 'none', md: 'block' }} />
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Flex
@@ -126,7 +126,10 @@ function SidebarContent({ onClose, ...rest }) {
           </Text>
           <Text fontSize="0.75em">
             此站使用咖啡廳社群
-            <Link href="https://cafenomad.tw/developers/docs/v1.2" color="blue">
+            <Link
+              href="https://cafenomad.tw/developers/docs/v1.2"
+              color="accent"
+            >
               Cafe Nomad
             </Link>
             資料庫
