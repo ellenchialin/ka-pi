@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton} from '@chakra-ui/react'
+import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
+import { ArrowRightIcon } from '@chakra-ui/icons'
 import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import { RiDeleteBin5Line } from 'react-icons/ri'
@@ -11,24 +12,27 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
   const [coverPhoto, setCoverPhoto] = useState(null)
 
   useEffect(() => {
-    firebase.getAllBlogs(cafe.id).then(blogs => setCoverPhoto(blogs[0].image))
+    firebase.getAllBlogs(cafe.id).then(blogs => {
+      if (blogs.length > 0) {
+        setCoverPhoto(blogs[0].image)
+      }
+    })
   }, [])
 
   return (
     <>
       <Box
         w="100%"
-        maxW={{ sm: '300px', md: '230px' }}
         h="100%"
-        minH={{ sm: '430px', md: '360px' }}
+        minH={{ sm: '300px', md: '360px' }}
         bg="white"
-        borderWidth="1px"
+        borderWidth={useColorModeValue('1px', '0px')}
         rounded="lg"
         shadow="lg"
-        mb="6"
+        color="primaryDark"
         position="relative"
       >
-        <AspectRatio maxW="100%" ratio={1}>
+        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3, md: 1 }}>
           <Image
             src={coverPhoto ? coverPhoto : ''}
             alt={`${cafe.name} 店內照片`}
@@ -52,16 +56,16 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
           />
         )}
 
-        <Box p="4">
-          <Flex alignItems="center" justifyContent="space-between">
-            <Heading as="h5" size="sm" isTruncated>
+        <VStack spacing="2" p="4" align="flex-start">
+          <Flex w="full" align="center" justify="space-between">
+            <Heading w="full" as="h5" size="sm" isTruncated>
               {cafe.name}
             </Heading>
             <Link to={`/cafe/${cafe.id}`}>
-              <AiOutlineDoubleRight size="0.75em" />
+              <ArrowRightIcon w="3" h="3" />
             </Link>
           </Flex>
-          <Text fontSize="0.75em" isTruncated>
+          <Text w="full" fontSize="0.75em" isTruncated>
             {cafe.address}
           </Text>
           <Flex alignItems="center">
@@ -79,7 +83,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
                 py="1"
                 mr="1"
                 fontSize="0.75em"
-                colorScheme="red"
+                bg="red.100"
+                color="red.800"
               >
                 有插座
               </Badge>
@@ -91,7 +96,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
                 py="1"
                 mr="1"
                 fontSize="0.75em"
-                colorScheme="green"
+                bg="green.100"
+                color="green.800"
               >
                 不限時
               </Badge>
@@ -103,13 +109,14 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
                 py="1"
                 mr="1"
                 fontSize="0.75em"
-                colorScheme="facebook"
+                bg="facebook.100"
+                color="facebook.800"
               >
                 WiFi 穩定
               </Badge>
             )}
           </Box>
-        </Box>
+        </VStack>
       </Box>
     </>
   )

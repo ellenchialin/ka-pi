@@ -38,7 +38,7 @@ function App() {
 
           <Flex
             as="main"
-            maxW="960px"
+            maxW="1080px"
             direction="column"
             justify="center"
             align="center"

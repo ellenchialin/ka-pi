@@ -67,7 +67,7 @@ function SidebarContent({ onClose, ...rest }) {
         <Text fontSize="3xl" ml="2" color={textColor} fontWeight="semibold">
           ka-pi
         </Text>
-        <ColorModeSwitcher display={{ base: 'none', md: 'block' }} />
+        <ColorModeSwitcher display={{ base: 'none', md: 'inline-flex' }} />
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Flex

@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+// prettier-ignore
+import { Heading, Icon, Text, Link, VStack, HStack, useColorModeValue } from '@chakra-ui/react'
 import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 
 function CityInfoCard({
@@ -28,23 +29,35 @@ function CityInfoCard({
   // console.log('city Link Endpoint: ', cityLinkEndpoint)
 
   return (
-    <>
-      <Heading as="h4" size="md" color="white">
+    <VStack spacing="2">
+      <Heading
+        as="h4"
+        size="md"
+        color={useColorModeValue('primaryLight', 'primaryDark')}
+      >
         {hoveredCity}
       </Heading>
-      <Text color="white" fontSize="0.875rem">
+      <Text
+        fontSize="0.875rem"
+        color={useColorModeValue('primaryLight', 'primaryDark')}
+      >
         {isLoading ? '整理咖啡廳中...' : getCafeNumbers()}
       </Text>
-      <Flex align="center" mt="2">
-        <HiOutlineArrowCircleRight color="#ecc94b" />
+      <HStack spacing="1" align="center">
+        <Icon
+          as={HiOutlineArrowCircleRight}
+          color={useColorModeValue('accent', 'primaryDark')}
+        />
         <Link
+          as={RouterLink}
           to={`/city/${cityLinkEndpoint}`}
-          style={{ color: '#ecc94b', fontSize: '0.875rem' }}
+          color={useColorModeValue('accent', 'primaryDark')}
+          fontSize="0.875rem"
         >
           前往看完整名單
         </Link>
-      </Flex>
-    </>
+      </HStack>
+    </VStack>
   )
 }
 
