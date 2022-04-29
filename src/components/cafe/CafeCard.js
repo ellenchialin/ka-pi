@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
-import { ArrowRightIcon } from '@chakra-ui/icons'
-import { GiRoundStar } from 'react-icons/gi'
-import { AiOutlineDoubleRight } from 'react-icons/ai'
+import { ArrowRightIcon, StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 
@@ -58,21 +56,26 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
 
         <VStack spacing="2" p="4" align="flex-start">
           <Flex w="full" align="center" justify="space-between">
-            <Heading w="full" as="h5" size="sm" isTruncated>
+            <Heading
+              w="full"
+              as="h5"
+              fontSize={{ sm: '1em', md: 'lg' }}
+              isTruncated
+            >
               {cafe.name}
             </Heading>
             <Link to={`/cafe/${cafe.id}`}>
               <ArrowRightIcon w="3" h="3" />
             </Link>
           </Flex>
-          <Text w="full" fontSize="0.75em" isTruncated>
+          <Text w="full" fontSize="0.875em" isTruncated>
             {cafe.address}
           </Text>
-          <Flex alignItems="center">
-            <Text fontSize="0.75em" mr="1">
+          <Flex align="center">
+            <Text fontSize="0.875em" mr="1">
               {cafe.tasty}
             </Text>
-            <GiRoundStar size="0.75em" />
+            <StarIcon w="3" h="3" />
           </Flex>
 
           <Box d="flex" alignItems="center" mt="3">

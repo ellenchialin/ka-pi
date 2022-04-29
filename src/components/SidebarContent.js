@@ -78,7 +78,12 @@ function SidebarContent({ onClose, ...rest }) {
         aria-label="主選單"
         h="100%"
       >
-        <NavItem as={NavLink} to="/" icon={HiOutlineHome}>
+        <NavItem
+          as={NavLink}
+          to="/"
+          icon={HiOutlineHome}
+          _activeLink={{ color: 'red.400' }}
+        >
           Home
         </NavItem>
         <NavItem icon={BsSearch} onClick={discoverIntegrations.onToggle}>

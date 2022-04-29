@@ -15,6 +15,16 @@ const custumTheme = extendTheme({
   fonts: {
     heading: 'Rubik, sans-serif',
   },
+  components: {
+    Link: {
+      sizes: {
+        sm: {
+          w: '25px',
+          h: '25px',
+        },
+      },
+    },
+  },
   colors: {
     secondaryDark: '#181818',
     primaryDark: '#121212',
