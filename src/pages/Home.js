@@ -1,19 +1,26 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
+import { Flex, SimpleGrid, Heading, Text, Spinner } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
+import Pagination from '../components/Pagination'
 
 function Home() {
   usePageTracking()
-  // const { cityLinkEndpoint, setCityLinkEndpoint } = props
 
   const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(12)
   const [isLoading, setIsLoading] = useState(true)
+
+  const indexOfLastCafe = currentPage * cafesPerPage
+  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
+  const currentCafes = userNearbyCafes.slice(indexOfFirstCafe, indexOfLastCafe)
+  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   const getNearbyCafes = (lat, lng) => {
     // console.log(lat, lng)
@@ -74,8 +81,8 @@ function Home() {
   }, [])
 
   return (
-    <Flex direction="column" align="center">
-      <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
+    <Flex w="full" direction="column" align="center">
+      <Flex as="section" mb="4" w="100%" direction="column" alignItems="center">
         <Heading as="h1" size="xl">
           來點 ka-pi
         </Heading>
@@ -99,17 +106,16 @@ function Home() {
         )}
       </Flex>
 
-      <Flex
-        w="100%"
-        wrap="wrap"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        as="section"
-      >
-        {userNearbyCafes.map(cafe => (
+      <SimpleGrid w="100%" minChildWidth="230px" spacing="20px" as="section">
+        {currentCafes.map(cafe => (
           <CafeCard key={cafe.id} cafe={cafe} />
         ))}
-      </Flex>
+      </SimpleGrid>
+      <Pagination
+        cafesPerPage={cafesPerPage}
+        totalCafes={userNearbyCafes.length}
+        paginate={paginate}
+      />
 
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
         <Heading as="h2" size="lg" mb="3">
