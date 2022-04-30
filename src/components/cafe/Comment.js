@@ -172,11 +172,13 @@ function Comment({
               isOpen={isReplyOpen}
               onClose={onReplyClose}
               size="md"
-              isCentered={true}
+              isCentered
+              autoFocus
+              variant="comment"
             >
               <ModalOverlay />
               <ModalContent>
-                <ModalCloseButton />
+                <ModalCloseButton color="primaryDark" />
                 <ModalBody>
                   <Textarea
                     value={newReplyText}
@@ -185,6 +187,9 @@ function Comment({
                     size="md"
                     mt="10"
                     mb="6"
+                    borderColor="secondaryLight"
+                    color="primaryDark"
+                    _hover={{ borderColor: 'secondaryDark' }}
                   />
                   <Flex mb="6">
                     <AspectRatio w="100%" maxWidth="100px" ratio={1}>
@@ -193,11 +198,11 @@ function Comment({
                         alt="留言照片"
                         fit="cover"
                         maxW="100px"
-                        fallbackSrc="https://via.placeholder.com/100?text=add+photo"
+                        fallbackSrc="https://via.placeholder.com/100?text=photo"
                       />
                     </AspectRatio>
                     <Button
-                      colorScheme="blackAlpha"
+                      variant="auth-buttons"
                       aria-label="上傳留言照"
                       leftIcon={<RiAddFill />}
                       size="xs"
@@ -220,9 +225,13 @@ function Comment({
 
                 <ModalFooter>
                   <Button
-                    variant="ghost"
+                    variant="auth-buttons"
                     isDisabled={newReplyText === '' ? true : false}
                     onClick={submitReply}
+                    _hover={{
+                      bg: 'primaryDark',
+                      _disabled: { bg: 'secondaryLight' },
+                    }}
                   >
                     Submit
                   </Button>

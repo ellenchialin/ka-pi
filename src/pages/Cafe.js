@@ -470,11 +470,13 @@ function Cafe() {
                 isOpen={isCommentOpen}
                 onClose={onCommentClose}
                 size="md"
-                isCentered={true}
+                isCentered
+                autoFocus
+                variant="comment"
               >
                 <ModalOverlay />
                 <ModalContent>
-                  <ModalCloseButton />
+                  <ModalCloseButton color="primaryDark" />
                   <ModalBody>
                     <Textarea
                       value={commentText}
@@ -483,6 +485,9 @@ function Cafe() {
                       size="md"
                       mt="10"
                       mb="6"
+                      borderColor="secondaryLight"
+                      color="primaryDark"
+                      _hover={{ borderColor: 'secondaryDark' }}
                     />
                     <Flex mb="6">
                       <AspectRatio w="100%" maxWidth="100px" ratio={1}>
@@ -494,7 +499,7 @@ function Cafe() {
                         />
                       </AspectRatio>
                       <Button
-                        colorScheme="blackAlpha"
+                        variant="auth-buttons"
                         aria-label="上傳留言照"
                         leftIcon={<RiAddFill />}
                         size="xs"
@@ -517,9 +522,13 @@ function Cafe() {
 
                   <ModalFooter>
                     <Button
-                      variant="ghost"
+                      variant="auth-buttons"
                       isDisabled={commentText === '' ? true : false}
                       onClick={handleAddComment}
+                      _hover={{
+                        bg: 'primaryDark',
+                        _disabled: { bg: 'secondaryLight' },
+                      }}
                     >
                       Submit
                     </Button>
