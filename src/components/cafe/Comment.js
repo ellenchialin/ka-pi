@@ -97,15 +97,18 @@ function Comment({
           alt={userInfo.name}
           objectFit="cover"
         />
-        <Flex w="full" direction="column" mx="2">
+        <Flex w="full" direction="column" ml="4">
           <Box
             w="full"
-            bg={useColorModeValue('secondaryLight', 'thirdDark')}
+            maxW="500px"
+            bg={useColorModeValue('gray.100', 'secondaryLight')}
             borderRadius="xl"
             p="4"
             mb="2"
           >
-            <Text mb="1">{text}</Text>
+            <Text mb="1" color="primaryDark">
+              {text}
+            </Text>
             {image && (
               <>
                 <AspectRatio w="100%" maxWidth="100px" ratio={1}>

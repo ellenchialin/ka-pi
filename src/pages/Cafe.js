@@ -398,7 +398,7 @@ function Cafe() {
             </Text>
             <SimpleGrid
               w="full"
-              spacing="20px"
+              spacing={{ base: '10px', sm: '20px' }}
               minChildWidth="220px"
               justifyItems="center"
             >
