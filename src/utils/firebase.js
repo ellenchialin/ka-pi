@@ -151,6 +151,11 @@ export const firebase = {
       })
     })
   },
+  /*
+  getBlogId(cafeId) {
+    const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
+    return blogRef.id
+  },
   addBlog(cafeId, userId) {
     return new Promise(resolve => {
       const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
@@ -165,13 +170,20 @@ export const firebase = {
       }).then(() => resolve(blogRef.id))
     })
   },
-  uploadBlog(cafeId, blogId, data) {
+  */
+  uploadBlog(cafeId, userId, data) {
     return new Promise(resolve => {
-      updateDoc(doc(db, `cafes/${cafeId}/blogs/${blogId}`), {
+      const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
+
+      setDoc(blogRef, {
+        blogId: blogRef.id,
+        cafeId,
+        userId,
         title: data.title,
         content: data.content,
         image: data.image,
-      }).then(() => resolve())
+        createdAt: serverTimestamp(),
+      }).then(() => resolve(blogRef.id))
     })
   },
   getAllBlogs(cafeId) {
@@ -217,12 +229,11 @@ export const firebase = {
       })
     })
   },
-  getBlogPhotoUrl(cafeId, blogId, file) {
+  getBlogPhotoUrl(file) {
     return new Promise(resolve => {
       const imageRef = ref(storage, `blogs/${file.name}`)
       uploadBytes(imageRef, file).then(() => {
         getDownloadURL(imageRef).then(url => {
-          updateDoc(doc(db, `cafes/${cafeId}/blogs/${blogId}`), { image: url })
           resolve(url)
         })
       })

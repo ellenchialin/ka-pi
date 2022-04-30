@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Input, Image, Button, AspectRatio, Textarea } from '@chakra-ui/react'
+import { Flex, Input, Image, Button, AspectRatio } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
 import TextEditor from '../components/TextEditor'
+import { useAuth } from '../contexts/AuthContext'
 
 function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')
@@ -14,7 +15,10 @@ function EditBlog() {
 
   const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
-  const { cafeId, blogId } = useParams()
+  const { currentUser } = useAuth()
+  console.log(currentUser)
+
+  const { cafeId } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,7 +34,7 @@ function EditBlog() {
   const handlePhotoUpload = e => {
     if (e.target.files[0]) {
       firebase
-        .getBlogPhotoUrl(cafeId, blogId, e.target.files[0])
+        .getBlogPhotoUrl(e.target.files[0])
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
           alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
@@ -46,9 +50,9 @@ function EditBlog() {
       image: coverPhotoUrl,
     }
 
-    firebase
-      .uploadBlog(cafeId, blogId, blogData)
-      .then(() => navigate(`/cafe/${cafeId}/blog/${blogId}`))
+    firebase.uploadBlog(cafeId, currentUser.uid, blogData).then(blogId => {
+      navigate(`/cafe/${cafeId}/blog/${blogId}`)
+    })
   }
 
   return (

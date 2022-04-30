@@ -174,11 +174,7 @@ function Cafe() {
     }
   }
 
-  const handleWriteBlogClick = () => {
-    firebase.addBlog(cafe.id, currentUser.uid).then(blogId => {
-      navigate(`blog/edit/${blogId}`)
-    })
-  }
+  const handleClickAddBlog = () => navigate('blog/edit')
 
   return (
     <Flex
@@ -332,7 +328,7 @@ function Cafe() {
               <Flex direction="column">
                 <Text fontSize="0.875rem">有無限時</Text>
                 <Heading as="h4" fontSize="1.5rem">
-                  {checkSocket(cafe.limited_time)}
+                  {checkLimitedTime(cafe.limited_time)}
                 </Heading>
               </Flex>
               <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
@@ -418,7 +414,7 @@ function Cafe() {
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
-                onClick={handleWriteBlogClick}
+                onClick={handleClickAddBlog}
               >
                 blog
               </Button>
