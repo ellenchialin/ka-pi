@@ -24,6 +24,18 @@ const custumTheme = extendTheme({
         },
       },
     },
+    Button: {
+      variants: {
+        'auth-buttons': {
+          bg: 'secondaryLight',
+          color: 'secondaryDark',
+          _hover: {
+            bg: 'gray.400',
+            color: 'primaryLight',
+          },
+        },
+      },
+    },
   },
   colors: {
     secondaryDark: '#181818',

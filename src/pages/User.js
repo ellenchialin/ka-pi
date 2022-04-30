@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, HStack, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, HStack, Tabs, TabList, Tab, TabPanel, TabPanels, useColorModeValue } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
@@ -149,8 +149,15 @@ function User() {
     }
   }
 
+  const tabBg = useColorModeValue('secondaryLight', 'primaryLight')
+  const tabColor = useColorModeValue('primaryLight', 'primaryDark')
+  const selectedTabStyle = {
+    color: useColorModeValue('accent'),
+    bg: 'primaryDark',
+  }
+
   return (
-    <Flex w="100%" direction="column" align="center" position="relative">
+    <VStack w="full" align="center" spacing="20px" position="relative">
       {isLoading ? (
         <Spinner
           thickness="4px"
@@ -213,7 +220,7 @@ function User() {
             </EditableText>
             <Text>{userInfo.email}</Text>
           </VStack>
-          <Tabs variant="soft-rounded" w="full" colorScheme="gray">
+          <Tabs variant="enclosed" w="full" colorScheme="teal">
             <TabList>
               <Tab>咖啡因足跡</Tab>
               <Tab>咖啡廳食記</Tab>
@@ -280,10 +287,12 @@ function User() {
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <Button onClick={handleSignout}>Sign out</Button>
+          <Button variant="auth-buttons" onClick={handleSignout}>
+            Sign out
+          </Button>
         </>
       )}
-    </Flex>
+    </VStack>
   )
 }
 

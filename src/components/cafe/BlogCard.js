@@ -76,7 +76,7 @@ function BlogCard({
             bg="secondaryLight"
             color="primaryDark"
             fontSize="0.75rem"
-            _hover={{ bg: 'primaryDark', color: 'primaryLight' }}
+            _hover={{ bg: 'gray.400', color: 'primaryLight' }}
           >
             Read More
           </Button>
