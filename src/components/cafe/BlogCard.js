@@ -73,10 +73,10 @@ function BlogCard({
           <Button
             onClick={handleReadmore}
             size="sm"
-            bg="secondaryLight"
-            color="primaryDark"
+            bg="thirdDark"
+            color="primaryLight"
             fontSize="0.75rem"
-            _hover={{ bg: 'gray.400', color: 'primaryLight' }}
+            _hover={{ bg: 'primaryDark' }}
           >
             Read More
           </Button>

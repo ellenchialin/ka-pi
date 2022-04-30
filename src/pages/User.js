@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, HStack, Tabs, TabList, Tab, TabPanel, TabPanels, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
@@ -59,10 +59,10 @@ function User() {
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
   const [userPhotoUrl, setUserPhotoUrl] = useState(null)
-  const [blogs, setBlogs] = useState([])
+  const [userBlogs, setUserBlogs] = useState([])
   const [savedCafes, setSavedCafes] = useState([])
-  const [updatedCafeList, setUpdatedCafeList] = useState([])
   const [canDeleteCafe] = useState(true)
+  const [canDeleteBlog] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
   const nameRef = useRef()
@@ -115,21 +115,24 @@ function User() {
   }, [])
 
   useEffect(() => {
-    firebase.getUserBlogs(currentUser.uid).then(blogs => setBlogs(blogs))
+    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
   }, [])
 
-  const handleSignout = () => {
-    signout().then(() => navigate('/'))
+  const deleteCafe = deletedCafeId => {
+    firebase.deleteSavedCafe(currentUser.uid, deletedCafeId).then(() => {
+      const updatedList = savedCafes
+        .filter(cafe => cafe.id !== deletedCafeId)
+        .map(cafe => cafe.id)
+
+      getFavCafes(updatedList)
+    })
   }
 
-  const deleteCafe = deletedCafeId => {
-    const updatedList = savedCafes
-      .filter(cafe => cafe.id !== deletedCafeId)
-      .map(cafe => cafe.id)
-
-    setUpdatedCafeList(updatedList)
-    getFavCafes(updatedList)
-    firebase.deleteSavedCafe(currentUser.uid, deletedCafeId)
+  const deleteBlog = (cafeId, blogId) => {
+    firebase.deleteBlog(cafeId, blogId).then(() => {
+      const updatedList = userBlogs.filter(blog => blog.blogId !== blogId)
+      setUserBlogs(updatedList)
+    })
   }
 
   const updateUserName = e => {
@@ -149,11 +152,8 @@ function User() {
     }
   }
 
-  const tabBg = useColorModeValue('secondaryLight', 'primaryLight')
-  const tabColor = useColorModeValue('primaryLight', 'primaryDark')
-  const selectedTabStyle = {
-    color: useColorModeValue('accent'),
-    bg: 'primaryDark',
+  const handleSignout = () => {
+    signout().then(() => navigate('/auth'))
   }
 
   return (
@@ -256,7 +256,7 @@ function User() {
                         key={cafe.id}
                         cafe={cafe}
                         canDeleteCafe={canDeleteCafe}
-                        handleDelete={() => deleteCafe(cafe.id)}
+                        handleDeleteCafe={() => deleteCafe(cafe.id)}
                       />
                     ))}
                   </SimpleGrid>
@@ -264,7 +264,7 @@ function User() {
               </TabPanel>
               <TabPanel>
                 <Text mb="3">
-                  共發表 {blogs.length > 0 ? blogs.length : 0} 篇
+                  共發表 {userBlogs.length > 0 ? userBlogs.length : 0} 篇
                 </Text>
                 <SimpleGrid
                   w="full"
@@ -272,7 +272,7 @@ function User() {
                   spacing="20px"
                   justifyItems="center"
                 >
-                  {blogs.map(blog => (
+                  {userBlogs.map(blog => (
                     <BlogCard
                       key={blog.blogId}
                       cafeId={blog.cafeId}
@@ -281,6 +281,10 @@ function User() {
                       title={blog.title}
                       date={blog.createdAt}
                       image={blog.image}
+                      canDeleteBlog={canDeleteBlog}
+                      handleBlogDelete={() =>
+                        deleteBlog(blog.cafeId, blog.blogId)
+                      }
                     />
                   ))}
                 </SimpleGrid>

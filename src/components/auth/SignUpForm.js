@@ -60,7 +60,7 @@ const SignUpForm = () => {
                   <Field as={Input} name="password" type="password" />
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
-                <Button mt={4} type="submit" colorScheme="facebook">
+                <Button mt={4} type="submit" variant="auth-buttons">
                   Sign up
                 </Button>
               </Flex>
