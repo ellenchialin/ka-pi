@@ -63,10 +63,7 @@ function App() {
               <Route path="cafe">
                 <Route path=":cafeId" element={<Cafe />} />
                 <Route path=":cafeId/blog/:blogId" element={<Blog />} />
-                <Route
-                  path=":cafeId/blog/edit/:blogId"
-                  element={<EditBlog />}
-                />
+                <Route path=":cafeId/blog/edit" element={<EditBlog />} />
               </Route>
               <Route path="picks" element={<Picks />} />
               <Route

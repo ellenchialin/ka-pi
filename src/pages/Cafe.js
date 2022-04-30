@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate, Outlet } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image } from '@chakra-ui/react'
-import { GiRoundStar } from 'react-icons/gi'
-// prettier-ignore
-import { BsBookmark, BsFillBookmarkFill, BsFillExclamationTriangleFill } from 'react-icons/bs'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid } from '@chakra-ui/react'
+import { StarIcon } from '@chakra-ui/icons'
+import { AiOutlineGlobal } from 'react-icons/ai'
+import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-// prettier-ignore
-import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
+import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
+import AlertModal from '../components/AlertModal'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
@@ -60,9 +60,6 @@ function Cafe() {
         firebase
           .getComments(cafe.id)
           .then(commentList => setComments(commentList))
-
-        // Create a cafe doc
-        // firebase.addCafeDoc(cafe.id, { mainPhoto: ''))
 
         firebase.updatePageViews(cafe.id)
         firebase.getPageViews(cafe.id).then(views => setPageViews(views))
@@ -130,7 +127,7 @@ function Cafe() {
 
   const handleClickAddComment = () => {
     if (!currentUser) {
-      alert('留言前須先登入，請前往登入或註冊帳號')
+      onAlertOpen()
       return
     }
     onCommentOpen()
@@ -178,11 +175,15 @@ function Cafe() {
     }
   }
 
-  const handleWriteBlogClick = () => {
-    firebase.addBlog(cafe.id, currentUser.uid).then(blogId => {
-      navigate(`blog/edit/${blogId}`)
-    })
+  const handleClickAddBlog = () => {
+    if (!currentUser) {
+      onAlertOpen()
+      return
+    }
+    navigate('blog/edit')
   }
+
+  const handleAlertAction = () => navigate('/auth')
 
   return (
     <Flex
@@ -214,55 +215,61 @@ function Cafe() {
             py="4"
             px="2"
             mb="4"
-            minH={{ sm: '30vh', md: '40vh' }}
+            minH={{ sm: '230px', md: '250px' }}
             bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
             borderRadius="xl"
-            d="flex"
             direction="column"
-            alignItems="center"
-            justifyContent="center"
+            align="center"
+            justify="center"
           >
+            <HStack spacing="5px">
+              <Text color="primaryLight">{cafe.tasty}</Text>
+              <StarIcon w="3" h="3" color="primaryLight" />
+            </HStack>
             <Heading
               as="h1"
-              size="2xl"
-              color="white"
+              size="3xl"
               letterSpacing="widest"
-              mb="3"
               align="center"
+              pt="2"
+              pb="4"
+              color="primaryLight"
             >
               {cafe.name}
             </Heading>
-            <Flex direction="column">
-              <Flex alignItems="center" justify="space-evenly" mb="1">
-                <Text fontSize="0.75em" mr="1" color="white">
-                  {cafe.tasty}
-                </Text>
-                <GiRoundStar size="0.75em" color="white" />
-              </Flex>
-              <Flex>
-                <Flex align="center">
-                  <Link
-                    href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
-                    isExternal
-                  >
-                    <Icon as={RiDirectionFill} color="white" />
-                  </Link>
-                </Flex>
-                <Flex align="center">
-                  <Link href={`${cafe.url}`} isExternal>
-                    <Icon as={RiGlobalFill} color="white" />
-                  </Link>
-                </Flex>
-              </Flex>
-            </Flex>
+
+            <HStack spacing="20px">
+              <HStack align="center" spacing="10px">
+                <Icon as={RiDirectionFill} color="white" />
+                <Link
+                  href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
+                  fontSize="0.875rem"
+                  color="primaryLight"
+                  isExternal
+                >
+                  Direction
+                </Link>
+              </HStack>
+              <HStack align="center" spacing="10px">
+                <Icon as={AiOutlineGlobal} color="white" />
+                <Link
+                  href={`${cafe.url}`}
+                  fontSize="0.875rem"
+                  color="primaryLight"
+                  isExternal
+                >
+                  Website
+                </Link>
+              </HStack>
+            </HStack>
             <IconButton
               position="absolute"
               top="-20px"
               right="20px"
-              colorScheme="telegram"
+              colorScheme="teal"
               isRound={true}
               aria-label="收藏到我的咖啡廳地圖"
               icon={
@@ -277,95 +284,20 @@ function Cafe() {
           </Flex>
 
           {/* Calculate saved numbers & page views section */}
-          <Flex my="3" direction="column">
+          <Box alignSelf="flex-end">
             <Text>
-              共有 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏
+              共 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏 /{' '}
+              {pageViews} 次瀏覽
             </Text>
-            <Text>共被瀏覽 {pageViews} 次</Text>
-          </Flex>
+          </Box>
 
-          <Flex
-            w="100%"
-            direction={{ base: 'column', md: 'row' }}
-            justify="space-between"
+          {/* Features section */}
+          <Stack
+            spacing={{ base: '20px', md: '50px', lg: '70px' }}
+            direction={['column', 'row']}
+            mt="2"
+            mb="4"
           >
-            <Flex
-              w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              align="center"
-              justify="center"
-              bg="gray.700"
-              color="white"
-              rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
-            >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">有無限時</Text>
-                  <Heading as="h4" fontSize="1.75rem">
-                    {checkLimitedTime(cafe.limited_time)}
-                  </Heading>
-                </Flex>
-              </Box>
-              <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
-            </Flex>
-
-            <Flex
-              w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              align="center"
-              justify="center"
-              bg="gray.700"
-              color="white"
-              rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
-            >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">有無插座</Text>
-                  <Heading as="h4" fontSize="1.75rem">
-                    {checkSocket(cafe.socket)}
-                  </Heading>
-                </Flex>
-              </Box>
-              <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
-            </Flex>
-
-            <Flex
-              w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              align="center"
-              justify="center"
-              bg="gray.700"
-              color="white"
-              rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
-            >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">站立座位</Text>
-                  <Heading as="h4" fontSize="1.75rem">
-                    {checkStandSeat(cafe.standing_desk)}
-                  </Heading>
-                </Flex>
-              </Box>
-              <Icon as={GiPerson} boxSize="32px" color="yellow.400" />
-            </Flex>
-          </Flex>
-
-          <Flex direction={{ base: 'column', sm: 'row' }}>
             <RatingStat
               feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
               feature2={{
@@ -380,36 +312,128 @@ function Cafe() {
                 value: cafe.music,
               }}
             />
-          </Flex>
+          </Stack>
+
+          <SimpleGrid
+            w="full"
+            columns={[1, 1, 3]}
+            spacing="20px"
+            justifyItems="center"
+            mb="10"
+          >
+            <HStack
+              w="100%"
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
+              h="100%"
+              minH="100px"
+              spacing="40px"
+              justify="center"
+              bg="primaryDark"
+              color="primaryLight"
+              rounded="lg"
+              shadow="md"
+              px="2"
+            >
+              <Flex direction="column">
+                <Text fontSize="0.875rem">有無限時</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkLimitedTime(cafe.limited_time)}
+                </Heading>
+              </Flex>
+              <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
+            </HStack>
+
+            <HStack
+              w="100%"
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
+              h="100%"
+              minH="100px"
+              spacing="40px"
+              justify="center"
+              bg="primaryDark"
+              color="primaryLight"
+              rounded="lg"
+              shadow="md"
+              px="2"
+            >
+              <Flex direction="column">
+                <Text fontSize="0.875rem">有無插座</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkSocket(cafe.socket)}
+                </Heading>
+              </Flex>
+              <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
+            </HStack>
+
+            <HStack
+              w="100%"
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
+              h="100%"
+              minH="100px"
+              spacing="40px"
+              justify="center"
+              bg="primaryDark"
+              color="primaryLight"
+              rounded="lg"
+              shadow="md"
+              px="2"
+            >
+              <Flex direction="column">
+                <Text fontSize="0.875rem">站立座位</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkStandSeat(cafe.standing_desk)}
+                </Heading>
+              </Flex>
+              <Icon as={GiPerson} boxSize="36px" color="yellow.400" />
+            </HStack>
+          </SimpleGrid>
 
           {/* Google Reviews Photos section */}
-          <Flex w="100%" direction="column">
-            <Heading as="h4" size="1.5rem">
+          <Flex w="100%" direction="column" mb="10">
+            <Text fontSize="0.875rem" color="secondaryLight">
+              Google Reviews
+            </Text>
+            <Text fontSize="1.5rem" fontWeight="bold" mb="4">
               More Photos
-            </Heading>
-            <Flex w="100%" wrap="wrap" justify="space-between">
+            </Text>
+            <SimpleGrid
+              w="full"
+              spacing={{ base: '10px', sm: '20px' }}
+              minChildWidth="220px"
+              justifyItems="center"
+            >
               {googlePhotoRefs.length > 0 &&
                 googlePhotoRefs.map(ref => (
                   <GooglePlaceCard key={ref} photoRef={ref} />
                 ))}
-            </Flex>
+            </SimpleGrid>
           </Flex>
 
           {/* Blogs section */}
-          <Flex w="100%" direction="column" my="6">
-            <Flex w="100%" justify="space-between" align="center" mb="4">
-              <Heading as="h4" size="1.5rem">
-                Blogs
-              </Heading>
+          <Flex w="100%" direction="column" mb="10">
+            <Flex w="100%" justify="space-between" align="end" mb="4">
+              <VStack align="flex-start" spacing="0">
+                <Text fontSize="0.875rem" color="secondaryLight">
+                  Blogs
+                </Text>
+                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                  Explore Others' Experience
+                </Text>
+              </VStack>
               <Button
                 leftIcon={<RiAddFill />}
-                size="xs"
-                onClick={handleWriteBlogClick}
+                size="sm"
+                onClick={handleClickAddBlog}
               >
-                Write a blog
+                blog
               </Button>
             </Flex>
-            <Flex>
+            <SimpleGrid
+              w="full"
+              spacing="20px"
+              minChildWidth="200px"
+              justifyItems="center"
+            >
               {blogs.map(blog => (
                 <BlogCard
                   key={blog.blogId}
@@ -421,31 +445,38 @@ function Cafe() {
                   image={blog.image}
                 />
               ))}
-            </Flex>
+            </SimpleGrid>
           </Flex>
 
           {/* Comments section */}
-          <Flex w="100%" direction="column" my="6">
-            <Flex w="100%" justify="space-between" align="center">
-              <Heading as="h4" size="1.5rem">
-                Comments
-              </Heading>
+          <Flex w="100%" direction="column">
+            <Flex w="100%" justify="space-between" align="end" mb="4">
+              <VStack align="flex-start" spacing="0">
+                <Text fontSize="0.875rem" color="secondaryLight">
+                  Comments
+                </Text>
+                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                  Interact With Others
+                </Text>
+              </VStack>
               <Button
-                onClick={handleClickAddComment}
                 leftIcon={<RiAddFill />}
-                size="xs"
+                size="sm"
+                onClick={handleClickAddComment}
               >
-                Add Comment
+                comment
               </Button>
               <Modal
                 isOpen={isCommentOpen}
                 onClose={onCommentClose}
                 size="md"
-                isCentered={true}
+                isCentered
+                autoFocus
+                variant="comment"
               >
                 <ModalOverlay />
                 <ModalContent>
-                  <ModalCloseButton />
+                  <ModalCloseButton color="primaryDark" />
                   <ModalBody>
                     <Textarea
                       value={commentText}
@@ -454,6 +485,9 @@ function Cafe() {
                       size="md"
                       mt="10"
                       mb="6"
+                      borderColor="secondaryLight"
+                      color="primaryDark"
+                      _hover={{ borderColor: 'secondaryDark' }}
                     />
                     <Flex mb="6">
                       <AspectRatio w="100%" maxWidth="100px" ratio={1}>
@@ -465,7 +499,7 @@ function Cafe() {
                         />
                       </AspectRatio>
                       <Button
-                        colorScheme="blackAlpha"
+                        variant="auth-buttons"
                         aria-label="上傳留言照"
                         leftIcon={<RiAddFill />}
                         size="xs"
@@ -488,9 +522,13 @@ function Cafe() {
 
                   <ModalFooter>
                     <Button
-                      variant="ghost"
+                      variant="auth-buttons"
                       isDisabled={commentText === '' ? true : false}
                       onClick={handleAddComment}
+                      _hover={{
+                        bg: 'primaryDark',
+                        _disabled: { bg: 'secondaryLight' },
+                      }}
                     >
                       Submit
                     </Button>
@@ -513,25 +551,14 @@ function Cafe() {
               ))}
           </Flex>
 
-          <Modal
-            onClose={onAlertClose}
-            size="md"
-            isOpen={isAlertOpen}
-            isCentered
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Oops! 尚未登入</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>請先登入或註冊，即可開始蒐藏咖啡廳：）</ModalBody>
-              <ModalFooter>
-                <Button onClick={() => navigate('/auth')}>前往登入</Button>
-                <Button onClick={onAlertClose} ml="3">
-                  Close
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          <AlertModal
+            isAlertOpen={isAlertOpen}
+            onAlertClose={onAlertClose}
+            alertHeader="Oops! 尚未登入"
+            alertBody="請先登入或註冊：）"
+            actionText="前往登入"
+            alertAction={() => handleAlertAction()}
+          />
         </>
       )}
     </Flex>

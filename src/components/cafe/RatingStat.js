@@ -1,4 +1,4 @@
-import { Flex, Heading, Text, Divider } from '@chakra-ui/react'
+import { Flex, VStack, Text, Divider } from '@chakra-ui/react'
 
 function RatingStat({ feature1, feature2 }) {
   return (
@@ -9,30 +9,25 @@ function RatingStat({ feature1, feature2 }) {
       minH="100px"
       align="center"
       justify="center"
-      color="gray.700"
       p="2"
-      mb="6"
     >
-      <Flex w="100%" h="50px" justify="space-evenly">
-        <Flex align="center">
-          <Flex direction="column">
-            <Text fontSize="0.875rem">{feature1.name}</Text>
-            <Heading as="h6" size="sm">
-              {feature1.value}
-            </Heading>
-          </Flex>
-        </Flex>
+      <Flex w="100%" justify="space-evenly" align="center">
+        <VStack spacing="5px" align="flex-start">
+          <Text fontSize="0.875rem">{feature1.name}</Text>
+          <Text fontSize="1.5rem">{feature1.value}</Text>
+        </VStack>
 
-        <Divider size="1em" orientation="vertical" colorScheme="blackAlpha" />
+        <Divider
+          size="1em"
+          h="50px"
+          orientation="vertical"
+          colorScheme="blackAlpha"
+        />
 
-        <Flex align="center">
-          <Flex direction="column">
-            <Text fontSize="0.875rem">{feature2.name}</Text>
-            <Heading as="h6" size="sm">
-              {feature2.value}
-            </Heading>
-          </Flex>
-        </Flex>
+        <VStack spacing="5px" align="flex-start">
+          <Text fontSize="0.875rem">{feature2.name}</Text>
+          <Text fontSize="1.5rem">{feature2.value}</Text>
+        </VStack>
       </Flex>
     </Flex>
   )

@@ -24,6 +24,7 @@ const custumTheme = extendTheme({
         },
       },
     },
+    Textarea: {},
     Button: {
       variants: {
         'auth-buttons': {
@@ -31,6 +32,15 @@ const custumTheme = extendTheme({
           color: 'primaryLight',
           _hover: {
             bg: 'primaryDark',
+          },
+        },
+      },
+    },
+    Modal: {
+      variants: {
+        comment: {
+          dialog: {
+            bg: 'primaryLight',
           },
         },
       },
