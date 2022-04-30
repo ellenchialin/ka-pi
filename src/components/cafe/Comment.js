@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Image, Text, IconButton, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, InputGroup, InputLeftElement, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack } from '@chakra-ui/react'
 import { RiReplyAllFill, RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
+import AlertModal from '../AlertModal'
 import Reply from './Reply'
 
 function Comment({
@@ -20,6 +22,7 @@ function Comment({
   const [replyList, setReplyList] = useState([])
 
   const replyPhotoRef = useRef()
+  const navigate = useNavigate()
 
   const {
     isOpen: isCommentPhotoOpen,
@@ -33,6 +36,12 @@ function Comment({
     onClose: onReplyClose,
   } = useDisclosure()
 
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
     firebase.getUser(commentUserId).then(data => {
       setUserInfo(data)
@@ -41,7 +50,6 @@ function Comment({
 
   useEffect(() => {
     firebase.getReplyList(cafeId, commentId).then(list => {
-      // console.log('Reply List: ', list)
       setReplyList(list)
     })
   }, [])
@@ -60,7 +68,7 @@ function Comment({
 
   const handleClickReply = () => {
     if (!currentUser) {
-      alert('請先登入才可以回覆留言')
+      onAlertOpen()
       return
     }
     onReplyOpen()
@@ -86,6 +94,8 @@ function Comment({
       })
     })
   }
+
+  const handleAlertAction = () => navigate('/auth')
 
   return (
     <Flex w="100%" direction="column" my="2">
@@ -150,6 +160,14 @@ function Comment({
             >
               Reply
             </Text>
+            <AlertModal
+              isAlertOpen={isAlertOpen}
+              onAlertClose={onAlertClose}
+              alertHeader="Oops! 尚未登入"
+              alertBody="請先登入或註冊：）"
+              actionText="前往登入"
+              alertAction={() => handleAlertAction()}
+            />
             <Modal
               isOpen={isReplyOpen}
               onClose={onReplyClose}

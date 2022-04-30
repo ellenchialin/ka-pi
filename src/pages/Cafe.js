@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
@@ -13,6 +13,7 @@ import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
+import AlertModal from '../components/AlertModal'
 import { firebase } from '../utils/firebase'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
@@ -126,7 +127,7 @@ function Cafe() {
 
   const handleClickAddComment = () => {
     if (!currentUser) {
-      alert('留言前須先登入，請前往登入或註冊帳號')
+      onAlertOpen()
       return
     }
     onCommentOpen()
@@ -174,7 +175,15 @@ function Cafe() {
     }
   }
 
-  const handleClickAddBlog = () => navigate('blog/edit')
+  const handleClickAddBlog = () => {
+    if (!currentUser) {
+      onAlertOpen()
+      return
+    }
+    navigate('blog/edit')
+  }
+
+  const handleAlertAction = () => navigate('/auth')
 
   return (
     <Flex
@@ -533,25 +542,14 @@ function Cafe() {
               ))}
           </Flex>
 
-          <Modal
-            onClose={onAlertClose}
-            size="md"
-            isOpen={isAlertOpen}
-            isCentered
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Oops! 尚未登入</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>請先登入或註冊，即可開始蒐藏咖啡廳：）</ModalBody>
-              <ModalFooter>
-                <Button onClick={() => navigate('/auth')}>前往登入</Button>
-                <Button onClick={onAlertClose} ml="3">
-                  Close
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          <AlertModal
+            isAlertOpen={isAlertOpen}
+            onAlertClose={onAlertClose}
+            alertHeader="Oops! 尚未登入"
+            alertBody="請先登入或註冊：）"
+            actionText="前往登入"
+            alertAction={() => handleAlertAction()}
+          />
         </>
       )}
     </Flex>
