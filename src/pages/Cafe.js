@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Outlet } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image, HStack, VStack, SimpleGrid } from '@chakra-ui/react'
+import { StarIcon } from '@chakra-ui/icons'
 import { GiRoundStar } from 'react-icons/gi'
-// prettier-ignore
-import { BsBookmark, BsFillBookmarkFill, BsFillExclamationTriangleFill } from 'react-icons/bs'
+import { AiOutlineGlobal } from 'react-icons/ai'
+import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
 import { ImPowerCord } from 'react-icons/im'
 import { GiPerson } from 'react-icons/gi'
-// prettier-ignore
-import { RiDirectionFill, RiGlobalFill, RiReplyAllFill, RiAddFill } from 'react-icons/ri'
+import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
@@ -60,9 +60,6 @@ function Cafe() {
         firebase
           .getComments(cafe.id)
           .then(commentList => setComments(commentList))
-
-        // Create a cafe doc
-        // firebase.addCafeDoc(cafe.id, { mainPhoto: ''))
 
         firebase.updatePageViews(cafe.id)
         firebase.getPageViews(cafe.id).then(views => setPageViews(views))
@@ -214,55 +211,54 @@ function Cafe() {
             py="4"
             px="2"
             mb="4"
-            minH={{ sm: '30vh', md: '40vh' }}
+            minH={{ sm: '230px', md: '250px' }}
             bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
             borderRadius="xl"
-            d="flex"
             direction="column"
-            alignItems="center"
-            justifyContent="center"
+            align="center"
+            justify="center"
           >
+            <HStack spacing="5px">
+              <Text>{cafe.tasty}</Text>
+              <StarIcon w="3" h="3" />
+            </HStack>
             <Heading
               as="h1"
-              size="2xl"
-              color="white"
+              size="3xl"
               letterSpacing="widest"
-              mb="3"
               align="center"
+              pt="2"
+              pb="4"
             >
               {cafe.name}
             </Heading>
-            <Flex direction="column">
-              <Flex alignItems="center" justify="space-evenly" mb="1">
-                <Text fontSize="0.75em" mr="1" color="white">
-                  {cafe.tasty}
-                </Text>
-                <GiRoundStar size="0.75em" color="white" />
-              </Flex>
-              <Flex>
-                <Flex align="center">
-                  <Link
-                    href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
-                    isExternal
-                  >
-                    <Icon as={RiDirectionFill} color="white" />
-                  </Link>
-                </Flex>
-                <Flex align="center">
-                  <Link href={`${cafe.url}`} isExternal>
-                    <Icon as={RiGlobalFill} color="white" />
-                  </Link>
-                </Flex>
-              </Flex>
-            </Flex>
+
+            <HStack spacing="20px">
+              <HStack align="center" spacing="10px">
+                <Icon as={RiDirectionFill} color="white" />
+                <Link
+                  href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
+                  fontSize="0.875rem"
+                  isExternal
+                >
+                  Direction
+                </Link>
+              </HStack>
+              <HStack align="center" spacing="10px">
+                <Icon as={AiOutlineGlobal} color="white" />
+                <Link href={`${cafe.url}`} fontSize="0.875rem" isExternal>
+                  Website
+                </Link>
+              </HStack>
+            </HStack>
             <IconButton
               position="absolute"
               top="-20px"
               right="20px"
-              colorScheme="telegram"
+              colorScheme="teal"
               isRound={true}
               aria-label="收藏到我的咖啡廳地圖"
               icon={
@@ -277,93 +273,92 @@ function Cafe() {
           </Flex>
 
           {/* Calculate saved numbers & page views section */}
-          <Flex my="3" direction="column">
+          <Box alignSelf="flex-end" mb="4">
             <Text>
-              共有 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏
+              共 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏 /{' '}
+              {pageViews} 次瀏覽
             </Text>
-            <Text>共被瀏覽 {pageViews} 次</Text>
-          </Flex>
+          </Box>
 
-          <Flex
-            w="100%"
-            direction={{ base: 'column', md: 'row' }}
-            justify="space-between"
+          {/* Features section */}
+          <SimpleGrid
+            w="full"
+            columns={[1, 1, 3]}
+            spacing="20px"
+            justifyItems="center"
           >
-            <Flex
+            <HStack
               w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
               h="100%"
               minH="100px"
-              align="center"
+              spacing="40px"
               justify="center"
-              bg="gray.700"
-              color="white"
+              bg="primaryDark"
+              color="primaryLight"
               rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
+              shadow="md"
+              px="2"
             >
               <Box>
                 <Flex direction="column">
                   <Text fontSize="0.875rem">有無限時</Text>
-                  <Heading as="h4" fontSize="1.75rem">
+                  <Heading as="h4" fontSize="1.5rem">
                     {checkLimitedTime(cafe.limited_time)}
                   </Heading>
                 </Flex>
               </Box>
               <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
-            </Flex>
+            </HStack>
 
-            <Flex
+            <HStack
               w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
               h="100%"
               minH="100px"
-              align="center"
+              spacing="40px"
               justify="center"
-              bg="gray.700"
-              color="white"
+              bg="primaryDark"
+              color="primaryLight"
               rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
+              shadow="md"
+              px="2"
             >
               <Box>
                 <Flex direction="column">
                   <Text fontSize="0.875rem">有無插座</Text>
-                  <Heading as="h4" fontSize="1.75rem">
+                  <Heading as="h4" fontSize="1.5rem">
                     {checkSocket(cafe.socket)}
                   </Heading>
                 </Flex>
               </Box>
               <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
-            </Flex>
+            </HStack>
 
-            <Flex
+            <HStack
               w="100%"
-              maxW={{ base: '100%', md: '160px', lg: '220px', xl: '280px' }}
+              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
               h="100%"
               minH="100px"
-              align="center"
+              spacing="40px"
               justify="center"
-              bg="gray.700"
-              color="white"
+              bg="primaryDark"
+              color="primaryLight"
               rounded="lg"
-              shadow="lg"
-              p="2"
-              mb="6"
+              shadow="md"
+              px="2"
             >
               <Box>
                 <Flex direction="column">
                   <Text fontSize="0.875rem">站立座位</Text>
-                  <Heading as="h4" fontSize="1.75rem">
+                  <Heading as="h4" fontSize="1.5rem">
                     {checkStandSeat(cafe.standing_desk)}
                   </Heading>
                 </Flex>
               </Box>
-              <Icon as={GiPerson} boxSize="32px" color="yellow.400" />
-            </Flex>
-          </Flex>
+              <Icon as={GiPerson} boxSize="36px" color="yellow.400" />
+            </HStack>
+          </SimpleGrid>
 
           <Flex direction={{ base: 'column', sm: 'row' }}>
             <RatingStat
