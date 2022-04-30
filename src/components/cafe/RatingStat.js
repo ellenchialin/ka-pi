@@ -11,22 +11,23 @@ function RatingStat({ feature1, feature2 }) {
       justify="center"
       p="2"
     >
-      <Flex w="100%" h="50px" justify="space-evenly">
-        <Flex align="center">
-          <Flex direction="column">
-            <Text fontSize="0.875rem">{feature1.name}</Text>
-            <Text fontSize="1.5rem">{feature1.value}</Text>
-          </Flex>
-        </Flex>
+      <Flex w="100%" justify="space-evenly" align="center">
+        <VStack spacing="5px" align="flex-start">
+          <Text fontSize="0.875rem">{feature1.name}</Text>
+          <Text fontSize="1.5rem">{feature1.value}</Text>
+        </VStack>
 
-        <Divider size="1em" orientation="vertical" colorScheme="blackAlpha" />
+        <Divider
+          size="1em"
+          h="50px"
+          orientation="vertical"
+          colorScheme="blackAlpha"
+        />
 
-        <Flex align="center">
-          <Flex direction="column">
-            <Text fontSize="0.875rem">{feature2.name}</Text>
-            <Text fontSize="1.5rem">{feature2.value}</Text>
-          </Flex>
-        </Flex>
+        <VStack spacing="5px" align="flex-start">
+          <Text fontSize="0.875rem">{feature2.name}</Text>
+          <Text fontSize="1.5rem">{feature2.value}</Text>
+        </VStack>
       </Flex>
     </Flex>
   )

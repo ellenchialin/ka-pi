@@ -290,7 +290,8 @@ function Cafe() {
           <Stack
             spacing={{ base: '20px', md: '50px', lg: '70px' }}
             direction={['column', 'row']}
-            my="4"
+            mt="2"
+            mb="4"
           >
             <RatingStat
               feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
@@ -328,14 +329,12 @@ function Cafe() {
               shadow="md"
               px="2"
             >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">有無限時</Text>
-                  <Heading as="h4" fontSize="1.5rem">
-                    {checkLimitedTime(cafe.limited_time)}
-                  </Heading>
-                </Flex>
-              </Box>
+              <Flex direction="column">
+                <Text fontSize="0.875rem">有無限時</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkSocket(cafe.limited_time)}
+                </Heading>
+              </Flex>
               <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
             </HStack>
 
@@ -352,14 +351,12 @@ function Cafe() {
               shadow="md"
               px="2"
             >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">有無插座</Text>
-                  <Heading as="h4" fontSize="1.5rem">
-                    {checkSocket(cafe.socket)}
-                  </Heading>
-                </Flex>
-              </Box>
+              <Flex direction="column">
+                <Text fontSize="0.875rem">有無插座</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkSocket(cafe.socket)}
+                </Heading>
+              </Flex>
               <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
             </HStack>
 
@@ -376,14 +373,12 @@ function Cafe() {
               shadow="md"
               px="2"
             >
-              <Box>
-                <Flex direction="column">
-                  <Text fontSize="0.875rem">站立座位</Text>
-                  <Heading as="h4" fontSize="1.5rem">
-                    {checkStandSeat(cafe.standing_desk)}
-                  </Heading>
-                </Flex>
-              </Box>
+              <Flex direction="column">
+                <Text fontSize="0.875rem">站立座位</Text>
+                <Heading as="h4" fontSize="1.5rem">
+                  {checkStandSeat(cafe.standing_desk)}
+                </Heading>
+              </Flex>
               <Icon as={GiPerson} boxSize="36px" color="yellow.400" />
             </HStack>
           </SimpleGrid>
