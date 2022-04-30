@@ -106,7 +106,12 @@ function Home() {
         )}
       </Flex>
 
-      <SimpleGrid w="100%" minChildWidth="230px" spacing="20px" as="section">
+      <SimpleGrid
+        w="full"
+        columns={[1, 2, 2, 3]}
+        spacing="20px"
+        justifyItems="center"
+      >
         {currentCafes.map(cafe => (
           <CafeCard key={cafe.id} cafe={cafe} />
         ))}

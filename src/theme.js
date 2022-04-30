@@ -6,8 +6,8 @@ const custumTheme = extendTheme({
     global: props => ({
       'html, body': {
         fontFamily: 'Rubik, sans-serif',
-        color: mode('#181818', '#fff')(props),
-        bg: mode('#fff', '#181818')(props),
+        color: mode('#212121', '#fff')(props),
+        bg: mode('#fff', '#212121')(props),
         lineHeight: 'base',
       },
     }),
@@ -24,10 +24,22 @@ const custumTheme = extendTheme({
         },
       },
     },
+    Button: {
+      variants: {
+        'auth-buttons': {
+          bg: 'thirdDark',
+          color: 'primaryLight',
+          _hover: {
+            bg: 'primaryDark',
+          },
+        },
+      },
+    },
   },
   colors: {
-    secondaryDark: '#181818',
     primaryDark: '#121212',
+    secondaryDark: '#212121',
+    thirdDark: '#535353',
     primaryLight: '#fff',
     secondaryLight: '#b3b3b3',
     accent: '#F4BF3A',

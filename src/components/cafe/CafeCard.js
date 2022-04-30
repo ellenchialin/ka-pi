@@ -6,7 +6,7 @@ import { ArrowRightIcon, StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 
-function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
+function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const [coverPhoto, setCoverPhoto] = useState(null)
 
   useEffect(() => {
@@ -51,7 +51,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDelete }) {
             variant="solid"
             colorScheme="blackAlpha"
             size="sm"
-            onClick={handleDelete}
+            onClick={handleDeleteCafe}
           />
         )}
 

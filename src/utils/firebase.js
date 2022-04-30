@@ -3,7 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, addDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -200,12 +200,20 @@ export const firebase = {
       const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
       getDoc(blogRef).then(docsnap => {
         if (docsnap.exists()) {
-          // console.log(docsnap.data())
           resolve(docsnap.data())
         } else {
           alert('找不到此blog')
           return
         }
+      })
+    })
+  },
+  deleteBlog(cafeId, blogId) {
+    return new Promise(resolve => {
+      const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
+      deleteDoc(blogRef).then(() => {
+        console.log('Blog Deleted')
+        resolve()
       })
     })
   },

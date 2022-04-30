@@ -10,7 +10,6 @@ import { firebase } from '../../utils/firebase'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
-  // const [currentUserId, setCurrentUserId] = useState('')
   const navigate = useNavigate()
   const { signin } = useAuth()
 
@@ -62,7 +61,7 @@ const SignInForm = () => {
                   <Field as={Input} type="password" name="password" />
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
-                <Button mt={4} colorScheme="facebook" type="submit">
+                <Button mt={4} variant="auth-buttons" type="submit">
                   Sign In
                 </Button>
               </Flex>

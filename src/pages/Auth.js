@@ -8,7 +8,7 @@ function Auth() {
 
   const SignTabs = () => {
     return (
-      <Tabs align="center">
+      <Tabs w="70%" align="center" colorScheme="teal" maxW="500px">
         <TabList>
           <Tab>Sign in</Tab>
           <Tab>Sign up</Tab>
