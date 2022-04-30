@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate, Outlet } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image, HStack, VStack, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, InputLeftElement, InputGroup, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
-import { GiRoundStar } from 'react-icons/gi'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
@@ -222,8 +221,8 @@ function Cafe() {
             justify="center"
           >
             <HStack spacing="5px">
-              <Text>{cafe.tasty}</Text>
-              <StarIcon w="3" h="3" />
+              <Text color="primaryLight">{cafe.tasty}</Text>
+              <StarIcon w="3" h="3" color="primaryLight" />
             </HStack>
             <Heading
               as="h1"
@@ -232,6 +231,7 @@ function Cafe() {
               align="center"
               pt="2"
               pb="4"
+              color="primaryLight"
             >
               {cafe.name}
             </Heading>
@@ -242,6 +242,7 @@ function Cafe() {
                 <Link
                   href={`https://www.google.com/maps/place/${cafe.latitude},${cafe.longitude}/@${cafe.latitude},${cafe.longitude},16z`}
                   fontSize="0.875rem"
+                  color="primaryLight"
                   isExternal
                 >
                   Direction
@@ -249,7 +250,12 @@ function Cafe() {
               </HStack>
               <HStack align="center" spacing="10px">
                 <Icon as={AiOutlineGlobal} color="white" />
-                <Link href={`${cafe.url}`} fontSize="0.875rem" isExternal>
+                <Link
+                  href={`${cafe.url}`}
+                  fontSize="0.875rem"
+                  color="primaryLight"
+                  isExternal
+                >
                   Website
                 </Link>
               </HStack>
@@ -273,7 +279,7 @@ function Cafe() {
           </Flex>
 
           {/* Calculate saved numbers & page views section */}
-          <Box alignSelf="flex-end" mb="4">
+          <Box alignSelf="flex-end">
             <Text>
               共 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏 /{' '}
               {pageViews} 次瀏覽
@@ -281,11 +287,33 @@ function Cafe() {
           </Box>
 
           {/* Features section */}
+          <Stack
+            spacing={{ base: '20px', md: '50px', lg: '70px' }}
+            direction={['column', 'row']}
+            my="4"
+          >
+            <RatingStat
+              feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
+              feature2={{
+                name: '價格親民',
+                value: cafe.cheap,
+              }}
+            />
+            <RatingStat
+              feature1={{ name: '安靜程度', value: cafe.quiet }}
+              feature2={{
+                name: '裝潢音樂',
+                value: cafe.music,
+              }}
+            />
+          </Stack>
+
           <SimpleGrid
             w="full"
             columns={[1, 1, 3]}
             spacing="20px"
             justifyItems="center"
+            mb="10"
           >
             <HStack
               w="100%"
@@ -360,51 +388,52 @@ function Cafe() {
             </HStack>
           </SimpleGrid>
 
-          <Flex direction={{ base: 'column', sm: 'row' }}>
-            <RatingStat
-              feature1={{ name: 'WiFi穩定', value: cafe.wifi }}
-              feature2={{
-                name: '價格親民',
-                value: cafe.cheap,
-              }}
-            />
-            <RatingStat
-              feature1={{ name: '安靜程度', value: cafe.quiet }}
-              feature2={{
-                name: '裝潢音樂',
-                value: cafe.music,
-              }}
-            />
-          </Flex>
-
           {/* Google Reviews Photos section */}
-          <Flex w="100%" direction="column">
-            <Heading as="h4" size="1.5rem">
+          <Flex w="100%" direction="column" mb="10">
+            <Text fontSize="0.875rem" color="secondaryLight">
+              Google Reviews
+            </Text>
+            <Text fontSize="1.5rem" fontWeight="bold" mb="4">
               More Photos
-            </Heading>
-            <Flex w="100%" wrap="wrap" justify="space-between">
+            </Text>
+            <SimpleGrid
+              w="full"
+              spacing="20px"
+              minChildWidth="220px"
+              justifyItems="center"
+            >
               {googlePhotoRefs.length > 0 &&
                 googlePhotoRefs.map(ref => (
                   <GooglePlaceCard key={ref} photoRef={ref} />
                 ))}
-            </Flex>
+            </SimpleGrid>
           </Flex>
 
           {/* Blogs section */}
-          <Flex w="100%" direction="column" my="6">
-            <Flex w="100%" justify="space-between" align="center" mb="4">
-              <Heading as="h4" size="1.5rem">
-                Blogs
-              </Heading>
+          <Flex w="100%" direction="column" mb="10">
+            <Flex w="100%" justify="space-between" align="end" mb="4">
+              <VStack align="flex-start" spacing="0">
+                <Text fontSize="0.875rem" color="secondaryLight">
+                  Blogs
+                </Text>
+                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                  Explore Others' Experience
+                </Text>
+              </VStack>
               <Button
                 leftIcon={<RiAddFill />}
-                size="xs"
+                size="sm"
                 onClick={handleWriteBlogClick}
               >
-                Write a blog
+                blog
               </Button>
             </Flex>
-            <Flex>
+            <SimpleGrid
+              w="full"
+              spacing="20px"
+              minChildWidth="200px"
+              justifyItems="center"
+            >
               {blogs.map(blog => (
                 <BlogCard
                   key={blog.blogId}
@@ -416,21 +445,26 @@ function Cafe() {
                   image={blog.image}
                 />
               ))}
-            </Flex>
+            </SimpleGrid>
           </Flex>
 
           {/* Comments section */}
-          <Flex w="100%" direction="column" my="6">
-            <Flex w="100%" justify="space-between" align="center">
-              <Heading as="h4" size="1.5rem">
-                Comments
-              </Heading>
+          <Flex w="100%" direction="column">
+            <Flex w="100%" justify="space-between" align="end" mb="4">
+              <VStack align="flex-start" spacing="0">
+                <Text fontSize="0.875rem" color="secondaryLight">
+                  Comments
+                </Text>
+                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                  Interact With Others
+                </Text>
+              </VStack>
               <Button
-                onClick={handleClickAddComment}
                 leftIcon={<RiAddFill />}
-                size="xs"
+                size="sm"
+                onClick={handleClickAddComment}
               >
-                Add Comment
+                comment
               </Button>
               <Modal
                 isOpen={isCommentOpen}
