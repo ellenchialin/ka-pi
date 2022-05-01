@@ -186,7 +186,7 @@ function SearchByFeature() {
         <Text>預設必備條件</Text>
         <HStack spacing="15px">
           {defaultFeatures.map((feature, i) => (
-            <Tag key={i} size="md" colorScheme="messenger">
+            <Tag key={i} size="md" colorScheme="teal">
               <TagLeftIcon boxSize="12px" as={FaHashtag} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
