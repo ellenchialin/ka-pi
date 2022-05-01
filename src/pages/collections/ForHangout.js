@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
-import Pagination from '../../components/Pagination'
+import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../../usePageTracking'
 import CafeCard from '../../components/cafe/CafeCard'
 
 function ForHangout() {
   usePageTracking()
   const [cafesForHangout, setCafesForHangout] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(true)
 
-  const labels = ['不限時', '裝潢音樂', '通常有位']
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(10)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = cafesForHangout.slice(offset, offset + cafesPerPage)
 
-  const indexOfLastCafe = currentPage * cafesPerPage
-  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
-  const currentCafes = cafesForHangout.slice(indexOfFirstCafe, indexOfLastCafe)
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+  const labels = ['不限時', '裝潢音樂', '通常有位']
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
@@ -38,14 +36,21 @@ function ForHangout() {
   }, [])
 
   return (
-    <Flex as="section" direction="column" align="center">
+    <Flex w="full" direction="column" align="center">
       <Heading as="h1" size="xl">
         盡情暢聊
       </Heading>
       <Text my="3">精選適合聚會咖啡廳</Text>
-      <Flex w="300px" justify="space-between" align="center">
+      <Flex
+        w="full"
+        maxW="400px"
+        justify="space-evenly"
+        align="center"
+        wrap="wrap"
+        mb="4"
+      >
         {labels.map((label, i) => (
-          <Tag key={i} size="md" colorScheme="messenger">
+          <Tag key={i} size="md" colorScheme="teal" mb="2">
             <TagLeftIcon boxSize="12px" as={FaHashtag} />
             <TagLabel>{label}</TagLabel>
           </Tag>
@@ -64,21 +69,33 @@ function ForHangout() {
         <>
           <Text my="3">共有 {cafesForHangout.length} 間符合</Text>
 
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
+          <SimpleGrid
+            w="full"
+            columns={[1, 2, 2, 3]}
+            spacing={['15px', '15px', '20px']}
+            justifyItems="center"
+            mb="4"
           >
             {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
-          </Flex>
+          </SimpleGrid>
           <Pagination
-            cafesPerPage={cafesPerPage}
-            totalCafes={cafesForHangout.length}
-            paginate={paginate}
+            defaultCurrent={1}
+            total={cafesForHangout.length}
+            current={currentPage}
+            onChange={page => setCurrentPage(page)}
+            pageSize={cafesPerPage}
+            paginationProps={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            pageNeighbours={2}
+            rounded="full"
+            baseStyles={{ bg: 'transparent' }}
+            activeStyles={{ bg: 'gray.400' }}
+            hoverStyles={{ bg: 'gray.400' }}
+            responsive={{ activePage: true }}
           />
         </>
       )}
