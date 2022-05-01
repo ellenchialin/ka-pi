@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text, Spinner } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
 import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
-import Pagination from '../components/Pagination'
+import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
 function Picks() {
@@ -10,19 +10,14 @@ function Picks() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(true)
 
-  const indexOfLastCafe = currentPage * cafesPerPage
-  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
-  const currentCafes = pickedCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(18)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = pickedCafes.slice(offset, offset + cafesPerPage)
 
   const getNearbyCafes = (lat, lng) => {
-    console.log(lat, lng)
-
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAiPvJAVuCQQekLZSIWdeedxpuw5VcO564`
     )
@@ -80,10 +75,12 @@ function Picks() {
 
   return (
     <Flex as="section" direction="column" align="center">
-      <Heading as="h1" size="xl">
+      <Heading as="h1" size="xl" align="center">
         不用思考，無腦跟喝
       </Heading>
-      <Text my="3">根據所在地區，隨機挑選 100 間，評價 4 分以上咖啡廳</Text>
+      <Text my="3" align="center">
+        根據所在地區，隨機挑選 100 間，評價 4 分以上咖啡廳
+      </Text>
 
       {isLoading ? (
         <Spinner
@@ -101,21 +98,30 @@ function Picks() {
             userLongitude={userLongitude}
             cafes={pickedCafes}
           />
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
+          <SimpleGrid
+            w="full"
+            columns={[1, 2, 2, 3]}
+            spacing="20px"
+            justifyItems="center"
+            mb="4"
           >
             {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
-          </Flex>
+          </SimpleGrid>
           <Pagination
-            cafesPerPage={cafesPerPage}
-            totalCafes={pickedCafes.length}
-            paginate={paginate}
+            defaultCurrent={1}
+            total={pickedCafes.length}
+            current={currentPage}
+            onChange={page => setCurrentPage(page)}
+            pageSize={cafesPerPage}
+            paginationProps={{ display: 'flex', justifyContent: 'center' }}
+            pageNeighbours={2}
+            rounded="full"
+            baseStyles={{ bg: 'transparent' }}
+            activeStyles={{ bg: 'gray.400' }}
+            hoverStyles={{ bg: 'gray.400' }}
+            responsive={{ activePage: true }}
           />
         </>
       )}
