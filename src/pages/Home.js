@@ -4,7 +4,7 @@ import usePageTracking from '../usePageTracking'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
-import Pagination from '../components/Pagination'
+import Pagination from '@choc-ui/paginator'
 
 function Home() {
   usePageTracking()
@@ -13,18 +13,14 @@ function Home() {
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(12)
   const [isLoading, setIsLoading] = useState(true)
 
-  const indexOfLastCafe = currentPage * cafesPerPage
-  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
-  const currentCafes = userNearbyCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(10)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
   const getNearbyCafes = (lat, lng) => {
-    // console.log(lat, lng)
-
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
     )
@@ -111,15 +107,25 @@ function Home() {
         columns={[1, 2, 2, 3]}
         spacing="20px"
         justifyItems="center"
+        mb="4"
       >
         {currentCafes.map(cafe => (
           <CafeCard key={cafe.id} cafe={cafe} />
         ))}
       </SimpleGrid>
       <Pagination
-        cafesPerPage={cafesPerPage}
-        totalCafes={userNearbyCafes.length}
-        paginate={paginate}
+        defaultCurrent={1}
+        total={userNearbyCafes.length}
+        current={currentPage}
+        onChange={page => setCurrentPage(page)}
+        pageSize={cafesPerPage}
+        paginationProps={{ display: 'flex', justifyContent: 'center' }}
+        pageNeighbours={2}
+        rounded="full"
+        baseStyles={{ bg: 'transparent' }}
+        activeStyles={{ bg: 'gray.400' }}
+        hoverStyles={{ bg: 'gray.400' }}
+        responsive={{ activePage: true }}
       />
 
       <Flex as="section" my="4" w="100%" direction="column" alignItems="center">

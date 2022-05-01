@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, InputGroup, InputLeftElement, Input, Button } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, InputGroup, InputLeftElement, Input, Button, SimpleGrid } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import CafeCard from '../../components/cafe/CafeCard'
+import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {
@@ -11,6 +12,10 @@ function SearchByKeyword() {
   const [matchedCafes, setMatchedCafes] = useState([])
   const [searchKeywords, setSearchKeywords] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(20)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = matchedCafes.slice(offset, offset + cafesPerPage)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -31,8 +36,6 @@ function SearchByKeyword() {
       .finally(() => setIsLoading(false))
   }
 
-  // 用 custom hook 避免第一次 render 就打 api
-
   const submitSearch = () => {
     setIsLoading(true)
     getSearchResults(searchKeywords)
@@ -41,14 +44,16 @@ function SearchByKeyword() {
   return (
     <>
       <Flex as="section" direction="column" alignItems="center">
-        <Heading as="h2" size="lg" mb="3">
-          透過關鍵字搜尋
+        <Heading as="h1" size="xl" mb="3">
+          關鍵字搜尋
         </Heading>
-        <InputGroup maxW="400px">
+        <InputGroup w="100%" maxW="500px" mb="3" justify="center">
           <InputLeftElement pointerEvents="none">
             <BiSearchAlt />
           </InputLeftElement>
           <Input
+            htmlSize={28}
+            width="auto"
             placeholder="Search..."
             value={searchKeywords}
             onChange={e => setSearchKeywords(e.target.value.trim())}
@@ -72,18 +77,36 @@ function SearchByKeyword() {
         />
       ) : (
         <Flex direction="column" align="center">
-          <Text my="3">共找到 {matchedCafes.length} 間關聯咖啡廳</Text>
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
+          {matchedCafes.length > 0 && (
+            <Text my="3" alignSelf="flex-end">
+              共找到 {matchedCafes.length} 間關聯咖啡廳
+            </Text>
+          )}
+          <SimpleGrid
+            w="full"
+            columns={[1, 2, 2, 3]}
+            spacing="20px"
+            justifyItems="center"
+            mb="4"
           >
-            {matchedCafes.map(cafe => (
+            {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
-          </Flex>
+          </SimpleGrid>
+          <Pagination
+            defaultCurrent={1}
+            total={matchedCafes.length}
+            current={currentPage}
+            onChange={page => setCurrentPage(page)}
+            pageSize={cafesPerPage}
+            paginationProps={{ display: 'flex', justifyContent: 'center' }}
+            pageNeighbours={2}
+            rounded="full"
+            baseStyles={{ bg: 'transparent' }}
+            activeStyles={{ bg: 'gray.400' }}
+            hoverStyles={{ bg: 'gray.400' }}
+            responsive={{ activePage: true }}
+          />
         </Flex>
       )}
     </>
