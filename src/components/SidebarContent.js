@@ -133,8 +133,8 @@ function SidebarContent({ onClose, ...rest }) {
           © 2022 ka-pi. All rights reserved.
         </Text>
         <Text fontSize="0.75em">
-          此站使用咖啡廳社群
-          <Link href="https://cafenomad.tw/developers/docs/v1.2" color="accent">
+          使用咖啡廳社群
+          <Link href="https://cafenomad.tw/developers/docs/v1.2" color="teal">
             Cafe Nomad
           </Link>
           資料庫
