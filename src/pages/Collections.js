@@ -1,28 +1,45 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import Pagination from '@choc-ui/paginator'
-import CafeCard from '../../components/cafe/CafeCard'
-import usePageTracking from '../../usePageTracking'
+import usePageTracking from '../usePageTracking'
+import CafeCard from '../components/cafe/CafeCard'
 
-function ForWork() {
+function Collections() {
   usePageTracking()
+  const { type } = useParams()
+  const [collectionType, setCollectionType] = useState(type)
   const [cafesForWork, setCafesForWork] = useState([])
+  const [cafesForHangout, setCafesForHangout] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(10)
   const offset = (currentPage - 1) * cafesPerPage
-  const currentCafes = cafesForWork.slice(offset, offset + cafesPerPage)
+  const currentCafes =
+    collectionType === 'work'
+      ? cafesForWork.slice(offset, offset + cafesPerPage)
+      : cafesForHangout.slice(offset, offset + cafesPerPage)
 
-  const labels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
+  const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
+  const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
+
+  useEffect(() => {
+    setCollectionType(type)
+  }, [type])
 
   useEffect(() => {
     fetch('https://ka-pi-server.herokuapp.com/allcafes')
       .then(res => res.json())
       .then(data => {
-        const filteredCafes = data.filter(
+        const forHangout = data.filter(
+          cafe =>
+            cafe.limited_time === 'no' && cafe.music === 5 && cafe.seat === 5
+        )
+
+        const forWork = data.filter(
           cafe =>
             cafe.limited_time === 'no' &&
             cafe.socket === 'yes' &&
@@ -30,7 +47,8 @@ function ForWork() {
             cafe.wifi === 5
         )
 
-        setCafesForWork(filteredCafes)
+        setCafesForHangout(forHangout)
+        setCafesForWork(forWork)
       })
       .catch(error => {
         alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
@@ -42,9 +60,13 @@ function ForWork() {
   return (
     <Flex w="full" direction="column" align="center">
       <Heading as="h1" size="xl">
-        不受打擾
+        {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
-      <Text my="3">精選全台最適合工作咖啡廳</Text>
+      <Text my="3">
+        {collectionType === 'work'
+          ? '精選全台最適合工作咖啡廳'
+          : '精選適合聚會咖啡廳'}
+      </Text>
       <Flex
         w="full"
         maxW="400px"
@@ -53,12 +75,19 @@ function ForWork() {
         wrap="wrap"
         mb="4"
       >
-        {labels.map((label, i) => (
-          <Tag key={i} size="md" colorScheme="teal" mb="2">
-            <TagLeftIcon boxSize="12px" as={FaHashtag} />
-            <TagLabel>{label}</TagLabel>
-          </Tag>
-        ))}
+        {collectionType === 'work'
+          ? workLabels.map((label, i) => (
+              <Tag key={i} size="md" colorScheme="teal" mb="2">
+                <TagLeftIcon boxSize="12px" as={FaHashtag} />
+                <TagLabel>{label}</TagLabel>
+              </Tag>
+            ))
+          : hangoutLabels.map((label, i) => (
+              <Tag key={i} size="md" colorScheme="teal" mb="2">
+                <TagLeftIcon boxSize="12px" as={FaHashtag} />
+                <TagLabel>{label}</TagLabel>
+              </Tag>
+            ))}
       </Flex>
 
       {isLoading ? (
@@ -72,7 +101,13 @@ function ForWork() {
         />
       ) : (
         <>
-          <Text my="3">共有 {cafesForWork.length} 間符合</Text>
+          <Text my="3">
+            共有{' '}
+            {collectionType === 'work'
+              ? cafesForWork.length
+              : cafesForHangout.length}{' '}
+            間符合
+          </Text>
 
           <SimpleGrid
             w="full"
@@ -87,7 +122,11 @@ function ForWork() {
           </SimpleGrid>
           <Pagination
             defaultCurrent={1}
-            total={cafesForWork.length}
+            total={
+              collectionType === 'work'
+                ? cafesForWork.length
+                : cafesForHangout.length
+            }
             current={currentPage}
             onChange={page => setCurrentPage(page)}
             pageSize={cafesPerPage}
@@ -108,4 +147,4 @@ function ForWork() {
   )
 }
 
-export default ForWork
+export default Collections

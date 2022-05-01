@@ -6,8 +6,7 @@ import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
 import Home from './pages/Home'
-import ForWork from './pages/collections/ForWork'
-import ForHangout from './pages/collections/ForHangout'
+import Collections from './pages/Collections'
 import Picks from './pages/Picks'
 import Auth from './pages/Auth'
 import User from './pages/User'
@@ -49,10 +48,6 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="collections">
-                <Route path="work" element={<ForWork />} />
-                <Route path="hangout" element={<ForHangout />} />
-              </Route>
               <Route path="city">
                 <Route path=":cityName" element={<City />} />
               </Route>
@@ -60,6 +55,7 @@ function App() {
                 <Route index element={<SearchByKeyword />} />
                 <Route path="features" element={<SearchByFeature />} />
               </Route>
+              <Route path="collections/:type" element={<Collections />} />
               <Route path="cafe">
                 <Route path=":cafeId" element={<Cafe />} />
                 <Route path=":cafeId/blog/:blogId" element={<Blog />} />
