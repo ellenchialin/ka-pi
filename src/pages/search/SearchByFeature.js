@@ -1,9 +1,9 @@
 import { useState } from 'react'
 // prettier-ignore
-import { useCheckbox,chakra,Box,Text,useCheckboxGroup,Heading,Flex,Button,Spinner,Tag,TagLeftIcon,TagLabel, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, Stack, useDisclosure } from '@chakra-ui/react'
+import { useCheckbox,chakra,Box,Text,useCheckboxGroup,Heading,Flex,Button,Spinner,Tag,TagLeftIcon,TagLabel, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, SimpleGrid, useDisclosure, HStack } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import CafeCard from '../../components/cafe/CafeCard'
-import Pagination from '../../components/Pagination'
+import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../../usePageTracking'
 import { cityData } from '../../cityData'
 
@@ -18,10 +18,10 @@ const CustomCheckbox = props => {
       alignItems="center"
       justifyContent="center"
       gridColumnGap={2}
-      maxW="28"
+      maxW="32"
       bg="transparent"
       border="1px solid"
-      borderColor="gray.500"
+      borderColor="thirdDark"
       rounded="lg"
       px={3}
       py={1}
@@ -33,16 +33,14 @@ const CustomCheckbox = props => {
         alignItems="center"
         justifyContent="center"
         border="2px solid"
-        borderColor="gray.500"
+        borderColor="thirdDark"
         w={4}
         h={4}
         {...getCheckboxProps()}
       >
-        {state.isChecked && <Box w={2} h={2} bg="gray.500" />}
+        {state.isChecked && <Box w={2} h={2} bg="thirdDark" />}
       </Flex>
-      <Text fontSize="0.875rem" {...getLabelProps()}>
-        {props.text}
-      </Text>
+      <Text {...getLabelProps()}>{props.text}</Text>
     </chakra.label>
   )
 }
@@ -51,7 +49,6 @@ const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
   const cities = cityData.map(city => city.place)
 
   const { value: filterCityValue, getCheckboxProps } = useCheckboxGroup()
-  // console.log('selected city: ', filterCityValue)
 
   const advancedSearch = () => {
     const results = filteredCafes.filter(cafe => {
@@ -74,13 +71,12 @@ const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
       onOpen={onPopoverOpen}
       onClose={onPopoverClose}
       placement="left"
-      closeOnBlur={false}
+      variant="search"
+      closeOnBlur
     >
       <PopoverTrigger>
         <Button
-          colorScheme="blackAlpha"
-          variant="solid"
-          fontSize="0.875rem"
+          variant="auth-buttons"
           fontWeight="normal"
           px="6"
           h="8"
@@ -91,11 +87,11 @@ const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
           進階搜尋
         </Button>
       </PopoverTrigger>
-      <PopoverContent w="200px" px={5} py={8} bg="gray.800" color="white">
+      <PopoverContent w="240px" px={5} py={8} color="white">
         <PopoverArrow />
         <PopoverCloseButton />
 
-        <Flex wrap="wrap">
+        <Flex justify="space-between" wrap="wrap">
           {cities.map(city => (
             <CustomCheckbox
               key={city}
@@ -104,10 +100,12 @@ const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
           ))}
         </Flex>
         <Button
-          variant="solid"
-          fontSize="0.875rem"
+          bg="secondaryDark"
+          color="primaryLight"
+          _hover={{
+            bg: 'thirdDark',
+          }}
           fontWeight="normal"
-          color="gray.800"
           px="6"
           h="8"
           mt="2"
@@ -125,17 +123,15 @@ function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
   const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(false)
 
-  const indexOfLastCafe = currentPage * cafesPerPage
-  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(20)
+  const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
     advacedFilteredCafes.length > 0
-      ? advacedFilteredCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-      : filteredCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
+      : filteredCafes.slice(offset, offset + cafesPerPage)
 
   const defaultFeatures = ['不限時', '有插座']
   const ratingFeatures = [
@@ -146,8 +142,6 @@ function SearchByFeature() {
     { text: '價格親民', tag: 'cheap' },
     { text: '裝潢音樂', tag: 'music' },
   ]
-
-  // console.log('Filter by city: ', advacedFilteredCafes.length)
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
   // console.log('Selected features: ', value)
@@ -184,44 +178,50 @@ function SearchByFeature() {
   }
 
   return (
-    <Flex as="section" direction="column" alignItems="center">
+    <Flex as="section" direction="column" alignItems="center" wrap="wrap">
       <Heading as="h2" size="lg" mb="3">
-        根據需求，快速找到符合的咖啡廳
+        根據需求，快速搜尋
       </Heading>
-      <Flex w="400px" justify="center" align="center" direction="column" mb="3">
+      <Flex w="400px" justify="center" align="center" direction="column" mb="4">
         <Text>預設必備條件</Text>
-        <Flex>
+        <HStack spacing="15px">
           {defaultFeatures.map((feature, i) => (
             <Tag key={i} size="md" colorScheme="messenger">
               <TagLeftIcon boxSize="12px" as={FaHashtag} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
           ))}
-        </Flex>
+        </HStack>
       </Flex>
       <Flex
         direction="column"
         align="center"
         bg="gray.200"
-        px="4"
+        color="primaryDark"
+        px="6"
         py="6"
         mb="12"
         borderRadius="xl"
       >
-        <Flex wrap="wrap" justify="space-evenly">
+        <SimpleGrid
+          w="full"
+          columns={[2, 3, 3, 4]}
+          spacing="15px"
+          justifyItems="center"
+          alignItems="center"
+          mb="4"
+        >
           {ratingFeatures.map(feature => (
             <CustomCheckbox
               key={feature.tag}
-              mb="3"
               {...getCheckboxProps({ value: feature.tag, text: feature.text })}
             />
           ))}
-        </Flex>
-        <Flex w="60%" justify="space-evenly">
+        </SimpleGrid>
+        <HStack spacing="20px">
           <Button
             colorScheme="pink"
             variant="solid"
-            fontSize="0.875rem"
             fontWeight="normal"
             px="6"
             h="8"
@@ -233,7 +233,6 @@ function SearchByFeature() {
           <Button
             colorScheme="blackAlpha"
             variant="solid"
-            fontSize="0.875rem"
             fontWeight="normal"
             px="6"
             h="8"
@@ -242,7 +241,7 @@ function SearchByFeature() {
           >
             條件搜尋
           </Button>
-        </Flex>
+        </HStack>
       </Flex>
 
       {isLoading ? (
@@ -256,36 +255,52 @@ function SearchByFeature() {
         />
       ) : (
         <Flex direction="column" align="center">
-          <Text my="3">
-            共篩選{' '}
-            {advacedFilteredCafes.length > 0
-              ? advacedFilteredCafes.length
-              : filteredCafes.length}{' '}
-            間咖啡廳
-          </Text>
-          <PopoverFilter
-            filteredCafes={filteredCafes}
-            setAdvacedFilteredCafes={setAdvacedFilteredCafes}
-          />
-          <Flex
-            w="100%"
-            wrap="wrap"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            as="section"
+          {filteredCafes.length > 0 && (
+            <>
+              <Text my="3" alignSelf="flex-end">
+                共篩選{' '}
+                {advacedFilteredCafes.length > 0
+                  ? advacedFilteredCafes.length
+                  : filteredCafes.length}{' '}
+                間咖啡廳
+              </Text>
+              <PopoverFilter
+                filteredCafes={filteredCafes}
+                setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+              />
+            </>
+          )}
+          <SimpleGrid
+            w="full"
+            columns={[1, 2, 2, 3]}
+            spacing="20px"
+            justifyItems="center"
+            mb="4"
           >
             {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
-          </Flex>
+          </SimpleGrid>
           <Pagination
-            cafesPerPage={cafesPerPage}
-            totalCafes={
+            defaultCurrent={1}
+            total={
               advacedFilteredCafes.length > 0
                 ? advacedFilteredCafes.length
                 : filteredCafes.length
             }
-            paginate={paginate}
+            current={currentPage}
+            onChange={page => setCurrentPage(page)}
+            pageSize={cafesPerPage}
+            paginationProps={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            pageNeighbours={2}
+            rounded="full"
+            baseStyles={{ bg: 'transparent' }}
+            activeStyles={{ bg: 'gray.400' }}
+            hoverStyles={{ bg: 'gray.400' }}
+            responsive={{ activePage: true }}
           />
         </Flex>
       )}

@@ -99,12 +99,13 @@ function SearchByKeyword() {
             current={currentPage}
             onChange={page => setCurrentPage(page)}
             pageSize={cafesPerPage}
-            paginationProps={{ display: 'flex' }}
-            pageNeighbours={3}
+            paginationProps={{ display: 'flex', justifyContent: 'center' }}
+            pageNeighbours={2}
             rounded="full"
             baseStyles={{ bg: 'transparent' }}
             activeStyles={{ bg: 'gray.400' }}
             hoverStyles={{ bg: 'gray.400' }}
+            responsive={{ activePage: true }}
           />
         </Flex>
       )}
