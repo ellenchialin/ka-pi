@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner, InputGroup, InputLeftElement, Input, Button, SimpleGrid } from '@chakra-ui/react'
 import { BiSearchAlt } from 'react-icons/bi'
 import CafeCard from '../../components/cafe/CafeCard'
+import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {
@@ -11,6 +12,10 @@ function SearchByKeyword() {
   const [matchedCafes, setMatchedCafes] = useState([])
   const [searchKeywords, setSearchKeywords] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(20)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = matchedCafes.slice(offset, offset + cafesPerPage)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -82,11 +87,25 @@ function SearchByKeyword() {
             columns={[1, 2, 2, 3]}
             spacing="20px"
             justifyItems="center"
+            mb="4"
           >
-            {matchedCafes.map(cafe => (
+            {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
+          <Pagination
+            defaultCurrent={1}
+            total={matchedCafes.length}
+            current={currentPage}
+            onChange={page => setCurrentPage(page)}
+            pageSize={cafesPerPage}
+            paginationProps={{ display: 'flex' }}
+            pageNeighbours={3}
+            rounded="full"
+            baseStyles={{ bg: 'transparent' }}
+            activeStyles={{ bg: 'gray.400' }}
+            hoverStyles={{ bg: 'gray.400' }}
+          />
         </Flex>
       )}
     </>
