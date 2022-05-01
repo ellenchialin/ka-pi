@@ -16,7 +16,7 @@ function Collections() {
   const [isLoading, setIsLoading] = useState(true)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(10)
+  const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
     collectionType === 'work'
