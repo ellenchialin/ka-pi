@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Flex, Heading, Text, Spinner, Box } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Box, SimpleGrid } from '@chakra-ui/react'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
-import Pagination from '../components/Pagination'
+import Pagination from '@choc-ui/paginator'
 import { cityData } from '../cityData'
 
 function City() {
@@ -16,19 +16,17 @@ function City() {
   // const [newTaipeiCafes, setNewTaipeiCafes] = useState([])
   const [selectedAreas, setSelectedAreas] = useState([])
   const [updatedCafes, setUpdatedCafes] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(20)
   const [isLoading, setIsLoading] = useState(true)
 
   const { cityName } = useParams()
 
-  const indexOfLastCafe = currentPage * cafesPerPage
-  const indexOfFirstCafe = indexOfLastCafe - cafesPerPage
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(10)
+  const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
     updatedCafes.length > 0
-      ? updatedCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-      : cityCafes.slice(indexOfFirstCafe, indexOfLastCafe)
-  const paginate = pageNumber => setCurrentPage(pageNumber)
+      ? updatedCafes.slice(offset, offset + cafesPerPage)
+      : cityCafes.slice(offset, offset + cafesPerPage)
 
   const convertCityName = city => {
     setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
@@ -70,20 +68,6 @@ function City() {
       // setTaipeiCafes([])
       // setNewTaipeiCafes([])
     }
-
-    /*
-    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${cityName}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('From City: ', data)
-        setCityCafes(data.slice(0, 20))
-      })
-      .catch(error => {
-        alert('無法取得咖啡廳資料庫，請聯繫開發人員')
-        console.error(error)
-      })
-      .finally(() => setIsLoading(false))
-    */
   }, [])
 
   const getSelectedCafes = () => {
@@ -126,29 +110,40 @@ function City() {
             setUpdatedCafes={setUpdatedCafes}
           />
           <Flex w="100%" direction="column" as="section">
-            <Text>
+            <Text alignSelf="flex-end" mb="3">
               {updatedCafes.length > 0
-                ? `搜尋結果： ${updatedCafes.length} 間`
+                ? `共篩選 ${updatedCafes.length} 間咖啡廳`
                 : '所有收錄咖啡廳'}
             </Text>
-            <Flex
-              wrap="wrap"
-              justifyContent="space-between"
-              alignItems="flex-start"
+            <SimpleGrid
+              w="full"
+              columns={[1, 2, 2, 3]}
+              spacing="20px"
+              justifyItems="center"
+              mb="4"
             >
               {currentCafes.map(cafe => (
                 <CafeCard key={cafe.id} cafe={cafe} />
               ))}
-            </Flex>
+            </SimpleGrid>
             <Box alignSelf="center">
               <Pagination
-                cafesPerPage={cafesPerPage}
-                totalCafes={
+                defaultCurrent={1}
+                total={
                   updatedCafes.length > 0
                     ? updatedCafes.length
                     : cityCafes.length
                 }
-                paginate={paginate}
+                current={currentPage}
+                onChange={page => setCurrentPage(page)}
+                pageSize={cafesPerPage}
+                paginationProps={{ display: 'flex', justifyContent: 'center' }}
+                pageNeighbours={2}
+                rounded="full"
+                baseStyles={{ bg: 'transparent' }}
+                activeStyles={{ bg: 'gray.400' }}
+                hoverStyles={{ bg: 'gray.400' }}
+                responsive={{ activePage: true }}
               />
             </Box>
           </Flex>

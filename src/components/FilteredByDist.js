@@ -17,7 +17,7 @@ function CustomCheckbox(props) {
       maxW="28"
       bg="transparent"
       border="1px solid"
-      borderColor="gray.500"
+      borderColor="thirdDark"
       rounded="lg"
       px={3}
       py={1}
@@ -29,16 +29,14 @@ function CustomCheckbox(props) {
         alignItems="center"
         justifyContent="center"
         border="2px solid"
-        borderColor="gray.500"
+        borderColor="thirdDark"
         w={4}
         h={4}
         {...getCheckboxProps()}
       >
-        {state.isChecked && <Box w={2} h={2} bg="gray.500" />}
+        {state.isChecked && <Box w={2} h={2} bg="thirdDark" />}
       </Flex>
-      <Text fontSize="0.875rem" {...getLabelProps()}>
-        {props.value}
-      </Text>
+      <Text {...getLabelProps()}>{props.value}</Text>
     </chakra.label>
   )
 }
@@ -48,8 +46,7 @@ function FilterByDist({
   setSelectedAreas,
   setUpdatedCafes,
 }) {
-  console.log('translated City Name: ', translatedCityName)
-
+  // console.log('translated City Name: ', translatedCityName)
   const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
 
@@ -82,7 +79,6 @@ function FilterByDist({
         <Button
           colorScheme="pink"
           variant="solid"
-          fontSize="0.875rem"
           fontWeight="normal"
           px="6"
           h="8"
@@ -94,7 +90,6 @@ function FilterByDist({
         <Button
           colorScheme="blackAlpha"
           variant="solid"
-          fontSize="0.875rem"
           fontWeight="normal"
           px="6"
           h="8"
