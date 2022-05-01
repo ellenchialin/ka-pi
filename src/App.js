@@ -25,7 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <Box minH="100vh">
-        <SidebarContent display={{ base: 'none', md: 'unset' }} />
+        <SidebarContent display={{ base: 'none', md: 'flex' }} />
         <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
           <DrawerOverlay />
           <DrawerContent>

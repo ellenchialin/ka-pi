@@ -23,6 +23,7 @@ const NavItem = props => {
         bg: 'gray.400',
         color: 'white',
       }}
+      _focus={{ bg: 'gray.400', color: 'white' }}
       role="group"
       transition=".15s ease"
       {...rest}
@@ -50,14 +51,15 @@ function SidebarContent({ onClose, ...rest }) {
   const textColor = useColorModeValue('primaryDark', 'primaryLight')
 
   return (
-    <Box
+    <Flex
       as="nav"
       pos="fixed"
       zIndex="sticky"
-      h="full"
+      h="100vh"
       w="60"
       bg={bgColor}
       color={textColor}
+      direction="column"
       boxShadow="base"
       overflowX="hidden"
       overflowY="auto"
@@ -76,7 +78,7 @@ function SidebarContent({ onClose, ...rest }) {
         fontSize="sm"
         color="grey.600"
         aria-label="主選單"
-        h="100%"
+        // h="100%"
       >
         <NavItem
           as={NavLink}
@@ -124,24 +126,21 @@ function SidebarContent({ onClose, ...rest }) {
         <NavItem as={NavLink} to="user" icon={CgCoffee}>
           Your Cafe Map
         </NavItem>
-        <Box mt="auto" px="4" pb="5">
-          <Divider />
-          <Text fontSize="0.75em" pt="5">
-            © 2022 ka-pi. All rights reserved.
-          </Text>
-          <Text fontSize="0.75em">
-            此站使用咖啡廳社群
-            <Link
-              href="https://cafenomad.tw/developers/docs/v1.2"
-              color="accent"
-            >
-              Cafe Nomad
-            </Link>
-            資料庫
-          </Text>
-        </Box>
       </Flex>
-    </Box>
+      <Box px="4" pb="5" mt="auto">
+        <Divider />
+        <Text fontSize="0.75em" pt="5">
+          © 2022 ka-pi. All rights reserved.
+        </Text>
+        <Text fontSize="0.75em">
+          此站使用咖啡廳社群
+          <Link href="https://cafenomad.tw/developers/docs/v1.2" color="accent">
+            Cafe Nomad
+          </Link>
+          資料庫
+        </Text>
+      </Box>
+    </Flex>
   )
 }
 
