@@ -74,7 +74,7 @@ function Picks() {
   }, [])
 
   return (
-    <Flex as="section" direction="column" align="center">
+    <Flex as="section" w="full" direction="column" align="center">
       <Heading as="h1" size="xl" align="center">
         不用思考，無腦跟喝
       </Heading>
@@ -87,7 +87,7 @@ function Picks() {
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
-          color="blue.600"
+          color="teal"
           siz="xl"
           mt="6"
         />
