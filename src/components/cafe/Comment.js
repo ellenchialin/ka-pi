@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Image, Text, IconButton, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, InputGroup, InputLeftElement, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack } from '@chakra-ui/react'
-import { RiReplyAllFill, RiAddFill } from 'react-icons/ri'
+import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack } from '@chakra-ui/react'
+import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 import AlertModal from '../AlertModal'
 import Reply from './Reply'

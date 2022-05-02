@@ -10,6 +10,30 @@ const custumTheme = extendTheme({
         bg: mode('#fff', '#212121')(props),
         lineHeight: 'base',
       },
+      h1: {
+        fontSize: '36px',
+        fontWeight: 'bold',
+      },
+      h2: {
+        fontSize: '30px',
+        fontWeight: 'bold',
+      },
+      h3: {
+        fontSize: '24px',
+        fontWeight: 'bold',
+      },
+      h4: {
+        fontSize: '18px',
+        fontWeight: 'bold',
+      },
+      h5: {
+        fontSize: '14px',
+        fontWeight: 'bold',
+      },
+      h6: {
+        fontSize: '12px',
+        fontWeight: 'bold',
+      },
     }),
   },
   fonts: {

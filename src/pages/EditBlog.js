@@ -16,8 +16,6 @@ function EditBlog() {
   const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
   const { currentUser } = useAuth()
-  console.log(currentUser)
-
   const { cafeId } = useParams()
   const navigate = useNavigate()
 

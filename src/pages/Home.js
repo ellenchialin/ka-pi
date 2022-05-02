@@ -128,7 +128,14 @@ function Home() {
         responsive={{ activePage: true }}
       />
 
-      <Flex as="section" my="4" w="100%" direction="column" alignItems="center">
+      <Flex
+        as="section"
+        mt="12"
+        mb="4"
+        w="100%"
+        direction="column"
+        alignItems="center"
+      >
         <Heading as="h2" size="lg" mb="3">
           為週末做準備
         </Heading>

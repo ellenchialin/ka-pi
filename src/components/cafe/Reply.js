@@ -4,8 +4,6 @@ import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, Moda
 import { firebase } from '../../utils/firebase'
 
 function Reply({ replyUserId, replyText, replyImage, replyDate }) {
-  console.log('Reply user Id: ', replyUserId)
-
   const [userInfo, setUserInfo] = useState({})
   const convertedReplyDate = replyDate.toDate().toLocaleDateString()
 

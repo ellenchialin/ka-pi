@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Flex, Text, Box, Icon, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Text, Box, useColorModeValue } from '@chakra-ui/react'
 import CityInfoCard from '../CityInfoCard'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
@@ -12,7 +12,6 @@ function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const convertFetchCityName = city => {
-    // console.log('Click city: ', city)
     if (city === 'taipei') {
       setCityLinkEndpoint('taipei')
       return 'taipei'
@@ -26,8 +25,6 @@ function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
     fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
       .then(res => res.json())
       .then(data => {
-        // console.log('From Taiwan Map: ', data)
-
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
         } else if (cityName === 'taipei') {
@@ -44,14 +41,9 @@ function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
   }
 
   const showCityInfo = e => {
-    // console.log(e.target.getAttribute('data-name'))
     const cityEngName = e.target.getAttribute('data-name')
-
     const cityChName = cityData.filter(city => city.tag === cityEngName)[0]
       .place
-
-    // console.log('Hovered EN name: ', cityEngName)
-    // console.log('Hovered CH name: ', cityChName)
 
     setHoveredCity(cityChName)
     setIsLoading(true)

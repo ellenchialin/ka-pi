@@ -1,12 +1,9 @@
 // prettier-ignore
 import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, Text, IconButton } from '@chakra-ui/react'
-import { useState } from 'react'
 import { FaFacebookF, FaGoogle } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-
-import { firebase } from '../../utils/firebase'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
