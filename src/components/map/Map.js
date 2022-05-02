@@ -9,8 +9,6 @@ const cafeIcon = new Icon({
 })
 
 function Map({ userLatitude, userLongitude, cafes }) {
-  // console.log(userLatitude, userLongitude)
-
   return (
     <Box w="100%" h="350px" mb="8">
       <MapContainer

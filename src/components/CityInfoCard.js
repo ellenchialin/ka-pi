@@ -11,22 +11,15 @@ function CityInfoCard({
   taipeiCafes,
   newTaipeiCafes,
 }) {
-  // console.log('taipei Cafes: ', taipeiCafes)
-  // console.log('newTaipei Cafes: ', newTaipeiCafes)
-
   const getCafeNumbers = () => {
     if (taipeiCafes.length > 0) {
-      // console.log('Taipei Cafes: ', taipeiCafes)
       return `共收錄 ${taipeiCafes.length} 間咖啡廳`
     } else if (newTaipeiCafes.length > 0) {
-      // console.log('New Taipei Cafes: ', newTaipeiCafes)
       return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
     } else {
       return `共收錄 ${cityCafes.length} 間咖啡廳`
     }
   }
-
-  // console.log('city Link Endpoint: ', cityLinkEndpoint)
 
   return (
     <VStack spacing="2">

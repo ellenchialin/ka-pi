@@ -33,7 +33,9 @@ const CustomCheckbox = props => {
       >
         {state.isChecked && <Box w={2} h={2} bg="thirdDark" />}
       </Flex>
-      <Text {...getLabelProps()}>{props.text}</Text>
+      <Text color="primaryDark" {...getLabelProps()}>
+        {props.text}
+      </Text>
     </chakra.label>
   )
 }
