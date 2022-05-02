@@ -84,7 +84,7 @@ function Cafe() {
               .map(photo => photo.photo_reference)
             setGooglePhotoRefs(references)
 
-            console.log('From google api: ', references)
+            // console.log('From google api: ', references)
           })
           .finally(() => setIsLoading(false))
       })
@@ -146,16 +146,25 @@ function Cafe() {
   }
 
   const handleAddComment = () => {
-    firebase
-      .addComment(cafe.id, currentUser.uid, commentText, commentPhotoUrl)
-      .then(() => {
-        setCommentText('')
-        onCommentClose()
+    const commentDetails = {
+      cafeId: cafe.id,
+      userId: currentUser.uid,
+      text: commentText,
+      image: commentPhotoUrl,
+    }
 
-        firebase
-          .listenCommentsChanges(cafe.id)
-          .then(commentList => setComments(commentList))
-      })
+    firebase.addComment(commentDetails).then(() => {
+      setCommentText('')
+      onCommentClose()
+
+      firebase
+        .getComments(cafe.id)
+        .then(commentList => setComments(commentList))
+
+      //firebase
+      //  .listenCommentsChanges(cafe.id)
+      //  .then(commentList => setComments(commentList))
+    })
   }
 
   const handleToggleSaved = () => {
@@ -215,7 +224,7 @@ function Cafe() {
             py="4"
             px="2"
             mb="4"
-            minH={{ sm: '230px', md: '250px' }}
+            minH="300px"
             bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
             bgSize="cover"
             bgPosition="center"

@@ -268,6 +268,12 @@ export const firebase = {
       )
 
       getDocs(q).then(docsSnapshot => {
+        const commentList = []
+        docsSnapshot.forEach(doc => {
+          commentList.push(doc.data())
+        })
+        resolve(commentList)
+        /*
         const commentArray = docsSnapshot.docs.map(doc => ({
           commentId: doc.data().commentId,
           createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
@@ -277,6 +283,7 @@ export const firebase = {
           replies: doc.data().replies,
         }))
         resolve(commentArray)
+        */
       })
     })
   },
@@ -288,18 +295,17 @@ export const firebase = {
       })
     })
   },
-  addComment(cafeId, userId, text, image) {
-    const newDocRef = doc(collection(db, `cafes/${cafeId}/comments`))
-
+  addComment(data) {
     return new Promise(resolve => {
+      const newDocRef = doc(collection(db, `cafes/${data.cafeId}/comments`))
+
       setDoc(newDocRef, {
         commentId: newDocRef.id,
+        userId: data.userId,
+        text: data.text,
+        image: data.image,
         createdAt: serverTimestamp(),
-        userId,
-        text,
-        image,
-      })
-      resolve()
+      }).then(() => resolve())
     })
   },
   listenCommentsChanges(cafeId) {
@@ -327,10 +333,9 @@ export const firebase = {
       ).then(querySnapshot => {
         const replyList = []
         querySnapshot.forEach(doc => {
-          // console.log(doc.data())
           replyList.push(doc.data())
-          resolve(replyList)
         })
+        resolve(replyList)
       })
     })
   },
