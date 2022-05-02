@@ -58,13 +58,11 @@ function BlogCard({
             onClick={handleBlogDelete}
           />
         )}
-        <VStack spacing="2" p="4" align="flex-start">
-          <Flex alignItems="center" justifyContent="space-between">
-            <Heading w="full" as="h5" size="sm" isTruncated>
-              {title}
-            </Heading>
-          </Flex>
-          <Text w="full" fontSize="0.875em" noOfLines={2} isTruncated>
+        <VStack w="100%" spacing="2" p="4" pb="0" align="flex-start">
+          <Heading w="full" as="h5" size="sm" isTruncated>
+            {title}
+          </Heading>
+          <Text w="100%" h="100%" minH="45px" fontSize="0.875em" noOfLines={2}>
             {editorState}
           </Text>
         </VStack>

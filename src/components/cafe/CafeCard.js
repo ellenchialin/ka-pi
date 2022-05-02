@@ -66,7 +66,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
               {cafe.name}
             </Heading>
             <Link to={`/cafe/${cafe.id}`}>
-              <ArrowRightIcon w="3" h="3" />
+              <ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />
             </Link>
           </Flex>
           <Text w="full" fontSize="0.875em" isTruncated>

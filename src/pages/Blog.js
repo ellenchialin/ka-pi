@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Text, Spinner, Heading, Avatar, Box, Image, AspectRatio } from '@chakra-ui/react'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
-
 import { firebase } from '../utils/firebase'
-import ImageSlider from '../components/ImageSlider'
+
+// import ImageSlider from '../components/ImageSlider'
 
 function Blog() {
   const [blog, setBlog] = useState({})
@@ -43,14 +43,15 @@ function Blog() {
       align="center"
       position="relative"
       w="100%"
-      minH="100vh"
+      maxW="800px"
+      h="100%"
     >
       {isLoading ? (
         <Spinner
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
-          color="blue.600"
+          color="teal"
           siz="xl"
           mt="6"
           position="absolute"
@@ -61,7 +62,7 @@ function Blog() {
       ) : (
         <Flex direction="column" h="100%" w="100%">
           {/*<ImageSlider slides={blog.images} />*/}
-          <AspectRatio w="100%" maxW="800px" ratio={21 / 9}>
+          <AspectRatio w="100%" ratio={21 / 9}>
             <Image
               src={blog.image}
               alt="食記照片"
@@ -70,16 +71,10 @@ function Blog() {
               w="100%"
             />
           </AspectRatio>
-          <Heading
-            as="h1"
-            size="2xl"
-            color="gray.800"
-            letterSpacing="widest"
-            mb="3"
-          >
+          <Heading as="h1" size="2xl" letterSpacing="widest" mt="6" mb="3">
             {blog.title}
           </Heading>
-          <Flex justify="space-between" align="center" my="3" color="gray.500">
+          <Flex justify="space-between" align="center" my="3">
             <Flex align="center">
               <Avatar
                 size="sm"

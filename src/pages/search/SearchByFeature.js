@@ -1,123 +1,12 @@
 import { useState } from 'react'
 // prettier-ignore
-import { useCheckbox,chakra,Box,Text,useCheckboxGroup,Heading,Flex,Button,Spinner,Tag,TagLeftIcon,TagLabel, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, SimpleGrid, useDisclosure, HStack } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
+import PopoverCityFilter from '../../components/PopoverCityFilter'
+import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../../usePageTracking'
-import { cityData } from '../../cityData'
-
-const CustomCheckbox = props => {
-  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
-    useCheckbox(props)
-
-  return (
-    <chakra.label
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="center"
-      gridColumnGap={2}
-      maxW="32"
-      bg="transparent"
-      border="1px solid"
-      borderColor="thirdDark"
-      rounded="lg"
-      px={3}
-      py={1}
-      cursor="pointer"
-      {...htmlProps}
-    >
-      <input {...getInputProps()} />
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        border="2px solid"
-        borderColor="thirdDark"
-        w={4}
-        h={4}
-        {...getCheckboxProps()}
-      >
-        {state.isChecked && <Box w={2} h={2} bg="thirdDark" />}
-      </Flex>
-      <Text {...getLabelProps()}>{props.text}</Text>
-    </chakra.label>
-  )
-}
-
-const PopoverFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
-  const cities = cityData.map(city => city.place)
-
-  const { value: filterCityValue, getCheckboxProps } = useCheckboxGroup()
-
-  const advancedSearch = () => {
-    const results = filteredCafes.filter(cafe => {
-      return filterCityValue.some(city => {
-        return cafe.address.includes(city)
-      })
-    })
-    setAdvacedFilteredCafes(results)
-  }
-
-  const {
-    onOpen: onPopoverOpen,
-    onClose: onPopoverClose,
-    isOpen: isPopoverOpen,
-  } = useDisclosure()
-
-  return (
-    <Popover
-      isOpen={isPopoverOpen}
-      onOpen={onPopoverOpen}
-      onClose={onPopoverClose}
-      placement="left"
-      variant="search"
-      closeOnBlur
-    >
-      <PopoverTrigger>
-        <Button
-          variant="auth-buttons"
-          fontWeight="normal"
-          px="6"
-          h="8"
-          mb="3"
-          alignSelf="flex-end"
-          onClick={() => console.log('Click city')}
-        >
-          進階搜尋
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent w="240px" px={5} py={8} color="white">
-        <PopoverArrow />
-        <PopoverCloseButton />
-
-        <Flex justify="space-between" wrap="wrap">
-          {cities.map(city => (
-            <CustomCheckbox
-              key={city}
-              {...getCheckboxProps({ value: city, text: city })}
-            />
-          ))}
-        </Flex>
-        <Button
-          bg="secondaryDark"
-          color="primaryLight"
-          _hover={{
-            bg: 'thirdDark',
-          }}
-          fontWeight="normal"
-          px="6"
-          h="8"
-          mt="2"
-          isDisabled={filterCityValue.length === 0 ? true : false}
-          onClick={advancedSearch}
-        >
-          搜尋
-        </Button>
-      </PopoverContent>
-    </Popover>
-  )
-}
 
 function SearchByFeature() {
   usePageTracking()
@@ -144,7 +33,6 @@ function SearchByFeature() {
   ]
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
-  // console.log('Selected features: ', value)
 
   const handleFeatureSearch = () => {
     setIsLoading(true)
@@ -186,7 +74,7 @@ function SearchByFeature() {
         <Text>預設必備條件</Text>
         <HStack spacing="15px">
           {defaultFeatures.map((feature, i) => (
-            <Tag key={i} size="md" colorScheme="teal">
+            <Tag key={i} size="lg" colorScheme="teal">
               <TagLeftIcon boxSize="12px" as={FaHashtag} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
@@ -249,7 +137,7 @@ function SearchByFeature() {
           thickness="4px"
           speed="0.65s"
           emptyColor="gray.200"
-          color="blue.600"
+          color="teal"
           siz="xl"
           mt="6"
         />
@@ -264,7 +152,7 @@ function SearchByFeature() {
                   : filteredCafes.length}{' '}
                 間咖啡廳
               </Text>
-              <PopoverFilter
+              <PopoverCityFilter
                 filteredCafes={filteredCafes}
                 setAdvacedFilteredCafes={setAdvacedFilteredCafes}
               />

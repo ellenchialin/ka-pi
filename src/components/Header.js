@@ -11,6 +11,8 @@ function Header({ onOpen }) {
       as="header"
       align="center"
       justify="space-between"
+      position="fixed"
+      zIndex="sticky"
       w="full"
       h="14"
       px="4"

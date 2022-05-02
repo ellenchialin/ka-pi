@@ -41,7 +41,8 @@ function App() {
             direction="column"
             justify="center"
             align="center"
-            py="8"
+            pt={{ base: '20', sm: '20', md: '8' }}
+            pb="8"
             px="6"
             my="0"
             mx="auto"
