@@ -243,7 +243,8 @@ export const firebase = {
     return new Promise(resolve => {
       const blogs = query(
         collectionGroup(db, `blogs`),
-        where('userId', '==', `${userId}`)
+        where('userId', '==', `${userId}`),
+        orderBy('createdAt', 'desc')
       )
       getDocs(blogs).then(docsSnapshot => {
         const blogsArray = docsSnapshot.docs.map(doc => ({
