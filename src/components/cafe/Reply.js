@@ -20,11 +20,12 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   }, [])
 
   return (
-    <HStack w="100%" pl="10" alignSelf="flex-start">
+    <HStack w="100%" pl="10">
       <Image
         borderRadius="full"
         boxSize="35px"
         mr="2"
+        alignSelf="flex-start"
         src={userInfo.photo}
         alt={userInfo.name}
         objectFit="cover"

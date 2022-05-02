@@ -4,7 +4,7 @@ import CustomCheckbox from './CustomCheckbox'
 import { cityData } from '../cityData'
 
 const PopoverCityFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
-  console.log('Before filtered by city: ', filteredCafes)
+  // console.log('Before filtered by city: ', filteredCafes)
 
   const cities = cityData.map(city => city.place)
 
@@ -16,7 +16,7 @@ const PopoverCityFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
         return cafe.address.includes(city)
       })
     })
-    console.log('Filtered by city: ', results)
+    // console.log('Filtered by city: ', results)
     setAdvacedFilteredCafes(results)
   }
 
@@ -50,7 +50,7 @@ const PopoverCityFilter = ({ filteredCafes, setAdvacedFilteredCafes }) => {
       </PopoverTrigger>
       <PopoverContent w="240px" px={5} py={8} color="white">
         <PopoverArrow />
-        <PopoverCloseButton />
+        <PopoverCloseButton color="primaryDark" />
 
         <Flex justify="space-between" wrap="wrap">
           {cities.map(city => (

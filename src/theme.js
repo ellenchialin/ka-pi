@@ -72,7 +72,7 @@ const custumTheme = extendTheme({
       variants: {
         search: {
           content: {
-            bg: 'primaryDark',
+            bg: 'gray.200',
           },
         },
       },

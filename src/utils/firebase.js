@@ -268,15 +268,11 @@ export const firebase = {
       )
 
       getDocs(q).then(docsSnapshot => {
-        const commentArray = docsSnapshot.docs.map(doc => ({
-          commentId: doc.data().commentId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
-          userId: doc.data().userId,
-          text: doc.data().text,
-          image: doc.data().image,
-          replies: doc.data().replies,
-        }))
-        resolve(commentArray)
+        const commentList = []
+        docsSnapshot.forEach(doc => {
+          commentList.push(doc.data())
+        })
+        resolve(commentList)
       })
     })
   },
@@ -288,20 +284,20 @@ export const firebase = {
       })
     })
   },
-  addComment(cafeId, userId, text, image) {
-    const newDocRef = doc(collection(db, `cafes/${cafeId}/comments`))
-
+  addComment(data) {
     return new Promise(resolve => {
+      const newDocRef = doc(collection(db, `cafes/${data.cafeId}/comments`))
+
       setDoc(newDocRef, {
         commentId: newDocRef.id,
+        userId: data.userId,
+        text: data.text,
+        image: data.image,
         createdAt: serverTimestamp(),
-        userId,
-        text,
-        image,
-      })
-      resolve()
+      }).then(() => resolve())
     })
   },
+  /*
   listenCommentsChanges(cafeId) {
     return new Promise(resolve => {
       const q = query(
@@ -320,17 +316,20 @@ export const firebase = {
       })
     })
   },
+  */
   getReplyList(cafeId, commentId) {
     return new Promise(resolve => {
-      getDocs(
-        collection(db, `cafes/${cafeId}/comments/${commentId}/replies`)
-      ).then(querySnapshot => {
+      const q = query(
+        collection(db, `cafes/${cafeId}/comments/${commentId}/replies`),
+        orderBy('repliedAt', 'desc')
+      )
+
+      getDocs(q).then(querySnapshot => {
         const replyList = []
         querySnapshot.forEach(doc => {
-          // console.log(doc.data())
           replyList.push(doc.data())
-          resolve(replyList)
         })
+        resolve(replyList)
       })
     })
   },

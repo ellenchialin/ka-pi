@@ -20,6 +20,7 @@ function Comment({
   const [newReplyText, setNewReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
   const [replyList, setReplyList] = useState([])
+  const convertedCommentDate = date.toDate().toLocaleDateString()
 
   const replyPhotoRef = useRef()
   const navigate = useNavigate()
@@ -71,6 +72,7 @@ function Comment({
       onAlertOpen()
       return
     }
+    setReplyPhotoUrl('')
     onReplyOpen()
   }
 
@@ -84,12 +86,12 @@ function Comment({
     }
 
     firebase.addReply(repliedDetails).then(() => {
-      console.log('Reply Added')
+      // console.log('Reply Added')
       setNewReplyText('')
       onReplyClose()
 
       firebase.getReplyList(cafeId, commentId).then(list => {
-        console.log('Latest Reply List: ', list)
+        // console.log('Latest Reply List: ', list)
         setReplyList(list)
       })
     })
@@ -149,7 +151,7 @@ function Comment({
           </Box>
           <HStack spacing="10px">
             <Text fontSize="0.75rem" alignSelf="flex-end">
-              {date}
+              {convertedCommentDate}
             </Text>
 
             <Text
