@@ -130,6 +130,7 @@ function Cafe() {
       onAlertOpen()
       return
     }
+    setCommentPhotoUrl('')
     onCommentOpen()
   }
 
@@ -160,10 +161,6 @@ function Cafe() {
       firebase
         .getComments(cafe.id)
         .then(commentList => setComments(commentList))
-
-      //firebase
-      //  .listenCommentsChanges(cafe.id)
-      //  .then(commentList => setComments(commentList))
     })
   }
 

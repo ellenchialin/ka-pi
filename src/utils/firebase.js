@@ -297,6 +297,7 @@ export const firebase = {
       }).then(() => resolve())
     })
   },
+  /*
   listenCommentsChanges(cafeId) {
     return new Promise(resolve => {
       const q = query(
@@ -315,6 +316,7 @@ export const firebase = {
       })
     })
   },
+  */
   getReplyList(cafeId, commentId) {
     return new Promise(resolve => {
       const q = query(
