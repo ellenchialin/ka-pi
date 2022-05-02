@@ -63,8 +63,9 @@ function EditBlog() {
             src={coverPhotoUrl ? coverPhotoUrl : ''}
             alt="食記封面照"
             fit="cover"
+            rounded="lg"
             maxW="800px"
-            fallbackSrc="https://via.placeholder.com/800x470?text=cover+photo"
+            fallbackSrc="https://via.placeholder.com/800x470?text=blog+cover"
           />
         </AspectRatio>
         <Button
