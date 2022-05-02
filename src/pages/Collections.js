@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
+import PopoverCityFilter from '../components/PopoverCityFilter'
 import Pagination from '@choc-ui/paginator'
+import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 import CafeCard from '../components/cafe/CafeCard'
 
@@ -13,13 +15,15 @@ function Collections() {
   const [collectionType, setCollectionType] = useState(type)
   const [cafesForWork, setCafesForWork] = useState([])
   const [cafesForHangout, setCafesForHangout] = useState([])
+  const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
-  const currentCafes =
-    collectionType === 'work'
+  const currentCafes = advacedFilteredCafes.length > 0 
+      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage) 
+      : collectionType === 'work'
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
 
@@ -57,6 +61,16 @@ function Collections() {
       .finally(() => setIsLoading(false))
   }, [])
 
+  const updateCityFilter = () => {
+    if (collectionType === 'work') {
+      setCafesForWork(advacedFilteredCafes)
+    } else {
+      setCafesForHangout(advacedFilteredCafes)
+    }
+  }
+
+  // useUpdateEffect(updateCityFilter, advacedFilteredCafes)
+
   return (
     <Flex w="full" direction="column" align="center">
       <Heading as="h1" size="xl">
@@ -77,13 +91,13 @@ function Collections() {
       >
         {collectionType === 'work'
           ? workLabels.map((label, i) => (
-              <Tag key={i} size="md" colorScheme="teal" mb="2">
+              <Tag key={i} size="lg" colorScheme="teal" mb="2">
                 <TagLeftIcon boxSize="12px" as={FaHashtag} />
                 <TagLabel>{label}</TagLabel>
               </Tag>
             ))
           : hangoutLabels.map((label, i) => (
-              <Tag key={i} size="md" colorScheme="teal" mb="2">
+              <Tag key={i} size="lg" colorScheme="teal" mb="2">
                 <TagLeftIcon boxSize="12px" as={FaHashtag} />
                 <TagLabel>{label}</TagLabel>
               </Tag>
@@ -101,13 +115,21 @@ function Collections() {
         />
       ) : (
         <>
-          <Text my="3">
+          <Text my="3" alignSelf="flex-end">
             共有{' '}
-            {collectionType === 'work'
+            {advacedFilteredCafes.length > 0
+              ? advacedFilteredCafes.length
+              : collectionType === 'work'
               ? cafesForWork.length
               : cafesForHangout.length}{' '}
             間符合
           </Text>
+          <PopoverCityFilter
+            filteredCafes={
+              collectionType === 'work' ? cafesForWork : cafesForHangout
+            }
+            setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+          />
 
           <SimpleGrid
             w="full"
@@ -122,7 +144,8 @@ function Collections() {
           </SimpleGrid>
           <Pagination
             defaultCurrent={1}
-            total={
+            total={advacedFilteredCafes.length > 0
+              ? advacedFilteredCafes.length :
               collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length
