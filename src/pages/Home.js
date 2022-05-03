@@ -26,6 +26,7 @@ function Home() {
     )
       .then(res => res.json())
       .then(data => {
+        // console.log(data.plus_code.compound_code.split(', ').slice(1, 2))
         let currentCity = ''
         if (
           data.results[0].formatted_address.split(', ').slice(-2, -1)[0] ===
@@ -47,7 +48,7 @@ function Home() {
         )
           .then(res => res.json())
           .then(data => {
-            setUserNearbyCafes(data.slice(0, 20))
+            setUserNearbyCafes(data.slice(0, 50))
           })
           .catch(error => {
             alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
