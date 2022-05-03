@@ -11,7 +11,7 @@ const InlineStyleControls = ({ editorState, onToggle }) => {
   const currentStyle = editorState.getCurrentInlineStyle()
 
   return (
-    <ButtonGroup spacing="4" className="RichEditor-controls">
+    <ButtonGroup spacing="4" mb="4" className="RichEditor-controls">
       {INLINE_STYLES.map(type => (
         <StyleButton
           key={type.label}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, HStack, Divider } from '@chakra-ui/react'
+import { Box, HStack, Divider, Flex } from '@chakra-ui/react'
 // prettier-ignore
 import { Editor, EditorState, convertToRaw, RichUtils, getDefaultKeyBinding } from 'draft-js'
 
@@ -48,16 +48,14 @@ function TextEditor({ setBlogContent }) {
 
   return (
     <Box borderWidth="2px" borderRadius="lg" p="4" h="100%" minH="300px" mb="6">
-      <HStack spacing="4">
-        <BlockStyleControls
-          editorState={editorState}
-          onToggle={toggleBlockType}
-        />
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={toggleInlineStyle}
-        />
-      </HStack>
+      <InlineStyleControls
+        editorState={editorState}
+        onToggle={toggleInlineStyle}
+      />
+      <BlockStyleControls
+        editorState={editorState}
+        onToggle={toggleBlockType}
+      />
       <Divider my="4" />
 
       <Editor
