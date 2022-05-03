@@ -40,12 +40,10 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           p="4"
           mb="2"
         >
-          <Text mb="1" color="primaryDark">
-            {replyText}
-          </Text>
+          <Text color="primaryDark">{replyText}</Text>
           {replyImage && (
             <>
-              <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+              <AspectRatio w="100%" maxWidth="100px" mt="2" ratio={1}>
                 <Image
                   src={replyImage}
                   alt="留言照片"

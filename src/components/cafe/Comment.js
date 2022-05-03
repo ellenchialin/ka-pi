@@ -86,12 +86,10 @@ function Comment({
     }
 
     firebase.addReply(repliedDetails).then(() => {
-      // console.log('Reply Added')
       setNewReplyText('')
       onReplyClose()
 
       firebase.getReplyList(cafeId, commentId).then(list => {
-        // console.log('Latest Reply List: ', list)
         setReplyList(list)
       })
     })
@@ -118,12 +116,10 @@ function Comment({
             p="4"
             mb="2"
           >
-            <Text mb="1" color="primaryDark">
-              {text}
-            </Text>
+            <Text color="primaryDark">{text}</Text>
             {image && (
               <>
-                <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                <AspectRatio w="100%" maxWidth="100px" mt="2" ratio={1}>
                   <Image
                     src={image}
                     alt="留言照片"
@@ -157,7 +153,7 @@ function Comment({
             <Text
               fontSize="0.75rem"
               _hover={{ color: 'teal' }}
-              cusor="pointer"
+              cursor="pointer"
               onClick={handleClickReply}
             >
               Reply
