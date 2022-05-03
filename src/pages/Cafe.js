@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
@@ -83,8 +83,6 @@ function Cafe() {
               .slice(0, 6)
               .map(photo => photo.photo_reference)
             setGooglePhotoRefs(references)
-
-            // console.log('From google api: ', references)
           })
           .finally(() => setIsLoading(false))
       })
@@ -190,6 +188,8 @@ function Cafe() {
   }
 
   const handleAlertAction = () => navigate('/auth')
+
+  const subtagTextColor = useColorModeValue('thirdDark', 'secondaryLight')
 
   return (
     <Flex
@@ -396,7 +396,7 @@ function Cafe() {
 
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column" mb="10">
-            <Text fontSize="0.875rem" color="secondaryLight">
+            <Text fontSize="0.875rem" color={subtagTextColor}>
               Google Reviews
             </Text>
             <Text fontSize="1.5rem" fontWeight="bold" mb="4">
@@ -419,7 +419,7 @@ function Cafe() {
           <Flex w="100%" direction="column" mb="10">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color="secondaryLight">
+                <Text fontSize="0.875rem" color={subtagTextColor}>
                   Blogs
                 </Text>
                 <Text fontSize="1.5rem" fontWeight="bold" mt="0">
@@ -429,6 +429,7 @@ function Cafe() {
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                fontSize="16px"
                 onClick={handleClickAddBlog}
               >
                 blog
@@ -458,7 +459,7 @@ function Cafe() {
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color="secondaryLight">
+                <Text fontSize="0.875rem" color={subtagTextColor}>
                   Comments
                 </Text>
                 <Text fontSize="1.5rem" fontWeight="bold" mt="0">
@@ -468,6 +469,7 @@ function Cafe() {
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                fontSize="16px"
                 onClick={handleClickAddComment}
               >
                 comment

@@ -1,12 +1,15 @@
-// prettier-ignore
-import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, Text, IconButton } from '@chakra-ui/react'
-import { FaFacebookF, FaGoogle } from 'react-icons/fa'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+// prettier-ignore
+import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, Text, IconButton, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { FaFacebookF, FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const { signin } = useAuth()
 
@@ -15,15 +18,12 @@ const SignInForm = () => {
       .email('Invalid email address format')
       .required('Email is required'),
     password: Yup.string()
-      .min(3, 'Password must be 3 characters at minimum')
+      .min(6, 'Password must be 6 characters at minimum')
       .required('Password is required'),
   })
 
   const handleSignIn = (email, password) => {
-    console.log('From auth page, sign in: ', email, password)
-
     signin(email, password).then(user => {
-      console.log('Current User from Context: ', user)
       navigate(-1)
     })
   }
@@ -35,7 +35,6 @@ const SignInForm = () => {
           initialValues={{ email: '', password: '' }}
           validationSchema={SigninSchema}
           onSubmit={(values, { resetForm }) => {
-            console.log('Sign in input: ', values)
             const { email, password } = values
             handleSignIn(email, password)
             resetForm()
@@ -55,7 +54,19 @@ const SignInForm = () => {
                   mb="2"
                 >
                   <FormLabel htmlFor="password">Password</FormLabel>
-                  <Field as={Input} type="password" name="password" />
+                  <InputGroup>
+                    <Field
+                      as={Input}
+                      type={showPassword ? 'text' : 'password'}
+                      name="password"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button mt={4} variant="auth-buttons" type="submit">

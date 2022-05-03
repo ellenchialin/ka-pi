@@ -1,4 +1,4 @@
-import { HStack } from '@chakra-ui/react'
+import { ButtonGroup, HStack, Flex } from '@chakra-ui/react'
 import StyleButton from './StyleButton'
 
 const BLOCK_TYPE_HEADINGS = [
@@ -18,7 +18,7 @@ const BlockStyleControls = ({ editorState, onToggle }) => {
     .getType()
 
   return (
-    <HStack spacing="4">
+    <Flex w="100%" maxW="320px" mb="4" justify="space-between" flexWrap="wrap">
       {BLOCK_TYPE_HEADINGS.map(heading => (
         <StyleButton
           key={heading.label}
@@ -28,7 +28,7 @@ const BlockStyleControls = ({ editorState, onToggle }) => {
           style={heading.style}
         />
       ))}
-    </HStack>
+    </Flex>
   )
 }
 

@@ -20,7 +20,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   }, [])
 
   return (
-    <HStack w="100%" pl="10">
+    <HStack w="100%" pl="12" spacing="0" mt="1">
       <Image
         borderRadius="full"
         boxSize="35px"
@@ -31,7 +31,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
         objectFit="cover"
         fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
       />
-      <Flex w="100%" direction="column" ms="0px">
+      <Flex w="100%" direction="column">
         <Box
           w="100%"
           maxW="460px"
@@ -40,12 +40,10 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           p="4"
           mb="2"
         >
-          <Text mb="1" color="primaryDark">
-            {replyText}
-          </Text>
+          <Text color="primaryDark">{replyText}</Text>
           {replyImage && (
             <>
-              <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+              <AspectRatio w="100%" maxWidth="100px" mt="2" ratio={1}>
                 <Image
                   src={replyImage}
                   alt="留言照片"

@@ -1,11 +1,14 @@
-// prettier-ignore
-import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button } from '@chakra-ui/react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+// prettier-ignore
+import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignUpForm = () => {
+  const [showPassword, setShowPassword] = useState(false)
   const { signup } = useAuth()
   const navigate = useNavigate()
 
@@ -15,7 +18,7 @@ const SignUpForm = () => {
       .email('Invalid email address format')
       .required('Email is required'),
     password: Yup.string()
-      .min(3, 'Password must be 3 characters at minimum')
+      .min(6, 'Password must be 6 characters at minimum')
       .required('Password is required'),
   })
 
@@ -56,7 +59,19 @@ const SignUpForm = () => {
                   mb="2"
                 >
                   <FormLabel htmlFor="password">Password</FormLabel>
-                  <Field as={Input} name="password" type="password" />
+                  <InputGroup>
+                    <Field
+                      as={Input}
+                      type={showPassword ? 'text' : 'password'}
+                      name="password"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button mt={4} type="submit" variant="auth-buttons">
