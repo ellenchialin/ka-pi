@@ -47,7 +47,7 @@ function TextEditor({ setBlogContent }) {
   }
 
   return (
-    <Box borderWidth="2px" borderRadius="lg" p="4" h="100%" minH="300px" mb="6">
+    <Box borderWidth="2px" borderRadius="lg" p="4" h="100%" minH="300px" mb="2">
       <InlineStyleControls
         editorState={editorState}
         onToggle={toggleInlineStyle}

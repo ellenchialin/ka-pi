@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Input, Image, Button, AspectRatio } from '@chakra-ui/react'
+import { Flex, Input, Image, Button, AspectRatio, Text, HStack } from '@chakra-ui/react'
+import { WarningIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
 import TextEditor from '../components/TextEditor'
@@ -91,12 +92,18 @@ function EditBlog() {
         variant="filled"
         placeholder="Blog Title"
         mb="6"
+        size="lg"
         value={blogTitle}
         onChange={e => setBlogTitle(e.target.value)}
         ref={titleInputRef}
         isRequired
       />
       <TextEditor setBlogContent={setBlogContent} />
+
+      <HStack spacing="2" mb="6" alignSelf="flex-end">
+        <WarningIcon />
+        <Text fontSize="sm">圖片、標題與內容，皆需完整填入才可發佈</Text>
+      </HStack>
 
       <Button
         alignSelf="center"
