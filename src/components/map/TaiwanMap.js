@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Flex, Text, Box, useColorModeValue } from '@chakra-ui/react'
-import CityInfoCard from '../CityInfoCard'
+import CityInfoCard from './CityInfoCard'
+import { api } from '../../utils/api'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
 
-function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
+function TaiwanMap() {
+  const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
   const [hoveredCity, setHoveredCity] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [taipeiCafes, setTaipeiCafes] = useState([])
@@ -22,8 +24,8 @@ function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
   }
 
   const getCafes = (cityName, fetchCity, setCityState) => {
-    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
-      .then(res => res.json())
+    api
+      .getCityCafes(fetchCity)
       .then(data => {
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
@@ -47,6 +49,8 @@ function TaiwanMap({ cityLinkEndpoint, setCityLinkEndpoint }) {
 
     setHoveredCity(cityChName)
     setIsLoading(true)
+
+    console.log('cityEngName: ', cityEngName)
 
     if (cityEngName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setNewTaipeiCafes)

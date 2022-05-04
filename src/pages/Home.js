@@ -11,7 +11,6 @@ import Pagination from '@choc-ui/paginator'
 function Home() {
   usePageTracking()
 
-  const [cityLinkEndpoint, setCityLinkEndpoint] = useState('')
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
@@ -173,10 +172,7 @@ function Home() {
           alignItems="center"
           position="relative"
         >
-          <TaiwanMap
-            cityLinkEndpoint={cityLinkEndpoint}
-            setCityLinkEndpoint={setCityLinkEndpoint}
-          />
+          <TaiwanMap />
         </Flex>
       </Flex>
     </Flex>
