@@ -46,6 +46,7 @@ function CityInfoCard({
           to={`/city/${cityLinkEndpoint}`}
           color={useColorModeValue('accent', 'primaryDark')}
           fontSize="0.875rem"
+          isExternal
         >
           前往看完整名單
         </Link>

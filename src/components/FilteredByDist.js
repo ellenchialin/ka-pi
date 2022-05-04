@@ -1,16 +1,32 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 // prettier-ignore
 import { useCheckboxGroup, Flex, Button } from '@chakra-ui/react'
 import { areaData } from '../cityData'
 import CustomCheckbox from '../components/CustomCheckbox'
 
 function FilterByDist({
+  cityCafes,
   translatedCityName,
   setSelectedAreas,
   setUpdatedCafes,
 }) {
-  const [cityAreas, setCityAreas] = useState(areaData[translatedCityName])
+  const [cityAreas, setCityAreas] = useState([])
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
+
+  useEffect(() => {
+    checkAvailableAreas()
+  }, [])
+
+  const checkAvailableAreas = () => {
+    const allAreas = areaData[translatedCityName]
+    const filteredAreas = allAreas.filter(area => {
+      return cityCafes.some(cafe => {
+        return cafe.address.includes(area)
+      })
+    })
+    setCityAreas(filteredAreas)
+    // console.log('Filtered Areas: ', filteredAreas)
+  }
 
   const handleResetFilter = () => {
     setValue([])

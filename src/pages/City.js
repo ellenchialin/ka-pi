@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Spinner, Box, SimpleGrid } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
-import Pagination from '@choc-ui/paginator'
+import { api } from '../utils/api'
 import { cityData } from '../cityData'
 
 function City() {
   usePageTracking()
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
-  // const [taipeiCafes, setTaipeiCafes] = useState([])
-  // const [newTaipeiCafes, setNewTaipeiCafes] = useState([])
   const [selectedAreas, setSelectedAreas] = useState([])
   const [updatedCafes, setUpdatedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -28,13 +27,26 @@ function City() {
       ? updatedCafes.slice(offset, offset + cafesPerPage)
       : cityCafes.slice(offset, offset + cafesPerPage)
 
+  useEffect(() => {
+    // 城市頁標題，把城市英文轉中文
+    convertCityName(cityName)
+
+    if (cityName === 'new_taipei') {
+      getCafes('new_taipei', 'taipei', setCityCafes)
+    } else if (cityName === 'taipei') {
+      getCafes('taipei', 'taipei', setCityCafes)
+    } else {
+      getCafes(cityName, cityName, setCityCafes)
+    }
+  }, [])
+
   const convertCityName = city => {
     setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
   }
 
   const getCafes = (cityName, fetchCity, setCityState) => {
-    fetch(`https://ka-pi-server.herokuapp.com/citycafes?city=${fetchCity}`)
-      .then(res => res.json())
+    api
+      .getCityCafes(fetchCity)
       .then(data => {
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
@@ -51,25 +63,6 @@ function City() {
       .finally(() => setIsLoading(false))
   }
 
-  useEffect(() => {
-    // 城市頁標題，把城市英文轉中文
-    convertCityName(cityName)
-
-    // console.log('City Page, fetch city endpoint: ', cityName)
-
-    if (cityName === 'new_taipei') {
-      getCafes('new_taipei', 'taipei', setCityCafes)
-      // setTaipeiCafes([])
-    } else if (cityName === 'taipei') {
-      getCafes('taipei', 'taipei', setCityCafes)
-      // setNewTaipeiCafes([])
-    } else {
-      getCafes(cityName, cityName, setCityCafes)
-      // setTaipeiCafes([])
-      // setNewTaipeiCafes([])
-    }
-  }, [])
-
   const getSelectedCafes = () => {
     if (selectedAreas.length > 0) {
       setUpdatedCafes([])
@@ -78,7 +71,7 @@ function City() {
         const filteredCafes = cityCafes.filter(cafe =>
           cafe.address.includes(area)
         )
-        console.log('filtered Cafes: ', filteredCafes)
+        // console.log('filtered Cafes: ', filteredCafes)
         setUpdatedCafes(prev => [...prev, ...filteredCafes])
       })
     }
@@ -105,6 +98,7 @@ function City() {
         <>
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
           <FilteredByDist
+            cityCafes={cityCafes}
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
             setUpdatedCafes={setUpdatedCafes}

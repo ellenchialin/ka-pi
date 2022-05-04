@@ -20,8 +20,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   return (
     <>
       <Box
-        w="100%"
-        maxW="280px"
+        w={{ base: '280px', lg: '250px' }}
         h="100%"
         minH={{ sm: '300px', md: '360px' }}
         bg="white"

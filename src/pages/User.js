@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
+import { useAuth } from '../contexts/AuthContext'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
 import usePageTracking from '../usePageTracking'
-import { useAuth } from '../contexts/AuthContext'
 import BlogCard from '../components/cafe/BlogCard'
+import Pagination from '@choc-ui/paginator'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 
 function EditableText({
@@ -67,9 +69,13 @@ function User() {
 
   const nameRef = useRef()
   const fileRef = useRef()
-
-  const { currentUser, signout } = useAuth()
   const navigate = useNavigate()
+  const { currentUser, signout } = useAuth()
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [cafesPerPage] = useState(10)
+  const offset = (currentPage - 1) * cafesPerPage
+  const currentCafes = savedCafes.slice(offset, offset + cafesPerPage)
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -87,8 +93,8 @@ function User() {
   }, [])
 
   const getFavCafes = cafesId => {
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
         const cafeList = data.filter(cafe => {
           return cafesId.some(id => {
@@ -245,21 +251,40 @@ function User() {
                       cafes={savedCafes}
                     />
                   )}
-                  <SimpleGrid
-                    w="full"
-                    columns={[1, 2, 2, 3]}
-                    spacing="20px"
-                    justifyItems="center"
-                  >
-                    {savedCafes.map(cafe => (
-                      <CafeCard
-                        key={cafe.id}
-                        cafe={cafe}
-                        canDeleteCafe={canDeleteCafe}
-                        handleDeleteCafe={() => deleteCafe(cafe.id)}
-                      />
-                    ))}
-                  </SimpleGrid>
+                  <Flex w="full" direction="column">
+                    <Wrap
+                      spacing={{ base: '10px', sm: '30px', md: '30px' }}
+                      justify="center"
+                      mb="4"
+                    >
+                      {currentCafes.map(cafe => (
+                        <WrapItem key={cafe.id}>
+                          <CafeCard
+                            cafe={cafe}
+                            canDeleteCafe={canDeleteCafe}
+                            handleDeleteCafe={() => deleteCafe(cafe.id)}
+                          />
+                        </WrapItem>
+                      ))}
+                    </Wrap>
+                    <Pagination
+                      defaultCurrent={1}
+                      total={savedCafes.length}
+                      current={currentPage}
+                      onChange={page => setCurrentPage(page)}
+                      pageSize={cafesPerPage}
+                      paginationProps={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                      pageNeighbours={2}
+                      rounded="full"
+                      baseStyles={{ bg: 'transparent' }}
+                      activeStyles={{ bg: 'gray.400' }}
+                      hoverStyles={{ bg: 'gray.400' }}
+                      responsive={{ activePage: true }}
+                    />
+                  </Flex>
                 </Flex>
               </TabPanel>
               <TabPanel>
