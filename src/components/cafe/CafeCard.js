@@ -59,6 +59,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             <Heading
               w="full"
               as="h5"
+              pr="1"
               fontSize={{ sm: '1em', md: 'lg' }}
               isTruncated
             >

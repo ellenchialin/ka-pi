@@ -1,57 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
 import Map from '../components/map/Map'
+import EditableText from '../components/EditableText'
 import CafeCard from '../components/cafe/CafeCard'
-import usePageTracking from '../usePageTracking'
 import BlogCard from '../components/cafe/BlogCard'
 import Pagination from '@choc-ui/paginator'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-
-function EditableText({
-  text,
-  type,
-  placeholder,
-  children,
-  childRef,
-  ...props
-}) {
-  const [isEditing, setEditing] = useState(false)
-
-  useEffect(() => {
-    if (childRef && childRef.current && isEditing === true) {
-      childRef.current.focus()
-    }
-  }, [isEditing, childRef])
-
-  return (
-    <Flex {...props}>
-      {isEditing ? (
-        <Box h="32px" onBlur={() => setEditing(false)}>
-          {children}
-        </Box>
-      ) : (
-        <Flex align="center">
-          <Text fontSize="xl" fontWeight="bold" mr="3">
-            {text || placeholder}
-          </Text>
-          <IconButton
-            aria-label="更改顯示名稱"
-            icon={<EditIcon />}
-            size="sm"
-            onClick={() => setEditing(true)}
-          />
-        </Flex>
-      )}
-    </Flex>
-  )
-}
+import usePageTracking from '../usePageTracking'
 
 function User() {
   usePageTracking()
@@ -73,9 +33,10 @@ function User() {
   const { currentUser, signout } = useAuth()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(10)
-  const offset = (currentPage - 1) * cafesPerPage
-  const currentCafes = savedCafes.slice(offset, offset + cafesPerPage)
+  const [cardsPerPage] = useState(10)
+  const offset = (currentPage - 1) * cardsPerPage
+  const currentCafes = savedCafes.slice(offset, offset + cardsPerPage)
+  const currentBlogs = userBlogs.slice(offset, offset + cardsPerPage)
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -113,7 +74,6 @@ function User() {
     firebase
       .getUser(currentUser.uid)
       .then(data => {
-        // console.log('Get user data: ', data)
         setUserInfo(data)
         getFavCafes(data.favCafes)
       })
@@ -213,6 +173,7 @@ function User() {
               type="input"
               placeholder={userInfo.name}
               childRef={nameRef}
+              ariaLabel="更改顯示名稱"
             >
               <Input
                 ref={nameRef}
@@ -255,7 +216,7 @@ function User() {
                     <Wrap
                       spacing={{ base: '10px', sm: '30px', md: '30px' }}
                       justify="center"
-                      mb="4"
+                      mb="6"
                     >
                       {currentCafes.map(cafe => (
                         <WrapItem key={cafe.id}>
@@ -272,7 +233,7 @@ function User() {
                       total={savedCafes.length}
                       current={currentPage}
                       onChange={page => setCurrentPage(page)}
-                      pageSize={cafesPerPage}
+                      pageSize={cardsPerPage}
                       paginationProps={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -291,28 +252,47 @@ function User() {
                 <Text mb="3">
                   共發表 {userBlogs.length > 0 ? userBlogs.length : 0} 篇
                 </Text>
-                <SimpleGrid
-                  w="full"
-                  columns={[1, 2, 2, 3]}
-                  spacing="20px"
-                  justifyItems="center"
-                >
-                  {userBlogs.map(blog => (
-                    <BlogCard
-                      key={blog.blogId}
-                      cafeId={blog.cafeId}
-                      blogId={blog.blogId}
-                      content={blog.content}
-                      title={blog.title}
-                      date={blog.createdAt}
-                      image={blog.image}
-                      canDeleteBlog={canDeleteBlog}
-                      handleBlogDelete={() =>
-                        deleteBlog(blog.cafeId, blog.blogId)
-                      }
-                    />
-                  ))}
-                </SimpleGrid>
+                <Flex w="full" direction="column">
+                  <Wrap
+                    spacing={{ base: '10px', sm: '30px', md: '30px' }}
+                    justify="center"
+                    mb="6"
+                  >
+                    {currentBlogs.map(blog => (
+                      <WrapItem key={blog.blogId}>
+                        <BlogCard
+                          cafeId={blog.cafeId}
+                          blogId={blog.blogId}
+                          content={blog.content}
+                          title={blog.title}
+                          date={blog.createdAt}
+                          image={blog.image}
+                          canDeleteBlog={canDeleteBlog}
+                          handleBlogDelete={() =>
+                            deleteBlog(blog.cafeId, blog.blogId)
+                          }
+                        />
+                      </WrapItem>
+                    ))}
+                  </Wrap>
+                  <Pagination
+                    defaultCurrent={1}
+                    total={userBlogs.length}
+                    current={currentPage}
+                    onChange={page => setCurrentPage(page)}
+                    pageSize={cardsPerPage}
+                    paginationProps={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                    pageNeighbours={2}
+                    rounded="full"
+                    baseStyles={{ bg: 'transparent' }}
+                    activeStyles={{ bg: 'gray.400' }}
+                    hoverStyles={{ bg: 'gray.400' }}
+                    responsive={{ activePage: true }}
+                  />
+                </Flex>
               </TabPanel>
             </TabPanels>
           </Tabs>

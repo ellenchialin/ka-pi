@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Flex, SimpleGrid, Heading, Text, Spinner } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Wrap, WrapItem } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -27,15 +27,12 @@ function Home() {
     )
       .then(res => res.json())
       .then(data => {
-        // console.log(data.plus_code.compound_code.split(' ').slice(1)[0].slice(2, 4))
         const currentCity = data.plus_code.compound_code
           .split(' ')
           .slice(1)[0]
           .slice(2, 4)
 
         if (currentCity === '新北') {
-          console.log('Current city: ', currentCity)
-
           api
             .getCityCafes('taipei')
             .then(cafes =>
@@ -49,8 +46,6 @@ function Home() {
             })
             .finally(() => setIsLoading(false))
         } else if (currentCity === '台北') {
-          console.log('Current city: ', currentCity)
-
           api
             .getCityCafes('taipei')
             .then(cafes =>
@@ -64,11 +59,8 @@ function Home() {
             })
             .finally(() => setIsLoading(false))
         } else {
-          console.log('Current city: ', currentCity)
           const city = cityData.filter(city => city.place === currentCity)[0]
             .tag
-
-          console.log('City tag: ', city)
 
           api
             .getCityCafes(city)
@@ -125,17 +117,18 @@ function Home() {
               userLongitude={userLongitude}
               cafes={userNearbyCafes}
             />
-            <SimpleGrid
-              w="full"
-              columns={[1, 2, 2, 3]}
-              spacing="20px"
-              justifyItems="center"
-              mb="4"
+            <Wrap
+              spacing={{ base: '10px', sm: '30px', md: '30px' }}
+              justify="center"
+              mb="6"
             >
               {currentCafes.map(cafe => (
-                <CafeCard key={cafe.id} cafe={cafe} />
+                <WrapItem key={cafe.id}>
+                  <CafeCard cafe={cafe} />
+                </WrapItem>
               ))}
-            </SimpleGrid>
+            </Wrap>
+
             <Pagination
               defaultCurrent={1}
               total={userNearbyCafes.length}
@@ -180,14 +173,3 @@ function Home() {
 }
 
 export default Home
-
-// https://maps.googleapis.com/maps/api/geocode/json?latlng=25.0384995,121.5236378&key=AIzaSyAiPvJAVuCQQekLZSIWdeedxpuw5VcO564&language=zh-TW
-//  ['2FCC+Q78', '台灣新北市板橋區']
-// "2FCC+Q7P Banqiao District, New Taipei City, Taiwan"
-
-// "2GQF+9FR Zhongzheng District, Taipei City, Taiwan"
-
-// "plus_code": {
-// "compound_code": "2GQF+9FR 台灣台北市中正區",
-// "global_code": "7QQ32GQF+9FR"
-// },

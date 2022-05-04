@@ -80,7 +80,7 @@ function City() {
   useUpdateEffect(getSelectedCafes, selectedAreas)
 
   return (
-    <Flex as="section" direction="column" align="center">
+    <Flex w="full" as="section" direction="column" align="center">
       <Heading as="h1" size="xl">
         {translatedCityName}
       </Heading>
@@ -104,17 +104,18 @@ function City() {
             setUpdatedCafes={setUpdatedCafes}
           />
           <Flex w="100%" direction="column" as="section">
-            <Text alignSelf="flex-end" mb="3">
+            <Text alignSelf="center" mb="6">
               {updatedCafes.length > 0
                 ? `共篩選 ${updatedCafes.length} 間咖啡廳`
                 : '所有收錄咖啡廳'}
             </Text>
             <SimpleGrid
               w="full"
-              columns={[1, 2, 2, 3]}
+              minChildWidth="265px"
+              // columns={[1, 2, 3, 4]}
               spacing="20px"
               justifyItems="center"
-              mb="4"
+              mb="6"
             >
               {currentCafes.map(cafe => (
                 <CafeCard key={cafe.id} cafe={cafe} />

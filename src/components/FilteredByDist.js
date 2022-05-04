@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 // prettier-ignore
-import { useCheckboxGroup, Flex, Button } from '@chakra-ui/react'
+import { useCheckboxGroup, Flex, Button, useColorModeValue, Wrap, WrapItem } from '@chakra-ui/react'
 import { areaData } from '../cityData'
 import CustomCheckbox from '../components/CustomCheckbox'
 
@@ -25,7 +25,6 @@ function FilterByDist({
       })
     })
     setCityAreas(filteredAreas)
-    // console.log('Filtered Areas: ', filteredAreas)
   }
 
   const handleResetFilter = () => {
@@ -33,27 +32,29 @@ function FilterByDist({
     setUpdatedCafes([])
   }
 
+  const bgColor = useColorModeValue('gray.200', 'primaryLight')
+
   return (
     <Flex
       direction="column"
       align="center"
-      bg="gray.200"
+      bg={bgColor}
       px="4"
       py="6"
-      mb="12"
+      mb="10"
       borderRadius="xl"
     >
-      <Flex wrap="wrap" justify="space-evenly">
+      <Wrap spacing="10px" justify="center" mb="4">
         {cityAreas.map(area => (
-          <CustomCheckbox
-            key={area}
-            mb="3"
-            {...getCheckboxProps({ value: area, text: area })}
-          />
+          <WrapItem key={area}>
+            <CustomCheckbox
+              {...getCheckboxProps({ value: area, text: area })}
+            />
+          </WrapItem>
         ))}
-      </Flex>
+      </Wrap>
 
-      <Flex w="60%" justify="space-evenly">
+      <Wrap spacing="10px" justify="center">
         <Button
           colorScheme="pink"
           variant="solid"
@@ -76,7 +77,7 @@ function FilterByDist({
         >
           搜尋
         </Button>
-      </Flex>
+      </Wrap>
     </Flex>
   )
 }
