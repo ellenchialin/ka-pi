@@ -1,57 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, SimpleGrid, VStack, Box, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
 import Map from '../components/map/Map'
+import EditableText from '../components/EditableText'
 import CafeCard from '../components/cafe/CafeCard'
-import usePageTracking from '../usePageTracking'
 import BlogCard from '../components/cafe/BlogCard'
 import Pagination from '@choc-ui/paginator'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-
-function EditableText({
-  text,
-  type,
-  placeholder,
-  children,
-  childRef,
-  ...props
-}) {
-  const [isEditing, setEditing] = useState(false)
-
-  useEffect(() => {
-    if (childRef && childRef.current && isEditing === true) {
-      childRef.current.focus()
-    }
-  }, [isEditing, childRef])
-
-  return (
-    <Flex {...props}>
-      {isEditing ? (
-        <Box h="32px" onBlur={() => setEditing(false)}>
-          {children}
-        </Box>
-      ) : (
-        <Flex align="center">
-          <Text fontSize="xl" fontWeight="bold" mr="3">
-            {text || placeholder}
-          </Text>
-          <IconButton
-            aria-label="更改顯示名稱"
-            icon={<EditIcon />}
-            size="sm"
-            onClick={() => setEditing(true)}
-          />
-        </Flex>
-      )}
-    </Flex>
-  )
-}
+import usePageTracking from '../usePageTracking'
 
 function User() {
   usePageTracking()
@@ -114,7 +74,6 @@ function User() {
     firebase
       .getUser(currentUser.uid)
       .then(data => {
-        // console.log('Get user data: ', data)
         setUserInfo(data)
         getFavCafes(data.favCafes)
       })
@@ -214,6 +173,7 @@ function User() {
               type="input"
               placeholder={userInfo.name}
               childRef={nameRef}
+              ariaLabel="更改顯示名稱"
             >
               <Input
                 ref={nameRef}
