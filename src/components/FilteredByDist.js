@@ -25,7 +25,7 @@ function FilterByDist({
       })
     })
     setCityAreas(filteredAreas)
-    console.log('Filtered Areas: ', filteredAreas)
+    // console.log('Filtered Areas: ', filteredAreas)
   }
 
   const handleResetFilter = () => {
