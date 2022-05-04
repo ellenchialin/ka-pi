@@ -1,6 +1,6 @@
 import { useState } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
@@ -70,17 +70,17 @@ function SearchByFeature() {
       <Heading as="h2" size="lg" mb="3">
         根據需求，快速搜尋
       </Heading>
-      <Flex w="400px" justify="center" align="center" direction="column" mb="4">
-        <Text>預設必備條件</Text>
-        <HStack spacing="15px">
-          {defaultFeatures.map((feature, i) => (
+      <Text>預設必備條件</Text>
+      <Wrap spacing="15px" justify="center" mb="4">
+        {defaultFeatures.map((feature, i) => (
+          <WrapItem>
             <Tag key={i} size="lg" colorScheme="teal">
               <TagLeftIcon boxSize="12px" as={FaHashtag} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
-          ))}
-        </HStack>
-      </Flex>
+          </WrapItem>
+        ))}
+      </Wrap>
       <Flex
         direction="column"
         align="center"
@@ -88,7 +88,7 @@ function SearchByFeature() {
         color="primaryDark"
         px="6"
         py="6"
-        mb="12"
+        mb="10"
         borderRadius="xl"
       >
         <Wrap spacing="10px" justify="center" mb="4">
@@ -103,7 +103,7 @@ function SearchByFeature() {
             </WrapItem>
           ))}
         </Wrap>
-        <HStack spacing="20px">
+        <HStack spacing="15px">
           <Button
             colorScheme="pink"
             variant="solid"
@@ -141,8 +141,8 @@ function SearchByFeature() {
       ) : (
         <Flex direction="column" align="center">
           {filteredCafes.length > 0 && (
-            <>
-              <Text my="3" alignSelf="flex-end">
+            <VStack alignSelf="flex-end" mb="4">
+              <Text mb="2">
                 共篩選{' '}
                 {advacedFilteredCafes.length > 0
                   ? advacedFilteredCafes.length
@@ -153,19 +153,19 @@ function SearchByFeature() {
                 filteredCafes={filteredCafes}
                 setAdvacedFilteredCafes={setAdvacedFilteredCafes}
               />
-            </>
+            </VStack>
           )}
-          <SimpleGrid
-            w="full"
-            columns={[1, 2, 2, 3]}
-            spacing="20px"
-            justifyItems="center"
-            mb="4"
+          <Wrap
+            spacing={{ base: '10px', sm: '30px', md: '30px' }}
+            justify="center"
+            mb="6"
           >
             {currentCafes.map(cafe => (
-              <CafeCard key={cafe.id} cafe={cafe} />
+              <WrapItem key={cafe.id}>
+                <CafeCard cafe={cafe} />
+              </WrapItem>
             ))}
-          </SimpleGrid>
+          </Wrap>
           <Pagination
             defaultCurrent={1}
             total={
