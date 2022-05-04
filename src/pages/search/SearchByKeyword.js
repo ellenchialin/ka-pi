@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, InputGroup, InputLeftElement, InputRightElement, Input, Button, SimpleGrid, Wrap, WrapItem, VStack, Stack, IconButton } from '@chakra-ui/react'
-import {
-  AutoComplete,
-  AutoCompleteInput,
-  AutoCompleteItem,
-  AutoCompleteList,
-} from '@choc-ui/chakra-autocomplete'
+import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl } from '@chakra-ui/react'
+// prettier-ignore
+import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete'
 import { BiSearchAlt } from 'react-icons/bi'
 import { api } from '../../utils/api'
 import CafeCard from '../../components/cafe/CafeCard'
@@ -19,7 +15,7 @@ function SearchByKeyword() {
   const [matchedCafe, setMatchedCafe] = useState(null)
   const [searchCafe, setSearchCafe] = useState(null)
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  // const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     api
@@ -34,50 +30,58 @@ function SearchByKeyword() {
   }, [])
 
   const submitSearch = () => {
-    console.log('Click search')
     const matched = allCafes.find(cafe => cafe.name === searchCafe)
 
     setMatchedCafe(matched)
-    setSearchParams(searchCafe)
+    // setSearchParams(searchCafe)
   }
 
   return (
-    <VStack w="full" align="center">
-      <Heading as="h1" size="xl" mb="4">
+    <Flex w="100%" direction="column" align="center">
+      <Heading as="h1" size="xl" mb="6">
         關鍵字搜尋
       </Heading>
 
-      <AutoComplete w="100%" bg="blue" onChange={cafe => setSearchCafe(cafe)}>
-        <InputGroup mb="10" maxW="500px" alignSelf="center">
-          <InputRightElement>
-            <IconButton
-              icon={<BiSearchAlt />}
-              fontSize="20px"
-              aria-label="搜尋"
-              onClick={submitSearch}
-              isDisabled={!searchCafe ? true : false}
+      <FormControl
+        maxW="400px"
+        display="flex"
+        align="center"
+        justify="center"
+        mb="10"
+      >
+        <AutoComplete w="100%" onChange={cafe => setSearchCafe(cafe)}>
+          <InputGroup>
+            <InputRightElement>
+              <IconButton
+                icon={<BiSearchAlt />}
+                fontSize="20px"
+                aria-label="搜尋"
+                onClick={submitSearch}
+                isDisabled={!searchCafe ? true : false}
+              />
+            </InputRightElement>
+            <AutoCompleteInput
+              variant="filled"
+              placeholder="Search..."
+              autoFocus
             />
-          </InputRightElement>
-          <AutoCompleteInput
-            variant="filled"
-            placeholder="Search..."
-            alignSelf="center"
-          />
-        </InputGroup>
-        <AutoCompleteList>
-          {allCafes.map((cafe, i) => (
-            <AutoCompleteItem
-              key={`option-${i}`}
-              value={cafe.name}
-              textTransform="capitalize"
-            >
-              {cafe.name}
-            </AutoCompleteItem>
-          ))}
-        </AutoCompleteList>
-      </AutoComplete>
+          </InputGroup>
+          <AutoCompleteList>
+            {allCafes.map((cafe, i) => (
+              <AutoCompleteItem
+                key={`option-${i}`}
+                value={cafe.name}
+                textTransform="capitalize"
+              >
+                {cafe.name}
+              </AutoCompleteItem>
+            ))}
+          </AutoCompleteList>
+        </AutoComplete>
+      </FormControl>
+
       {matchedCafe && <CafeCard cafe={matchedCafe} />}
-    </VStack>
+    </Flex>
   )
 }
 
