@@ -73,9 +73,10 @@ function User() {
   const { currentUser, signout } = useAuth()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(10)
-  const offset = (currentPage - 1) * cafesPerPage
-  const currentCafes = savedCafes.slice(offset, offset + cafesPerPage)
+  const [cardsPerPage] = useState(10)
+  const offset = (currentPage - 1) * cardsPerPage
+  const currentCafes = savedCafes.slice(offset, offset + cardsPerPage)
+  const currentBlogs = userBlogs.slice(offset, offset + cardsPerPage)
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -255,7 +256,7 @@ function User() {
                     <Wrap
                       spacing={{ base: '10px', sm: '30px', md: '30px' }}
                       justify="center"
-                      mb="4"
+                      mb="6"
                     >
                       {currentCafes.map(cafe => (
                         <WrapItem key={cafe.id}>
@@ -272,7 +273,7 @@ function User() {
                       total={savedCafes.length}
                       current={currentPage}
                       onChange={page => setCurrentPage(page)}
-                      pageSize={cafesPerPage}
+                      pageSize={cardsPerPage}
                       paginationProps={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -291,28 +292,47 @@ function User() {
                 <Text mb="3">
                   共發表 {userBlogs.length > 0 ? userBlogs.length : 0} 篇
                 </Text>
-                <SimpleGrid
-                  w="full"
-                  columns={[1, 2, 2, 3]}
-                  spacing="20px"
-                  justifyItems="center"
-                >
-                  {userBlogs.map(blog => (
-                    <BlogCard
-                      key={blog.blogId}
-                      cafeId={blog.cafeId}
-                      blogId={blog.blogId}
-                      content={blog.content}
-                      title={blog.title}
-                      date={blog.createdAt}
-                      image={blog.image}
-                      canDeleteBlog={canDeleteBlog}
-                      handleBlogDelete={() =>
-                        deleteBlog(blog.cafeId, blog.blogId)
-                      }
-                    />
-                  ))}
-                </SimpleGrid>
+                <Flex w="full" direction="column">
+                  <Wrap
+                    spacing={{ base: '10px', sm: '30px', md: '30px' }}
+                    justify="center"
+                    mb="6"
+                  >
+                    {currentBlogs.map(blog => (
+                      <WrapItem key={blog.blogId}>
+                        <BlogCard
+                          cafeId={blog.cafeId}
+                          blogId={blog.blogId}
+                          content={blog.content}
+                          title={blog.title}
+                          date={blog.createdAt}
+                          image={blog.image}
+                          canDeleteBlog={canDeleteBlog}
+                          handleBlogDelete={() =>
+                            deleteBlog(blog.cafeId, blog.blogId)
+                          }
+                        />
+                      </WrapItem>
+                    ))}
+                  </Wrap>
+                  <Pagination
+                    defaultCurrent={1}
+                    total={userBlogs.length}
+                    current={currentPage}
+                    onChange={page => setCurrentPage(page)}
+                    pageSize={cardsPerPage}
+                    paginationProps={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                    pageNeighbours={2}
+                    rounded="full"
+                    baseStyles={{ bg: 'transparent' }}
+                    activeStyles={{ bg: 'gray.400' }}
+                    hoverStyles={{ bg: 'gray.400' }}
+                    responsive={{ activePage: true }}
+                  />
+                </Flex>
               </TabPanel>
             </TabPanels>
           </Tabs>
