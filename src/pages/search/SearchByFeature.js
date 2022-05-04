@@ -1,6 +1,6 @@
 import { useState } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { FaHashtag } from 'react-icons/fa'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
@@ -91,21 +91,18 @@ function SearchByFeature() {
         mb="12"
         borderRadius="xl"
       >
-        <SimpleGrid
-          w="full"
-          columns={[2, 3, 3, 4]}
-          spacing="15px"
-          justifyItems="center"
-          alignItems="center"
-          mb="4"
-        >
+        <Wrap spacing="10px" justify="center" mb="4">
           {ratingFeatures.map(feature => (
-            <CustomCheckbox
-              key={feature.tag}
-              {...getCheckboxProps({ value: feature.tag, text: feature.text })}
-            />
+            <WrapItem key={feature.tag}>
+              <CustomCheckbox
+                {...getCheckboxProps({
+                  value: feature.tag,
+                  text: feature.text,
+                })}
+              />
+            </WrapItem>
           ))}
-        </SimpleGrid>
+        </Wrap>
         <HStack spacing="20px">
           <Button
             colorScheme="pink"
