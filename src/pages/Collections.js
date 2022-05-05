@@ -73,7 +73,7 @@ function Collections() {
   // useUpdateEffect(updateCityFilter, advacedFilteredCafes)
 
   return (
-    <Flex w="full" direction="column" align="center">
+    <Flex w="full" maxW="1170px" direction="column" align="center">
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
         {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
