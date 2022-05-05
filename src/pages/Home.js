@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text, Spinner, Wrap, WrapItem } from '@chakra-ui/react'
+import {
+  Flex,
+  Heading,
+  Text,
+  Spinner,
+  Wrap,
+  WrapItem,
+  SimpleGrid,
+} from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -94,12 +102,14 @@ function Home() {
   }, [])
 
   return (
-    <Flex w="full" direction="column" align="center">
+    <Flex w="full" maxW="1170px" direction="column" align="center">
       <Flex as="section" mb="4" w="100%" direction="column" alignItems="center">
-        <Heading as="h1" size="xl">
+        <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
           來點 ka-pi
         </Heading>
-        <Text my="3">探索鄰近咖啡廳，點擊地圖圖示看更多資訊</Text>
+        <Text my="3" fontSize={{ base: '18px', md: '24px' }} textAlign="center">
+          探索鄰近咖啡廳，點擊圖示看更多資訊
+        </Text>
 
         {isLoading ? (
           <Spinner
@@ -117,17 +127,17 @@ function Home() {
               userLongitude={userLongitude}
               cafes={userNearbyCafes}
             />
-            <Wrap
-              spacing={{ base: '10px', sm: '30px', md: '30px' }}
-              justify="center"
+            <SimpleGrid
+              w="full"
+              minChildWidth="270px"
+              spacing="20px"
               mb="6"
+              justifyItems="center"
             >
               {currentCafes.map(cafe => (
-                <WrapItem key={cafe.id}>
-                  <CafeCard cafe={cafe} />
-                </WrapItem>
+                <CafeCard cafe={cafe} />
               ))}
-            </Wrap>
+            </SimpleGrid>
 
             <Pagination
               defaultCurrent={1}
@@ -155,7 +165,7 @@ function Home() {
         direction="column"
         alignItems="center"
       >
-        <Heading as="h2" size="lg" mb="3">
+        <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
           為週末做準備
         </Heading>
 

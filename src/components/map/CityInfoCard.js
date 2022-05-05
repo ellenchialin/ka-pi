@@ -22,7 +22,7 @@ function CityInfoCard({
   }
 
   return (
-    <VStack spacing="2">
+    <VStack spacing="2" bg={useColorModeValue('primaryDark', 'primaryLight')}>
       <Heading
         as="h4"
         size="md"
@@ -30,10 +30,7 @@ function CityInfoCard({
       >
         {hoveredCity}
       </Heading>
-      <Text
-        fontSize="0.875rem"
-        color={useColorModeValue('primaryLight', 'primaryDark')}
-      >
+      <Text color={useColorModeValue('primaryLight', 'primaryDark')}>
         {isLoading ? '整理咖啡廳中...' : getCafeNumbers()}
       </Text>
       <HStack spacing="1" align="center">
@@ -45,7 +42,6 @@ function CityInfoCard({
           as={RouterLink}
           to={`/city/${cityLinkEndpoint}`}
           color={useColorModeValue('accent', 'primaryDark')}
-          fontSize="0.875rem"
           isExternal
         >
           前往看完整名單

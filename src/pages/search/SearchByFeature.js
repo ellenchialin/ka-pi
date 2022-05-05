@@ -1,6 +1,7 @@
 import { useState } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
+import { CheckIcon } from '@chakra-ui/icons'
 import { FaHashtag } from 'react-icons/fa'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
@@ -66,16 +67,23 @@ function SearchByFeature() {
   }
 
   return (
-    <Flex as="section" direction="column" alignItems="center" wrap="wrap">
-      <Heading as="h2" size="lg" mb="3">
+    <Flex
+      w="full"
+      maxW="1170px"
+      as="section"
+      direction="column"
+      alignItems="center"
+      wrap="wrap"
+    >
+      <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
         根據需求，快速搜尋
       </Heading>
-      <Text>預設必備條件</Text>
+      <Text fontSize={{ base: '16px', md: '18px' }}>預設必備條件</Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {defaultFeatures.map((feature, i) => (
           <WrapItem>
-            <Tag key={i} size="lg" colorScheme="teal">
-              <TagLeftIcon boxSize="12px" as={FaHashtag} />
+            <Tag key={i} size="lg" color="primaryDark" bg="gray.200">
+              <TagLeftIcon boxSize="12px" as={CheckIcon} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
           </WrapItem>
@@ -88,7 +96,7 @@ function SearchByFeature() {
         color="primaryDark"
         px="6"
         py="6"
-        mb="10"
+        mb="8"
         borderRadius="xl"
       >
         <Wrap spacing="10px" justify="center" mb="4">
@@ -139,7 +147,7 @@ function SearchByFeature() {
           mt="6"
         />
       ) : (
-        <Flex direction="column" align="center">
+        <Flex w="full" direction="column" align="center">
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2">
@@ -155,17 +163,17 @@ function SearchByFeature() {
               />
             </VStack>
           )}
-          <Wrap
-            spacing={{ base: '10px', sm: '30px', md: '30px' }}
-            justify="center"
+          <SimpleGrid
+            w="full"
+            minChildWidth="270px"
+            spacing="20px"
             mb="6"
+            justifyItems="center"
           >
             {currentCafes.map(cafe => (
-              <WrapItem key={cafe.id}>
-                <CafeCard cafe={cafe} />
-              </WrapItem>
+              <CafeCard key={cafe.id} cafe={cafe} />
             ))}
-          </Wrap>
+          </SimpleGrid>
           <Pagination
             defaultCurrent={1}
             total={
