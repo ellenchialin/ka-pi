@@ -2,7 +2,6 @@ import { useState } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
-import { FaHashtag } from 'react-icons/fa'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
@@ -75,7 +74,7 @@ function SearchByFeature() {
       alignItems="center"
       wrap="wrap"
     >
-      <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
+      <Heading as="h1" mb="3" fontSize={{ base: '28px', md: '40px' }}>
         根據需求，快速搜尋
       </Heading>
       <Text fontSize={{ base: '16px', md: '18px' }}>預設必備條件</Text>
