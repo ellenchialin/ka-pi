@@ -87,11 +87,11 @@ function City() {
 
       {isLoading ? (
         <Spinner
-          thickness="6px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal.600"
-          size="xl"
+          size="lg"
           mt="6"
         />
       ) : (

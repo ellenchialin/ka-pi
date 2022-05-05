@@ -376,10 +376,12 @@ function Cafe() {
 
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column" mb="10">
-            <Text fontSize="0.875rem" color={subtagTextColor}>
-              Google Reviews
-            </Text>
-            <Text fontSize="1.5rem" fontWeight="bold" mb="4">
+            <Text color={subtagTextColor}>Google Reviews</Text>
+            <Text
+              fontSize={{ base: '20px', md: '28px' }}
+              fontWeight="bold"
+              mb="4"
+            >
               More Photos
             </Text>
             <SimpleGrid
@@ -399,10 +401,12 @@ function Cafe() {
           <Flex w="100%" direction="column" mb="10">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color={subtagTextColor}>
-                  Blogs
-                </Text>
-                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                <Text color={subtagTextColor}>Blogs</Text>
+                <Text
+                  fontSize={{ base: '20px', md: '28px' }}
+                  fontWeight="bold"
+                  mt="0"
+                >
                   Explore Others' Experience
                 </Text>
               </VStack>
@@ -415,34 +419,41 @@ function Cafe() {
                 blog
               </Button>
             </Flex>
-            <SimpleGrid
-              w="full"
-              spacing="20px"
-              minChildWidth="200px"
-              justifyItems="center"
-            >
-              {blogs.map(blog => (
-                <BlogCard
-                  key={blog.blogId}
-                  cafeId={blog.cafeId}
-                  blogId={blog.blogId}
-                  content={blog.content}
-                  title={blog.title}
-                  date={blog.createdAt}
-                  image={blog.image}
-                />
-              ))}
-            </SimpleGrid>
+
+            {blogs.length > 0 ? (
+              <SimpleGrid
+                w="full"
+                spacing="20px"
+                minChildWidth="200px"
+                justifyItems="center"
+              >
+                {blogs.map(blog => (
+                  <BlogCard
+                    key={blog.blogId}
+                    cafeId={blog.cafeId}
+                    blogId={blog.blogId}
+                    content={blog.content}
+                    title={blog.title}
+                    date={blog.createdAt}
+                    image={blog.image}
+                  />
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Text color={subtagTextColor}>尚未有任何食記</Text>
+            )}
           </Flex>
 
           {/* Comments section */}
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color={subtagTextColor}>
-                  Comments
-                </Text>
-                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                <Text color={subtagTextColor}>Comments</Text>
+                <Text
+                  fontSize={{ base: '20px', md: '28px' }}
+                  fontWeight="bold"
+                  mt="0"
+                >
                   Interact With Others
                 </Text>
               </VStack>
@@ -524,7 +535,7 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {comments.length > 0 &&
+            {comments.length > 0 ? (
               comments.map(comment => (
                 <Comment
                   key={comment.commentId}
@@ -536,7 +547,10 @@ function Cafe() {
                   image={comment.image}
                   currentUser={currentUser}
                 />
-              ))}
+              ))
+            ) : (
+              <Text color={subtagTextColor}>尚未有任何留言</Text>
+            )}
           </Flex>
 
           <AlertModal
