@@ -77,6 +77,9 @@ const custumTheme = extendTheme({
         },
       },
     },
+    Divider: {
+      colorScheme: 'secondaryLight',
+    },
   },
   colors: {
     primaryDark: '#121212',

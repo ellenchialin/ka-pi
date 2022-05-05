@@ -1,4 +1,4 @@
-import { Flex, VStack, Text, Divider } from '@chakra-ui/react'
+import { Flex, VStack, Text, Divider, HStack } from '@chakra-ui/react'
 
 function RatingStat({ feature1, feature2 }) {
   return (
@@ -13,20 +13,30 @@ function RatingStat({ feature1, feature2 }) {
     >
       <Flex w="100%" justify="space-evenly" align="center">
         <VStack spacing="5px" align="flex-start">
-          <Text fontSize="0.875rem">{feature1.name}</Text>
-          <Text fontSize="1.5rem">{feature1.value}</Text>
+          <Text>{feature1.name}</Text>
+          <Flex w="full" align="center">
+            <Text fontSize="28px" fontWeight="medium" mr="1">
+              {feature1.value}
+            </Text>
+            <Text as="sub">/5</Text>
+          </Flex>
         </VStack>
 
         <Divider
-          size="1em"
-          h="50px"
+          h="35px"
+          borderWidth="2px"
           orientation="vertical"
-          colorScheme="blackAlpha"
+          colorScheme="secondaryLight"
         />
 
         <VStack spacing="5px" align="flex-start">
-          <Text fontSize="0.875rem">{feature2.name}</Text>
-          <Text fontSize="1.5rem">{feature2.value}</Text>
+          <Text>{feature2.name}</Text>
+          <Flex w="full" align="center">
+            <Text fontSize="28px" fontWeight="medium" mr="1">
+              {feature2.value}
+            </Text>
+            <Text as="sub">/5</Text>
+          </Flex>
         </VStack>
       </Flex>
     </Flex>
