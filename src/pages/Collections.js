@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid } from '@chakra-ui/react'
-import { FaHashtag } from 'react-icons/fa'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack } from '@chakra-ui/react'
+import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import Pagination from '@choc-ui/paginator'
 import useUpdateEffect from '../hooks/useUpdateEffect'
@@ -21,8 +21,9 @@ function Collections() {
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
-  const currentCafes = advacedFilteredCafes.length > 0 
-      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage) 
+  const currentCafes =
+    advacedFilteredCafes.length > 0
+      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
       : collectionType === 'work'
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
@@ -72,71 +73,70 @@ function Collections() {
   // useUpdateEffect(updateCityFilter, advacedFilteredCafes)
 
   return (
-    <Flex w="full" direction="column" align="center">
-      <Heading as="h1" size="xl">
+    <Flex w="full" maxW="1170px" direction="column" align="center">
+      <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
         {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
-      <Text my="3">
+      <Text my="3" fontSize={{ base: '18px', md: '24px' }} textAlign="center">
         {collectionType === 'work'
           ? '精選全台最適合工作咖啡廳'
           : '精選適合聚會咖啡廳'}
       </Text>
-      <Flex
-        w="full"
-        maxW="400px"
-        justify="space-evenly"
-        align="center"
-        wrap="wrap"
-        mb="4"
-      >
+      <Wrap spacing="15px" justify="center" mb="4">
         {collectionType === 'work'
           ? workLabels.map((label, i) => (
-              <Tag key={i} size="lg" colorScheme="teal" mb="2">
-                <TagLeftIcon boxSize="12px" as={FaHashtag} />
-                <TagLabel>{label}</TagLabel>
-              </Tag>
+              <WrapItem key={i}>
+                <Tag size="lg" color="primaryDark" bg="gray.200">
+                  <TagLeftIcon boxSize="12px" as={CheckIcon} />
+                  <TagLabel>{label}</TagLabel>
+                </Tag>
+              </WrapItem>
             ))
           : hangoutLabels.map((label, i) => (
-              <Tag key={i} size="lg" colorScheme="teal" mb="2">
-                <TagLeftIcon boxSize="12px" as={FaHashtag} />
-                <TagLabel>{label}</TagLabel>
-              </Tag>
+              <WrapItem key={i}>
+                <Tag size="lg" color="primaryDark" bg="gray.200">
+                  <TagLeftIcon boxSize="12px" as={CheckIcon} />
+                  <TagLabel>{label}</TagLabel>
+                </Tag>
+              </WrapItem>
             ))}
-      </Flex>
+      </Wrap>
 
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
         />
       ) : (
         <>
-          <Text my="3" alignSelf="flex-end">
-            共有{' '}
-            {advacedFilteredCafes.length > 0
-              ? advacedFilteredCafes.length
-              : collectionType === 'work'
-              ? cafesForWork.length
-              : cafesForHangout.length}{' '}
-            間符合
-          </Text>
-          <PopoverCityFilter
-            filteredCafes={
-              collectionType === 'work' ? cafesForWork : cafesForHangout
-            }
-            setAdvacedFilteredCafes={setAdvacedFilteredCafes}
-          />
+          <VStack alignSelf="flex-end" mb="4">
+            <Text mt="3" alignSelf="flex-end">
+              共有{' '}
+              {advacedFilteredCafes.length > 0
+                ? advacedFilteredCafes.length
+                : collectionType === 'work'
+                ? cafesForWork.length
+                : cafesForHangout.length}{' '}
+              間符合
+            </Text>
+            <PopoverCityFilter
+              filteredCafes={
+                collectionType === 'work' ? cafesForWork : cafesForHangout
+              }
+              setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+            />
+          </VStack>
 
           <SimpleGrid
             w="full"
-            columns={[1, 2, 2, 3]}
-            spacing={['15px', '15px', '20px']}
+            minChildWidth="270px"
+            spacing="20px"
+            mb="6"
             justifyItems="center"
-            mb="4"
           >
             {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
@@ -144,9 +144,10 @@ function Collections() {
           </SimpleGrid>
           <Pagination
             defaultCurrent={1}
-            total={advacedFilteredCafes.length > 0
-              ? advacedFilteredCafes.length :
-              collectionType === 'work'
+            total={
+              advacedFilteredCafes.length > 0
+                ? advacedFilteredCafes.length
+                : collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length
             }

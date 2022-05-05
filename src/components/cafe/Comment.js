@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack } from '@chakra-ui/react'
+import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon } from '@chakra-ui/react'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
 import AlertModal from '../AlertModal'
@@ -24,6 +25,7 @@ function Comment({
 
   const replyPhotoRef = useRef()
   const navigate = useNavigate()
+  const successToast = useToast()
 
   const {
     isOpen: isCommentPhotoOpen,
@@ -89,6 +91,23 @@ function Comment({
       setNewReplyText('')
       onReplyClose()
 
+      successToast({
+        position: 'top-right',
+        render: () => (
+          <HStack
+            spacing="4"
+            color="primaryDark"
+            p={3}
+            bg="teal.200"
+            borderRadius="md"
+          >
+            <Icon as={CheckCircleIcon} />
+            <Text>成功回覆留言</Text>
+          </HStack>
+        ),
+        isClosable: true,
+      })
+
       firebase.getReplyList(cafeId, commentId).then(list => {
         setReplyList(list)
       })
@@ -138,7 +157,9 @@ function Comment({
                   <ModalContent>
                     <ModalCloseButton />
                     <ModalBody p="10">
-                      <Image src={image} alt="留言照片" fit="cover" />
+                      <AspectRatio h="85vh" _before={{ pb: '0' }}>
+                        <Image src={image} alt="留言照片" align="center" />
+                      </AspectRatio>
                     </ModalBody>
                   </ModalContent>
                 </Modal>

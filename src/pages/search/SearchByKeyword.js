@@ -38,7 +38,7 @@ function SearchByKeyword() {
 
   return (
     <Flex w="100%" direction="column" align="center">
-      <Heading as="h1" size="xl" mb="6">
+      <Heading as="h1" mb="6" fontSize={{ base: '28px', md: '40px' }}>
         關鍵字搜尋
       </Heading>
 

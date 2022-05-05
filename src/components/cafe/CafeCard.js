@@ -20,7 +20,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   return (
     <>
       <Box
-        w={{ base: '280px', lg: '250px' }}
+        w="270px"
         h="100%"
         minH={{ sm: '300px', md: '360px' }}
         bg="white"
@@ -30,7 +30,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
         color="primaryDark"
         position="relative"
       >
-        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3, md: 1 }}>
+        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
           <Image
             src={coverPhoto ? coverPhoto : ''}
             alt={`${cafe.name} 店內照片`}
@@ -60,7 +60,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
               w="full"
               as="h5"
               pr="1"
-              fontSize={{ sm: '1em', md: 'lg' }}
+              pt="0.5"
+              fontSize={{ base: '18px', md: '20px' }}
               isTruncated
             >
               {cafe.name}
@@ -69,11 +70,11 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
               <ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />
             </Link>
           </Flex>
-          <Text w="full" fontSize="0.875em" isTruncated>
+          <Text w="full" fontSize={{ base: '14px', md: '16px' }} isTruncated>
             {cafe.address}
           </Text>
           <Flex align="center">
-            <Text fontSize="0.875em" mr="1">
+            <Text fontSize={{ base: '14px', md: '16px' }} mr="1">
               {cafe.tasty}
             </Text>
             <StarIcon w="3" h="3" />

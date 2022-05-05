@@ -62,7 +62,14 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
                 <ModalContent>
                   <ModalCloseButton />
                   <ModalBody p="10">
-                    <Image src={replyImage} alt="留言照片" fit="cover" />
+                    <AspectRatio h="85vh" _before={{ pb: '0' }}>
+                      <Image
+                        src={replyImage}
+                        alt="留言照片"
+                        fit="cover"
+                        align="center"
+                      />
+                    </AspectRatio>
                   </ModalBody>
                 </ModalContent>
               </Modal>

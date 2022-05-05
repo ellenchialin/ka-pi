@@ -74,21 +74,21 @@ function Picks() {
   }, [])
 
   return (
-    <Flex as="section" w="full" direction="column" align="center">
-      <Heading as="h1" size="xl" align="center">
+    <Flex as="section" w="full" maxW="1170px" direction="column" align="center">
+      <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
         不用思考，無腦跟喝
       </Heading>
-      <Text my="3" align="center">
+      <Text my="3" align="center" fontSize={{ base: '18px', md: '24px' }}>
         根據所在地區，隨機挑選 100 間，評價 4 分以上咖啡廳
       </Text>
 
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
         />
       ) : (
@@ -100,7 +100,7 @@ function Picks() {
           />
           <SimpleGrid
             w="full"
-            columns={[1, 2, 2, 3]}
+            minChildWidth="270px"
             spacing="20px"
             justifyItems="center"
             mb="4"

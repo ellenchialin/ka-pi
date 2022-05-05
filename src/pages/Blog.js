@@ -48,11 +48,11 @@ function Blog() {
     >
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
           position="absolute"
           top="50%"

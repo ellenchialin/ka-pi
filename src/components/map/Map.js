@@ -36,6 +36,7 @@ function Map({ userLatitude, userLongitude, cafes }) {
                 <div>
                   <h4>{cafe.name}</h4>
                   <p>{cafe.address}</p>
+
                   <Link href={`/cafe/${cafe.id}`} isExternal>
                     完整資訊 <ExternalLinkIcon mx="2px" />
                   </Link>

@@ -1,23 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue, useToast } from '@chakra-ui/react'
+import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
-import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
-import { ImPowerCord } from 'react-icons/im'
-import { GiPerson } from 'react-icons/gi'
+import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
 import AlertModal from '../components/AlertModal'
+import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
+import usePageTracking from '../usePageTracking'
 
 function Cafe() {
   usePageTracking()
@@ -37,6 +36,7 @@ function Cafe() {
   const commentPhotoRef = useRef()
   const { cafeId } = useParams()
   const navigate = useNavigate()
+  const successToast = useToast()
 
   const {
     isOpen: isCommentOpen,
@@ -50,10 +50,10 @@ function Cafe() {
   } = useDisclosure()
 
   useEffect(() => {
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
-        const cafe = data.filter(item => item.id === cafeId)[0]
+        const cafe = data.find(item => item.id === cafeId)
         setCafe(cafe)
 
         firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
@@ -123,6 +123,24 @@ function Cafe() {
     }
   }
 
+  const primaryFeatures = [
+    {
+      name: '有無限時',
+      icon: BiAlarmExclamation,
+      func: checkLimitedTime(cafe.limited_time),
+    },
+    {
+      name: '有無插座',
+      icon: BiPlug,
+      func: checkSocket(cafe.socket),
+    },
+    {
+      name: '站立座位',
+      icon: VscPerson,
+      func: checkStandSeat(cafe.standing_desk),
+    },
+  ]
+
   const handleClickAddComment = () => {
     if (!currentUser) {
       onAlertOpen()
@@ -155,6 +173,23 @@ function Cafe() {
     firebase.addComment(commentDetails).then(() => {
       setCommentText('')
       onCommentClose()
+
+      successToast({
+        position: 'top-right',
+        render: () => (
+          <HStack
+            spacing="4"
+            color="primaryDark"
+            p={3}
+            bg="teal.200"
+            borderRadius="md"
+          >
+            <Icon as={CheckCircleIcon} />
+            <Text>成功送出留言</Text>
+          </HStack>
+        ),
+        isClosable: true,
+      })
 
       firebase
         .getComments(cafe.id)
@@ -198,15 +233,16 @@ function Cafe() {
       align="center"
       position="relative"
       w="100%"
+      maxW="1170px"
       minH="100vh"
     >
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
           position="absolute"
           top="50%"
@@ -237,7 +273,7 @@ function Cafe() {
             </HStack>
             <Heading
               as="h1"
-              size="3xl"
+              fontSize={{ base: '28px', md: '40px' }}
               letterSpacing="widest"
               align="center"
               pt="2"
@@ -327,79 +363,44 @@ function Cafe() {
             justifyItems="center"
             mb="10"
           >
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">有無限時</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkLimitedTime(cafe.limited_time)}
-                </Heading>
-              </Flex>
-              <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
-            </HStack>
-
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">有無插座</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkSocket(cafe.socket)}
-                </Heading>
-              </Flex>
-              <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
-            </HStack>
-
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">站立座位</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkStandSeat(cafe.standing_desk)}
-                </Heading>
-              </Flex>
-              <Icon as={GiPerson} boxSize="36px" color="yellow.400" />
-            </HStack>
+            {primaryFeatures.map(feature => (
+              <HStack
+                key={feature.name}
+                w="100%"
+                maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
+                h="100%"
+                minH="100px"
+                spacing={{ base: '40px', md: '20px', lg: '40px' }}
+                justify="center"
+                bg="primaryDark"
+                color="primaryLight"
+                rounded="lg"
+                shadow="md"
+                px="2"
+              >
+                <VStack spacing="2" align="flex-start">
+                  <Text>{feature.name}</Text>
+                  <Heading as="h4" fontSize="1.5rem">
+                    {feature.func}
+                  </Heading>
+                </VStack>
+                <Icon
+                  as={feature.icon}
+                  boxSize={feature.icon === VscPerson ? '40px' : '34px'}
+                  color="accent"
+                />
+              </HStack>
+            ))}
           </SimpleGrid>
 
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column" mb="10">
-            <Text fontSize="0.875rem" color={subtagTextColor}>
-              Google Reviews
-            </Text>
-            <Text fontSize="1.5rem" fontWeight="bold" mb="4">
+            <Text color={subtagTextColor}>Google Reviews</Text>
+            <Text
+              fontSize={{ base: '20px', md: '28px' }}
+              fontWeight="bold"
+              mb="4"
+            >
               More Photos
             </Text>
             <SimpleGrid
@@ -416,13 +417,15 @@ function Cafe() {
           </Flex>
 
           {/* Blogs section */}
-          <Flex w="100%" direction="column" mb="10">
-            <Flex w="100%" justify="space-between" align="end" mb="4">
+          <Flex w="full" direction="column" mb="10">
+            <Flex w="full" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color={subtagTextColor}>
-                  Blogs
-                </Text>
-                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                <Text color={subtagTextColor}>Blogs</Text>
+                <Text
+                  fontSize={{ base: '20px', md: '28px' }}
+                  fontWeight="bold"
+                  mt="0"
+                >
                   Explore Others' Experience
                 </Text>
               </VStack>
@@ -435,34 +438,41 @@ function Cafe() {
                 blog
               </Button>
             </Flex>
-            <SimpleGrid
-              w="full"
-              spacing="20px"
-              minChildWidth="200px"
-              justifyItems="center"
-            >
-              {blogs.map(blog => (
-                <BlogCard
-                  key={blog.blogId}
-                  cafeId={blog.cafeId}
-                  blogId={blog.blogId}
-                  content={blog.content}
-                  title={blog.title}
-                  date={blog.createdAt}
-                  image={blog.image}
-                />
-              ))}
-            </SimpleGrid>
+
+            {blogs.length > 0 ? (
+              <SimpleGrid
+                w="full"
+                spacing="20px"
+                minChildWidth="270px"
+                justifyItems="center"
+              >
+                {blogs.map(blog => (
+                  <BlogCard
+                    key={blog.blogId}
+                    cafeId={blog.cafeId}
+                    blogId={blog.blogId}
+                    content={blog.content}
+                    title={blog.title}
+                    date={blog.createdAt}
+                    image={blog.image}
+                  />
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Text color={subtagTextColor}>尚未有任何食記</Text>
+            )}
           </Flex>
 
           {/* Comments section */}
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text fontSize="0.875rem" color={subtagTextColor}>
-                  Comments
-                </Text>
-                <Text fontSize="1.5rem" fontWeight="bold" mt="0">
+                <Text color={subtagTextColor}>Comments</Text>
+                <Text
+                  fontSize={{ base: '20px', md: '28px' }}
+                  fontWeight="bold"
+                  mt="0"
+                >
                   Interact With Others
                 </Text>
               </VStack>
@@ -544,7 +554,7 @@ function Cafe() {
                 </ModalContent>
               </Modal>
             </Flex>
-            {comments.length > 0 &&
+            {comments.length > 0 ? (
               comments.map(comment => (
                 <Comment
                   key={comment.commentId}
@@ -556,7 +566,10 @@ function Cafe() {
                   image={comment.image}
                   currentUser={currentUser}
                 />
-              ))}
+              ))
+            ) : (
+              <Text color={subtagTextColor}>尚未有任何留言</Text>
+            )}
           </Flex>
 
           <AlertModal
