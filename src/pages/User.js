@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem, SimpleGrid } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -123,14 +123,21 @@ function User() {
   }
 
   return (
-    <VStack w="full" align="center" spacing="20px" position="relative">
+    <VStack
+      w="full"
+      maxW="1170px"
+      h="100%"
+      align="center"
+      spacing="20px"
+      position="relative"
+    >
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
           position="absolute"
           top="50%"
@@ -182,10 +189,13 @@ function User() {
                 name="username"
                 value={updatedUserName}
                 placeholder={userInfo.name}
+                fontSize={{ base: '18px', md: '20px' }}
                 onChange={e => updateUserName(e)}
               />
             </EditableText>
-            <Text>{userInfo.email}</Text>
+            <Text fontSize={{ base: '16px', md: '18px' }} fontWeight="semibold">
+              {userInfo.email}
+            </Text>
           </VStack>
           <Tabs variant="enclosed" w="full" colorScheme="teal">
             <TabList>
@@ -193,7 +203,7 @@ function User() {
               <Tab>咖啡廳食記</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel p="0" pt="4">
                 <Text mb="3">
                   共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間
                 </Text>
@@ -213,21 +223,22 @@ function User() {
                     />
                   )}
                   <Flex w="full" direction="column">
-                    <Wrap
-                      spacing={{ base: '10px', sm: '30px', md: '30px' }}
-                      justify="center"
-                      mb="6"
+                    <SimpleGrid
+                      w="full"
+                      minChildWidth="270px"
+                      spacing="20px"
+                      justifyItems="center"
+                      mb="4"
                     >
                       {currentCafes.map(cafe => (
-                        <WrapItem key={cafe.id}>
-                          <CafeCard
-                            cafe={cafe}
-                            canDeleteCafe={canDeleteCafe}
-                            handleDeleteCafe={() => deleteCafe(cafe.id)}
-                          />
-                        </WrapItem>
+                        <CafeCard
+                          key={cafe.id}
+                          cafe={cafe}
+                          canDeleteCafe={canDeleteCafe}
+                          handleDeleteCafe={() => deleteCafe(cafe.id)}
+                        />
                       ))}
-                    </Wrap>
+                    </SimpleGrid>
                     <Pagination
                       defaultCurrent={1}
                       total={savedCafes.length}
@@ -248,33 +259,34 @@ function User() {
                   </Flex>
                 </Flex>
               </TabPanel>
-              <TabPanel>
+              <TabPanel p="0" pt="4">
                 <Text mb="3">
                   共發表 {userBlogs.length > 0 ? userBlogs.length : 0} 篇
                 </Text>
                 <Flex w="full" direction="column">
-                  <Wrap
-                    spacing={{ base: '10px', sm: '30px', md: '30px' }}
-                    justify="center"
-                    mb="6"
+                  <SimpleGrid
+                    w="full"
+                    minChildWidth="270px"
+                    spacing="20px"
+                    justifyItems="center"
+                    mb="4"
                   >
                     {currentBlogs.map(blog => (
-                      <WrapItem key={blog.blogId}>
-                        <BlogCard
-                          cafeId={blog.cafeId}
-                          blogId={blog.blogId}
-                          content={blog.content}
-                          title={blog.title}
-                          date={blog.createdAt}
-                          image={blog.image}
-                          canDeleteBlog={canDeleteBlog}
-                          handleBlogDelete={() =>
-                            deleteBlog(blog.cafeId, blog.blogId)
-                          }
-                        />
-                      </WrapItem>
+                      <BlogCard
+                        key={blog.blogId}
+                        cafeId={blog.cafeId}
+                        blogId={blog.blogId}
+                        content={blog.content}
+                        title={blog.title}
+                        date={blog.createdAt}
+                        image={blog.image}
+                        canDeleteBlog={canDeleteBlog}
+                        handleBlogDelete={() =>
+                          deleteBlog(blog.cafeId, blog.blogId)
+                        }
+                      />
                     ))}
-                  </Wrap>
+                  </SimpleGrid>
                   <Pagination
                     defaultCurrent={1}
                     total={userBlogs.length}

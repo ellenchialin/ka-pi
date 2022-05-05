@@ -80,18 +80,18 @@ function City() {
   useUpdateEffect(getSelectedCafes, selectedAreas)
 
   return (
-    <Flex w="full" as="section" direction="column" align="center">
+    <Flex w="full" maxW="1170px" as="section" direction="column" align="center">
       <Heading as="h1" size="xl">
         {translatedCityName}
       </Heading>
 
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="6px"
           speed="0.65s"
           emptyColor="gray.200"
-          color="teal"
-          siz="xl"
+          color="teal.600"
+          size="xl"
           mt="6"
         />
       ) : (
@@ -111,7 +111,7 @@ function City() {
             </Text>
             <SimpleGrid
               w="full"
-              minChildWidth="265px"
+              minChildWidth="270px"
               // columns={[1, 2, 3, 4]}
               spacing="20px"
               justifyItems="center"

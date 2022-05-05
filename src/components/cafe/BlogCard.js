@@ -30,7 +30,7 @@ function BlogCard({
   return (
     <>
       <Box
-        w={{ base: '280px', lg: '250px' }}
+        w="270px"
         h="100%"
         minH={{ sm: '300px', md: '360px' }}
         bg="white"

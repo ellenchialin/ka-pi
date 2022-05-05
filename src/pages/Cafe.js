@@ -202,11 +202,11 @@ function Cafe() {
     >
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="5px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="lg"
           mt="6"
           position="absolute"
           top="50%"
@@ -237,7 +237,7 @@ function Cafe() {
             </HStack>
             <Heading
               as="h1"
-              size="3xl"
+              fontSize={{ base: '28px', md: '40px' }}
               letterSpacing="widest"
               align="center"
               pt="2"

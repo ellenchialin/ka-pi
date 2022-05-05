@@ -113,11 +113,11 @@ function Home() {
 
         {isLoading ? (
           <Spinner
-            thickness="4px"
+            thickness="6px"
             speed="0.65s"
             emptyColor="gray.200"
             color="teal"
-            siz="xl"
+            size="xl"
             mt="6"
           />
         ) : (
@@ -135,7 +135,7 @@ function Home() {
               justifyItems="center"
             >
               {currentCafes.map(cafe => (
-                <CafeCard cafe={cafe} />
+                <CafeCard key={cafe.id} cafe={cafe} />
               ))}
             </SimpleGrid>
 

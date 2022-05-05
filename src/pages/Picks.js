@@ -84,11 +84,11 @@ function Picks() {
 
       {isLoading ? (
         <Spinner
-          thickness="4px"
+          thickness="6px"
           speed="0.65s"
           emptyColor="gray.200"
           color="teal"
-          siz="xl"
+          size="xl"
           mt="6"
         />
       ) : (

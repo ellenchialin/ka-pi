@@ -26,8 +26,8 @@ function EditableText({
           {children}
         </Box>
       ) : (
-        <Flex align="center">
-          <Text fontSize="24px" fontWeight="bold" mr="3">
+        <Flex align="center" position="relative">
+          <Text fontSize={{ base: '18px', md: '24px' }} fontWeight="semibold">
             {text || placeholder}
           </Text>
           <IconButton
@@ -35,6 +35,8 @@ function EditableText({
             icon={<EditIcon />}
             size="sm"
             isRound
+            position="absolute"
+            right="-40px"
             onClick={() => setEditing(true)}
           />
         </Flex>
