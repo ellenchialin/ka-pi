@@ -3,21 +3,20 @@ import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
+import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
-import { BiAlarmExclamation, BiCommentDots } from 'react-icons/bi'
-import { ImPowerCord } from 'react-icons/im'
-import { GiPerson } from 'react-icons/gi'
+import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
 import Comment from '../components/cafe/Comment'
 import AlertModal from '../components/AlertModal'
+import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-import usePageTracking from '../usePageTracking'
 import { useAuth } from '../contexts/AuthContext'
+import usePageTracking from '../usePageTracking'
 
 function Cafe() {
   usePageTracking()
@@ -50,10 +49,10 @@ function Cafe() {
   } = useDisclosure()
 
   useEffect(() => {
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
-        const cafe = data.filter(item => item.id === cafeId)[0]
+        const cafe = data.find(item => item.id === cafeId)
         setCafe(cafe)
 
         firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
@@ -122,6 +121,24 @@ function Cafe() {
       return '部分'
     }
   }
+
+  const primaryFeatures = [
+    {
+      name: '有無限時',
+      icon: BiAlarmExclamation,
+      func: checkLimitedTime(cafe.limited_time),
+    },
+    {
+      name: '有無插座',
+      icon: BiPlug,
+      func: checkSocket(cafe.socket),
+    },
+    {
+      name: '站立座位',
+      icon: VscPerson,
+      func: checkStandSeat(cafe.standing_desk),
+    },
+  ]
 
   const handleClickAddComment = () => {
     if (!currentUser) {
@@ -327,71 +344,34 @@ function Cafe() {
             justifyItems="center"
             mb="10"
           >
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">有無限時</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkLimitedTime(cafe.limited_time)}
-                </Heading>
-              </Flex>
-              <Icon as={BiAlarmExclamation} boxSize="32px" color="yellow.400" />
-            </HStack>
-
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">有無插座</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkSocket(cafe.socket)}
-                </Heading>
-              </Flex>
-              <Icon as={ImPowerCord} boxSize="32px" color="yellow.400" />
-            </HStack>
-
-            <HStack
-              w="100%"
-              maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-              h="100%"
-              minH="100px"
-              spacing="40px"
-              justify="center"
-              bg="primaryDark"
-              color="primaryLight"
-              rounded="lg"
-              shadow="md"
-              px="2"
-            >
-              <Flex direction="column">
-                <Text fontSize="0.875rem">站立座位</Text>
-                <Heading as="h4" fontSize="1.5rem">
-                  {checkStandSeat(cafe.standing_desk)}
-                </Heading>
-              </Flex>
-              <Icon as={GiPerson} boxSize="36px" color="yellow.400" />
-            </HStack>
+            {primaryFeatures.map(feature => (
+              <HStack
+                key={feature.name}
+                w="100%"
+                maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
+                h="100%"
+                minH="100px"
+                spacing={{ base: '40px', md: '20px', lg: '40px' }}
+                justify="center"
+                bg="primaryDark"
+                color="primaryLight"
+                rounded="lg"
+                shadow="md"
+                px="2"
+              >
+                <VStack spacing="2" align="flex-start">
+                  <Text>{feature.name}</Text>
+                  <Heading as="h4" fontSize="1.5rem">
+                    {feature.func}
+                  </Heading>
+                </VStack>
+                <Icon
+                  as={feature.icon}
+                  boxSize={feature.icon === VscPerson ? '40px' : '34px'}
+                  color="accent"
+                />
+              </HStack>
+            ))}
           </SimpleGrid>
 
           {/* Google Reviews Photos section */}
