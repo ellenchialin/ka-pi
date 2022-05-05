@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue, useToast } from '@chakra-ui/react'
+import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
@@ -36,6 +36,7 @@ function Cafe() {
   const commentPhotoRef = useRef()
   const { cafeId } = useParams()
   const navigate = useNavigate()
+  const successToast = useToast()
 
   const {
     isOpen: isCommentOpen,
@@ -173,6 +174,23 @@ function Cafe() {
       setCommentText('')
       onCommentClose()
 
+      successToast({
+        position: 'top-right',
+        render: () => (
+          <HStack
+            spacing="4"
+            color="primaryDark"
+            p={3}
+            bg="teal.200"
+            borderRadius="md"
+          >
+            <Icon as={CheckCircleIcon} />
+            <Text>成功送出留言</Text>
+          </HStack>
+        ),
+        isClosable: true,
+      })
+
       firebase
         .getComments(cafe.id)
         .then(commentList => setComments(commentList))
@@ -215,6 +233,7 @@ function Cafe() {
       align="center"
       position="relative"
       w="100%"
+      maxW="1170px"
       minH="100vh"
     >
       {isLoading ? (
@@ -398,8 +417,8 @@ function Cafe() {
           </Flex>
 
           {/* Blogs section */}
-          <Flex w="100%" direction="column" mb="10">
-            <Flex w="100%" justify="space-between" align="end" mb="4">
+          <Flex w="full" direction="column" mb="10">
+            <Flex w="full" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
                 <Text color={subtagTextColor}>Blogs</Text>
                 <Text
@@ -424,7 +443,7 @@ function Cafe() {
               <SimpleGrid
                 w="full"
                 spacing="20px"
-                minChildWidth="200px"
+                minChildWidth="270px"
                 justifyItems="center"
               >
                 {blogs.map(blog => (
