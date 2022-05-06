@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { Box, useDisclosure, Drawer, DrawerOverlay, DrawerContent, Flex } from '@chakra-ui/react'
-
 import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
@@ -19,8 +19,26 @@ import SearchByFeature from './pages/search/SearchByFeature'
 import NoMatch from './pages/NoMatch'
 
 function App() {
+  const [userLatitude, setUserLatitude] = useState(null)
+  const [userLongitude, setUserLongitude] = useState(null)
+
   const { currentUser } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+    }
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setUserLatitude(position.coords.latitude)
+        setUserLongitude(position.coords.longitude)
+      },
+      () => {
+        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
+      }
+    )
+  }, [])
 
   return (
     <BrowserRouter>
@@ -48,7 +66,17 @@ function App() {
             mx="auto"
           >
             <Routes>
-              <Route path="/" element={<Home />} />
+              {userLatitude && userLongitude && (
+                <Route
+                  path="/"
+                  element={
+                    <Home
+                      userLatitude={userLatitude}
+                      userLongitude={userLongitude}
+                    />
+                  }
+                />
+              )}
               <Route path="city">
                 <Route path=":cityName" element={<City />} />
               </Route>
@@ -62,13 +90,32 @@ function App() {
                 <Route path=":cafeId/blog/:blogId" element={<Blog />} />
                 <Route path=":cafeId/blog/edit" element={<EditBlog />} />
               </Route>
-              <Route path="picks" element={<Picks />} />
-              <Route
-                path="user"
-                element={
-                  currentUser ? <User /> : <Navigate to="/auth" replace />
-                }
-              />
+              {userLatitude && userLongitude && (
+                <Route
+                  path="picks"
+                  element={
+                    <Picks
+                      userLatitude={userLatitude}
+                      userLongitude={userLongitude}
+                    />
+                  }
+                />
+              )}
+              {userLatitude && userLongitude && (
+                <Route
+                  path="user"
+                  element={
+                    currentUser ? (
+                      <User
+                        userLatitude={userLatitude}
+                        userLongitude={userLongitude}
+                      />
+                    ) : (
+                      <Navigate to="/auth" replace />
+                    )
+                  }
+                />
+              )}
               <Route
                 path="/auth"
                 element={

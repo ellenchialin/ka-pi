@@ -8,11 +8,9 @@ import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 import Pagination from '@choc-ui/paginator'
 
-function Home() {
+function Home({ userLatitude, userLongitude }) {
   usePageTracking()
 
-  const [userLatitude, setUserLatitude] = useState(null)
-  const [userLongitude, setUserLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -20,6 +18,10 @@ function Home() {
   const [cafesPerPage] = useState(10)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
+
+  useEffect(() => {
+    getNearbyCafes(userLatitude, userLongitude)
+  }, [])
 
   const getNearbyCafes = (lat, lng) => {
     fetch(
@@ -76,22 +78,6 @@ function Home() {
         alert('無法取得當前位置，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖')
       )
   }
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
-    }
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        setUserLatitude(position.coords.latitude)
-        setUserLongitude(position.coords.longitude)
-        getNearbyCafes(position.coords.latitude, position.coords.longitude)
-      },
-      () => {
-        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
-      }
-    )
-  }, [])
 
   return (
     <Flex w="full" maxW="1170px" direction="column" align="center">

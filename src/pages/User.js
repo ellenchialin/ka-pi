@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -13,11 +13,8 @@ import BlogCard from '../components/cafe/BlogCard'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
-function User() {
+function User({ userLatitude, userLongitude }) {
   usePageTracking()
-
-  const [userLatitude, setUserLatitude] = useState(null)
-  const [userLongitude, setUserLongitude] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
   const [userPhotoUrl, setUserPhotoUrl] = useState(null)
@@ -39,18 +36,17 @@ function User() {
   const currentBlogs = userBlogs.slice(offset, offset + cardsPerPage)
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
-    }
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        setUserLatitude(position.coords.latitude)
-        setUserLongitude(position.coords.longitude)
-      },
-      () => {
-        alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
-      }
-    )
+    firebase
+      .getUser(currentUser.uid)
+      .then(data => {
+        setUserInfo(data)
+        getFavCafes(data.favCafes)
+      })
+      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
+  }, [])
+
+  useEffect(() => {
+    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
   }, [])
 
   const getFavCafes = cafesId => {
@@ -69,20 +65,6 @@ function User() {
       )
       .finally(() => setIsLoading(false))
   }
-
-  useEffect(() => {
-    firebase
-      .getUser(currentUser.uid)
-      .then(data => {
-        setUserInfo(data)
-        getFavCafes(data.favCafes)
-      })
-      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
-  }, [])
-
-  useEffect(() => {
-    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
-  }, [])
 
   const deleteCafe = deletedCafeId => {
     firebase.deleteSavedCafe(currentUser.uid, deletedCafeId).then(() => {
