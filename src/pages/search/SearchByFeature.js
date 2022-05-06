@@ -2,6 +2,7 @@ import { useState } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
@@ -33,12 +34,19 @@ function SearchByFeature() {
   ]
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
+  const {
+    value: filterCityValue,
+    getCheckboxProps: getCityCheckboxProps,
+    setValue: setCityValue,
+  } = useCheckboxGroup()
+
+  console.log('Selected city: ', filterCityValue)
 
   const handleFeatureSearch = () => {
     setIsLoading(true)
 
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
         const defaultMatched = data.filter(
           cafe => cafe.limited_time === 'no' && cafe.socket === 'yes'
@@ -61,6 +69,7 @@ function SearchByFeature() {
 
   const handleResetFilter = () => {
     setValue([])
+    setCityValue([])
     setFilteredCafes([])
     setAdvacedFilteredCafes([])
   }
@@ -80,8 +89,8 @@ function SearchByFeature() {
       <Text fontSize={{ base: '16px', md: '18px' }}>預設必備條件</Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {defaultFeatures.map((feature, i) => (
-          <WrapItem>
-            <Tag key={i} size="lg" color="primaryDark" bg="gray.200">
+          <WrapItem key={i}>
+            <Tag size="lg" color="primaryDark" bg="gray.200">
               <TagLeftIcon boxSize="12px" as={CheckIcon} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
@@ -159,6 +168,8 @@ function SearchByFeature() {
               <PopoverCityFilter
                 filteredCafes={filteredCafes}
                 setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+                filterCityValue={filterCityValue}
+                getCityCheckboxProps={getCityCheckboxProps}
               />
             </VStack>
           )}

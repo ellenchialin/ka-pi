@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
@@ -23,6 +23,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
     return thumbnails[randomNum]
   }
 
+  const thumbnailUrl = useMemo(() => getRandomCafeThumbnail(), [])
+
   return (
     <>
       <Box
@@ -42,7 +44,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             alt={`${cafe.name} 店內照片`}
             roundedTop="lg"
             objectFit="cover"
-            fallbackSrc={getRandomCafeThumbnail()}
+            align="center"
+            fallbackSrc={thumbnailUrl}
           />
         </AspectRatio>
         {canDeleteCafe && (
