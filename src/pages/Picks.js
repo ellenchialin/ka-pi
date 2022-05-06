@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
+import { api } from '../utils/api'
+import { cityData } from '../cityData'
 import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
-import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
 function Picks() {
@@ -19,42 +21,68 @@ function Picks() {
 
   const getNearbyCafes = (lat, lng) => {
     fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}&language=zh-TW`
     )
       .then(res => res.json())
       .then(data => {
-        let currentCity = ''
-        if (
-          data.results[0].formatted_address.split(', ').slice(-2, -1)[0] ===
-          'New Taipei City'
-        ) {
-          currentCity = 'taipei'
-        } else {
-          currentCity = data.results[0].formatted_address
-            .split(', ')
-            .slice(-2, -1)[0]
-            .split(' ')[0]
-            .toLowerCase()
-        }
+        let currentCity = data.plus_code.compound_code
+          .split(' ')
+          .slice(1)[0]
+          .slice(2, 4)
 
-        fetch(
-          `https://ka-pi-server.herokuapp.com/citycafes?city=${currentCity}`
-        )
-          .then(res => res.json())
-          .then(data => {
-            setPickedCafes(data.filter(cafe => cafe.tasty >= 4).slice(0, 100))
-          })
-          .catch(error => {
-            alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
-            console.error(error)
-          })
-          .finally(() => setIsLoading(false))
+        if (currentCity === '新北') {
+          api
+            .getCityCafes('taipei')
+            .then(cafes =>
+              setPickedCafes(
+                cafes
+                  .filter(
+                    cafe => cafe.address.includes('新北') && cafe.tasty >= 4
+                  )
+                  .slice(0, 100)
+              )
+            )
+            .catch(error => {
+              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              console.error(error)
+            })
+            .finally(() => setIsLoading(false))
+        } else if (currentCity === '台北') {
+          api
+            .getCityCafes('taipei')
+            .then(cafes =>
+              setPickedCafes(
+                cafes
+                  .filter(
+                    cafe => cafe.address.includes('台北') && cafe.tasty >= 4
+                  )
+                  .slice(0, 100)
+              )
+            )
+            .catch(error => {
+              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              console.error(error)
+            })
+            .finally(() => setIsLoading(false))
+        } else {
+          const city = cityData.filter(city => city.place === currentCity)[0]
+            .tag
+
+          api
+            .getCityCafes(city)
+            .then(cafes =>
+              setPickedCafes(
+                cafes.filter(cafe => cafe.tasty >= 4).slice(0, 100)
+              )
+            )
+            .catch(error => {
+              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              console.error(error)
+            })
+            .finally(() => setIsLoading(false))
+        }
       })
-      .catch(error =>
-        alert(
-          '無法取得當前行政區位置，將預設顯示雙北咖啡廳，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖'
-        )
-      )
+      .catch(error => alert('無法取得當前行政區位置，請確認網路連線'))
   }
 
   useEffect(() => {

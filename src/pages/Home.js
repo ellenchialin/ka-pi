@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  Wrap,
-  WrapItem,
-  SimpleGrid,
-} from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
