@@ -13,8 +13,11 @@ import BlogCard from '../components/cafe/BlogCard'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
-function User({ userLatitude, userLongitude }) {
+function User() {
   usePageTracking()
+
+  const [userLatitude, setUserLatitude] = useState(null)
+  const [userLongitude, setUserLongitude] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
   const [userPhotoUrl, setUserPhotoUrl] = useState(null)
@@ -34,6 +37,21 @@ function User({ userLatitude, userLongitude }) {
   const offset = (currentPage - 1) * cardsPerPage
   const currentCafes = savedCafes.slice(offset, offset + cardsPerPage)
   const currentBlogs = userBlogs.slice(offset, offset + cardsPerPage)
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+    }
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setUserLatitude(position.coords.latitude)
+        setUserLongitude(position.coords.longitude)
+      },
+      () => {
+        alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
+      }
+    )
+  }, [])
 
   useEffect(() => {
     firebase

@@ -7,8 +7,11 @@ import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
 import usePageTracking from '../usePageTracking'
 
-function Picks({ userLatitude, userLongitude }) {
+function Picks() {
   usePageTracking()
+
+  const [userLatitude, setUserLatitude] = useState(null)
+  const [userLongitude, setUserLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -18,7 +21,19 @@ function Picks({ userLatitude, userLongitude }) {
   const currentCafes = pickedCafes.slice(offset, offset + cafesPerPage)
 
   useEffect(() => {
-    getNearbyCafes(userLatitude, userLongitude)
+    if (!navigator.geolocation) {
+      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+    }
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setUserLatitude(position.coords.latitude)
+        setUserLongitude(position.coords.longitude)
+        getNearbyCafes(position.coords.latitude, position.coords.longitude)
+      },
+      () => {
+        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
+      }
+    )
   }, [])
 
   const getNearbyCafes = (lat, lng) => {
