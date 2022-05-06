@@ -1,4 +1,5 @@
 import { Link as NavLink } from 'react-router-dom'
+import PropTypes from 'prop-types'
 // prettier-ignore
 import { Box, Flex, Text, Link, Divider, Icon, Collapse, CloseButton, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import { MdKeyboardArrowRight } from 'react-icons/md'
@@ -43,9 +44,15 @@ const NavItem = props => {
   )
 }
 
-function SidebarContent({ onClose, ...rest }) {
-  const discoverIntegrations = useDisclosure()
-  const collectionIntegrations = useDisclosure()
+NavItem.propTypes = {
+  icon: PropTypes.func,
+  children: PropTypes.node,
+}
+
+function SidebarContent({ onClose }) {
+  const { isOpen: discoverIsOpen, onToggle: discoverOnToggle } = useDisclosure()
+  const { isOpen: collectionsIsOpen, onToggle: collectionsOnToggle } =
+    useDisclosure()
 
   const bgColor = useColorModeValue('primaryLight', 'primaryDark')
   const textColor = useColorModeValue('primaryDark', 'primaryLight')
@@ -63,7 +70,6 @@ function SidebarContent({ onClose, ...rest }) {
       boxShadow="base"
       overflowX="hidden"
       overflowY="auto"
-      {...rest}
     >
       <Flex px="4" py="5" alignItems="center" justifyContent="space-between">
         <Text fontSize="3xl" ml="2" color={textColor} fontWeight="semibold">
@@ -78,7 +84,6 @@ function SidebarContent({ onClose, ...rest }) {
         fontSize="sm"
         color="grey.600"
         aria-label="主選單"
-        // h="100%"
       >
         <NavItem
           as={NavLink}
@@ -88,15 +93,15 @@ function SidebarContent({ onClose, ...rest }) {
         >
           Home
         </NavItem>
-        <NavItem icon={BsSearch} onClick={discoverIntegrations.onToggle}>
+        <NavItem icon={BsSearch} onClick={discoverOnToggle}>
           Discover
           <Icon
             as={MdKeyboardArrowRight}
             ml="3"
-            transform={discoverIntegrations.isOpen && 'rotate(90deg)'}
+            transform={discoverIsOpen && 'rotate(90deg)'}
           />
         </NavItem>
-        <Collapse in={discoverIntegrations.isOpen}>
+        <Collapse in={discoverIsOpen}>
           <NavItem as={NavLink} to="search" pl="12" py="2">
             by Keywords
           </NavItem>
@@ -104,15 +109,15 @@ function SidebarContent({ onClose, ...rest }) {
             by Features
           </NavItem>
         </Collapse>
-        <NavItem icon={VscLibrary} onClick={collectionIntegrations.onToggle}>
+        <NavItem icon={VscLibrary} onClick={collectionsOnToggle}>
           Collections
           <Icon
             as={MdKeyboardArrowRight}
             ml="3"
-            transform={collectionIntegrations.isOpen && 'rotate(90deg)'}
+            transform={collectionsIsOpen && 'rotate(90deg)'}
           />
         </NavItem>
-        <Collapse in={collectionIntegrations.isOpen}>
+        <Collapse in={collectionsIsOpen}>
           <NavItem as={NavLink} to="collections/work" pl="12" py="2">
             for Work
           </NavItem>
@@ -142,6 +147,10 @@ function SidebarContent({ onClose, ...rest }) {
       </Box>
     </Flex>
   )
+}
+
+SidebarContent.propTypes = {
+  onClose: PropTypes.func,
 }
 
 export default SidebarContent

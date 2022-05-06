@@ -28,7 +28,7 @@ function App() {
         <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
           <DrawerOverlay />
           <DrawerContent>
-            <SidebarContent onClose={onClose} w="full" borderRight="none" />
+            <SidebarContent onClose={onClose} />
           </DrawerContent>
         </Drawer>
         <Box ml={{ base: 0, md: 60 }} transition=".3s ease">
@@ -37,9 +37,9 @@ function App() {
           <Flex
             as="main"
             maxW="1280px"
-            h="100vh"
+            h="100%"
+            minH="100vh"
             direction="column"
-            justify="center"
             align="center"
             pt={{ base: '20', sm: '20', md: '8' }}
             pb="8"

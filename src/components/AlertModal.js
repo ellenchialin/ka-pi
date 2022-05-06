@@ -1,13 +1,6 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button } from '@chakra-ui/react'
+import PropTypes from 'prop-types'
 
 function AlertModal({
   isAlertOpen,
@@ -33,6 +26,15 @@ function AlertModal({
       </ModalContent>
     </Modal>
   )
+}
+
+AlertModal.propTypes = {
+  isAlertOpen: PropTypes.bool,
+  onAlertClose: PropTypes.func,
+  alertHeader: PropTypes.string,
+  alertBody: PropTypes.string,
+  actionText: PropTypes.string,
+  alertAction: PropTypes.func,
 }
 
 export default AlertModal

@@ -176,6 +176,7 @@ function Cafe() {
 
       successToast({
         position: 'top-right',
+        duration: 3000,
         render: () => (
           <HStack
             spacing="4"

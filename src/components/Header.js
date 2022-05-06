@@ -1,6 +1,7 @@
 import { IconButton, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 import { ColorModeSwitcher } from '../ColorModeSwitcher'
 import { CgMenuLeft } from 'react-icons/cg'
+import PropTypes from 'prop-types'
 
 function Header({ onOpen }) {
   const bgColor = useColorModeValue('secondaryLight', 'primaryDark')
@@ -35,6 +36,10 @@ function Header({ onOpen }) {
       <ColorModeSwitcher />
     </Flex>
   )
+}
+
+Header.propTypes = {
+  onOpen: PropTypes.func,
 }
 
 export default Header

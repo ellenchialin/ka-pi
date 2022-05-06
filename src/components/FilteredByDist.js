@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 // prettier-ignore
 import { useCheckboxGroup, Flex, Button, useColorModeValue, Wrap, WrapItem } from '@chakra-ui/react'
 import { areaData } from '../cityData'
@@ -81,4 +82,12 @@ function FilterByDist({
     </Flex>
   )
 }
+
+FilterByDist.propTypes = {
+  cityCafes: PropTypes.array,
+  translatedCityName: PropTypes.string,
+  setSelectedAreas: PropTypes.func,
+  setUpdatedCafes: PropTypes.func,
+}
+
 export default FilterByDist

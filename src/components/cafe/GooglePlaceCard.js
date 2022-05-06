@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Image, AspectRatio } from '@chakra-ui/react'
 
 function GooglePlaceCard({ photoRef }) {
@@ -11,6 +13,10 @@ function GooglePlaceCard({ photoRef }) {
       />
     </AspectRatio>
   )
+}
+
+GooglePlaceCard.propTypes = {
+  photoRef: PropTypes.string,
 }
 
 export default GooglePlaceCard

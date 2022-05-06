@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon } from '@chakra-ui/react'
@@ -93,6 +94,7 @@ function Comment({
 
       successToast({
         position: 'top-right',
+        duration: 3000,
         render: () => (
           <HStack
             spacing="4"
@@ -103,6 +105,7 @@ function Comment({
           >
             <Icon as={CheckCircleIcon} />
             <Text>成功回覆留言</Text>
+            <Button onClick={() => successToast.closeAll()}>X</Button>
           </HStack>
         ),
         isClosable: true,
@@ -274,6 +277,16 @@ function Comment({
       <Divider mt="2" />
     </Flex>
   )
+}
+
+Comment.propTypes = {
+  currentUser: PropTypes.object,
+  cafeId: PropTypes.string,
+  commentId: PropTypes.string,
+  commentUserId: PropTypes.string,
+  text: PropTypes.string,
+  date: PropTypes.object,
+  image: PropTypes.string,
 }
 
 export default Comment

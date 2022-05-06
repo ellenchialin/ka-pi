@@ -1,7 +1,8 @@
 // prettier-ignore
-import { useCheckboxGroup, Flex, Button, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, useDisclosure, Wrap, WrapItem, Portal } from '@chakra-ui/react'
+import { Button, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, useDisclosure, Wrap, WrapItem, Portal } from '@chakra-ui/react'
 import CustomCheckbox from './CustomCheckbox'
 import { cityData } from '../cityData'
+import PropTypes from 'prop-types'
 
 const PopoverCityFilter = ({
   filteredCafes,
@@ -9,11 +10,7 @@ const PopoverCityFilter = ({
   filterCityValue,
   getCityCheckboxProps,
 }) => {
-  // console.log('Before filtered by city: ', filteredCafes)
-
   const cities = cityData.map(city => city.place)
-
-  // const { value: filterCityValue, getCheckboxProps, setValue: setCityValue } = useCheckboxGroup()
 
   const advancedSearch = () => {
     const results = filteredCafes.filter(cafe => {
@@ -21,7 +18,6 @@ const PopoverCityFilter = ({
         return cafe.address.includes(city)
       })
     })
-    // console.log('Filtered by city: ', results)
     setAdvacedFilteredCafes(results)
   }
 
@@ -95,6 +91,13 @@ const PopoverCityFilter = ({
       </Portal>
     </Popover>
   )
+}
+
+PopoverCityFilter.propTypes = {
+  filteredCafes: PropTypes.array,
+  setAdvacedFilteredCafes: PropTypes.func,
+  filterCityValue: PropTypes.array,
+  getCityCheckboxProps: PropTypes.func,
 }
 
 export default PopoverCityFilter

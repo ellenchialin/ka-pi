@@ -1,4 +1,5 @@
-import { ButtonGroup, HStack, Flex } from '@chakra-ui/react'
+import PropTypes from 'prop-types'
+import { Flex } from '@chakra-ui/react'
 import StyleButton from './StyleButton'
 
 const BLOCK_TYPE_HEADINGS = [
@@ -30,6 +31,11 @@ const BlockStyleControls = ({ editorState, onToggle }) => {
       ))}
     </Flex>
   )
+}
+
+BlockStyleControls.propTypes = {
+  editorState: PropTypes.object,
+  onToggle: PropTypes.func,
 }
 
 export default BlockStyleControls
