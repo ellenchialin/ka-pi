@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router-dom'
 // prettier-ignore
 import { Heading, Icon, Text, Link, VStack, HStack, useColorModeValue } from '@chakra-ui/react'
 import { HiOutlineArrowCircleRight } from 'react-icons/hi'
+import PropTypes from 'prop-types'
 
 function CityInfoCard({
   hoveredCity,
@@ -49,6 +50,15 @@ function CityInfoCard({
       </HStack>
     </VStack>
   )
+}
+
+CityInfoCard.propTypes = {
+  hoveredCity: PropTypes.string,
+  cityLinkEndpoint: PropTypes.string,
+  isLoading: PropTypes.bool,
+  cityCafes: PropTypes.array,
+  taipeiCafes: PropTypes.array,
+  newTaipeiCafes: PropTypes.array,
 }
 
 export default CityInfoCard

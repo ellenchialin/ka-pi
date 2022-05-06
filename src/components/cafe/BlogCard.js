@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button, useColorModeValue, VStack } from '@chakra-ui/react'
 import { RiDeleteBin5Line } from 'react-icons/ri'
@@ -81,6 +82,17 @@ function BlogCard({
       </Box>
     </>
   )
+}
+
+BlogCard.propTypes = {
+  cafeId: PropTypes.string,
+  blogId: PropTypes.string,
+  content: PropTypes.object,
+  title: PropTypes.string,
+  image: PropTypes.string,
+  date: PropTypes.string,
+  canDeleteBlog: PropTypes.bool,
+  handleBlogDelete: PropTypes.func,
 }
 
 export default BlogCard

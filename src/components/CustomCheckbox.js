@@ -1,4 +1,5 @@
 import { useCheckbox, chakra, Box, Text, Flex } from '@chakra-ui/react'
+import PropTypes from 'prop-types'
 
 const CustomCheckbox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
@@ -38,6 +39,10 @@ const CustomCheckbox = props => {
       </Text>
     </chakra.label>
   )
+}
+
+CustomCheckbox.propTypes = {
+  text: PropTypes.string,
 }
 
 export default CustomCheckbox

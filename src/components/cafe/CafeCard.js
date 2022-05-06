@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
@@ -134,6 +135,12 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
       </Box>
     </>
   )
+}
+
+CafeCard.propTypes = {
+  cafe: PropTypes.object,
+  canDeleteCafe: PropTypes.bool,
+  handleDeleteCafe: PropTypes.func,
 }
 
 export default CafeCard

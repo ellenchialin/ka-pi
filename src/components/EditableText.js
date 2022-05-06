@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Flex, Box, Text, IconButton } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
+import PropTypes from 'prop-types'
 
 function EditableText({
   text,
-  type,
   placeholder,
   children,
   childRef,
@@ -43,6 +43,17 @@ function EditableText({
       )}
     </Flex>
   )
+}
+
+EditableText.propTypes = {
+  text: PropTypes.string,
+  placeholder: PropTypes.string,
+  children: PropTypes.node,
+  childRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.elementType }),
+  ]),
+  ariaLabel: PropTypes.string,
 }
 
 export default EditableText

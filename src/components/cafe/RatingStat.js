@@ -1,4 +1,5 @@
-import { Flex, VStack, Text, Divider, HStack } from '@chakra-ui/react'
+import PropTypes from 'prop-types'
+import { Flex, VStack, Text, Divider } from '@chakra-ui/react'
 
 function RatingStat({ feature1, feature2 }) {
   return (
@@ -41,6 +42,11 @@ function RatingStat({ feature1, feature2 }) {
       </Flex>
     </Flex>
   )
+}
+
+RatingStat.propTypes = {
+  feature1: PropTypes.object,
+  feature2: PropTypes.object,
 }
 
 export default RatingStat

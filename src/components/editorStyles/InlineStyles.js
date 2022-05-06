@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { ButtonGroup } from '@chakra-ui/react'
 import StyleButton from './StyleButton'
 
@@ -23,6 +24,11 @@ const InlineStyleControls = ({ editorState, onToggle }) => {
       ))}
     </ButtonGroup>
   )
+}
+
+InlineStyleControls.propTypes = {
+  editorState: PropTypes.object,
+  onToggle: PropTypes.func,
 }
 
 export default InlineStyleControls

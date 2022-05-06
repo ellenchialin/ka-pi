@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack } from '@chakra-ui/react'
 import { firebase } from '../../utils/firebase'
@@ -80,6 +81,13 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
       </Flex>
     </HStack>
   )
+}
+
+Reply.propTypes = {
+  replyUserId: PropTypes.string,
+  replyText: PropTypes.string,
+  replyImage: PropTypes.string,
+  replyDate: PropTypes.object,
 }
 
 export default Reply

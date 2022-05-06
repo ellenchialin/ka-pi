@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { Button } from '@chakra-ui/react'
 
 const StyleButton = ({ style, onToggle, active, label }) => {
@@ -29,6 +30,13 @@ const StyleButton = ({ style, onToggle, active, label }) => {
       {label}
     </Button>
   )
+}
+
+StyleButton.propTypes = {
+  style: PropTypes.string,
+  onToggle: PropTypes.func,
+  active: PropTypes.bool,
+  label: PropTypes.string,
 }
 
 export default StyleButton

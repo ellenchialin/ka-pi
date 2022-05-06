@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import { Box, Link } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import PropTypes from 'prop-types'
 
 const cafeIcon = new Icon({
   iconUrl: '/cafeIcon.png',
@@ -47,6 +48,12 @@ function Map({ userLatitude, userLongitude, cafes }) {
       </MapContainer>
     </Box>
   )
+}
+
+Map.propTypes = {
+  userLatitude: PropTypes.number,
+  userLongitude: PropTypes.number,
+  cafes: PropTypes.array,
 }
 
 export default Map

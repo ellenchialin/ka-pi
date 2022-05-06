@@ -55,7 +55,7 @@ function EditBlog() {
   }
 
   return (
-    <Flex direction="column" w="100%" maxWidth="800px">
+    <Flex direction="column" w="100%" h="100%" maxWidth="800px">
       <Flex mb="6" maxWidth="800px" position="relative">
         <AspectRatio w="100%" maxWidth="800px" ratio={21 / 9}>
           <Image
@@ -73,8 +73,8 @@ function EditBlog() {
           leftIcon={<RiAddFill />}
           size="xs"
           position="absolute"
-          top="10px"
-          right="10px"
+          top="20px"
+          right="20px"
           onClick={() => coverPhototRef.current.click()}
         >
           Upload

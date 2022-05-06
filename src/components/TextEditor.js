@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Box, HStack, Divider, Flex } from '@chakra-ui/react'
+import PropTypes from 'prop-types'
+import { Box, Divider } from '@chakra-ui/react'
 // prettier-ignore
 import { Editor, EditorState, convertToRaw, RichUtils, getDefaultKeyBinding } from 'draft-js'
 
@@ -67,6 +68,10 @@ function TextEditor({ setBlogContent }) {
       />
     </Box>
   )
+}
+
+TextEditor.propTypes = {
+  setBlogContent: PropTypes.func,
 }
 
 export default TextEditor
