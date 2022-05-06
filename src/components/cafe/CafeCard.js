@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
 import { ArrowRightIcon, StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
+import { thumbnails } from '../../cafeThumbnails'
 
 function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const [coverPhoto, setCoverPhoto] = useState(null)
@@ -16,6 +17,13 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
       }
     })
   }, [])
+
+  const getRandomCafeThumbnail = () => {
+    const randomNum = Math.floor(Math.random() * 16) + 1
+    return thumbnails[randomNum]
+  }
+
+  const thumbnailUrl = useMemo(() => getRandomCafeThumbnail(), [])
 
   return (
     <>
@@ -36,7 +44,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             alt={`${cafe.name} 店內照片`}
             roundedTop="lg"
             objectFit="cover"
-            fallbackSrc="https://images.unsplash.com/photo-1534201569625-ed4662d8be97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=411&q=80"
+            align="center"
+            fallbackSrc={thumbnailUrl}
           />
         </AspectRatio>
         {canDeleteCafe && (

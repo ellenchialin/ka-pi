@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { Box, useDisclosure, Drawer, DrawerOverlay, DrawerContent, Flex } from '@chakra-ui/react'
-
 import { useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import SidebarContent from './components/SidebarContent'
@@ -38,6 +37,7 @@ function App() {
           <Flex
             as="main"
             maxW="1280px"
+            h="100vh"
             direction="column"
             justify="center"
             align="center"

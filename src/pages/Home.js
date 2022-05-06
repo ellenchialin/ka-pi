@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  Wrap,
-  WrapItem,
-  SimpleGrid,
-} from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -28,6 +20,22 @@ function Home() {
   const [cafesPerPage] = useState(10)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+    }
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setUserLatitude(position.coords.latitude)
+        setUserLongitude(position.coords.longitude)
+        getNearbyCafes(position.coords.latitude, position.coords.longitude)
+      },
+      () => {
+        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
+      }
+    )
+  }, [])
 
   const getNearbyCafes = (lat, lng) => {
     fetch(
@@ -85,24 +93,8 @@ function Home() {
       )
   }
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
-    }
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        setUserLatitude(position.coords.latitude)
-        setUserLongitude(position.coords.longitude)
-        getNearbyCafes(position.coords.latitude, position.coords.longitude)
-      },
-      () => {
-        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
-      }
-    )
-  }, [])
-
   return (
-    <Flex w="full" maxW="1170px" direction="column" align="center">
+    <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
       <Flex as="section" mb="4" w="100%" direction="column" alignItems="center">
         <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
           來點 ka-pi

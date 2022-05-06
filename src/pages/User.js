@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, Wrap, WrapItem, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -53,6 +53,20 @@ function User() {
     )
   }, [])
 
+  useEffect(() => {
+    firebase
+      .getUser(currentUser.uid)
+      .then(data => {
+        setUserInfo(data)
+        getFavCafes(data.favCafes)
+      })
+      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
+  }, [])
+
+  useEffect(() => {
+    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
+  }, [])
+
   const getFavCafes = cafesId => {
     api
       .getAllCafes()
@@ -69,20 +83,6 @@ function User() {
       )
       .finally(() => setIsLoading(false))
   }
-
-  useEffect(() => {
-    firebase
-      .getUser(currentUser.uid)
-      .then(data => {
-        setUserInfo(data)
-        getFavCafes(data.favCafes)
-      })
-      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
-  }, [])
-
-  useEffect(() => {
-    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
-  }, [])
 
   const deleteCafe = deletedCafeId => {
     firebase.deleteSavedCafe(currentUser.uid, deletedCafeId).then(() => {
