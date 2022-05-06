@@ -94,7 +94,7 @@ function Home() {
   }
 
   return (
-    <Flex w="full" maxW="1170px" direction="column" align="center">
+    <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
       <Flex as="section" mb="4" w="100%" direction="column" alignItems="center">
         <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
           來點 ka-pi

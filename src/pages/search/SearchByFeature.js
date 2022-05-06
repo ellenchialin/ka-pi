@@ -40,8 +40,6 @@ function SearchByFeature() {
     setValue: setCityValue,
   } = useCheckboxGroup()
 
-  console.log('Selected city: ', filterCityValue)
-
   const handleFeatureSearch = () => {
     setIsLoading(true)
 
@@ -78,6 +76,7 @@ function SearchByFeature() {
     <Flex
       w="full"
       maxW="1170px"
+      h="100%"
       as="section"
       direction="column"
       alignItems="center"

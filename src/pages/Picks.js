@@ -103,7 +103,14 @@ function Picks() {
   }
 
   return (
-    <Flex as="section" w="full" maxW="1170px" direction="column" align="center">
+    <Flex
+      as="section"
+      w="full"
+      maxW="1170px"
+      h="100%"
+      direction="column"
+      align="center"
+    >
       <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
         不用思考，無腦跟喝
       </Heading>

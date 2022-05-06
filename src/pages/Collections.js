@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import Pagination from '@choc-ui/paginator'
@@ -30,6 +30,12 @@ function Collections() {
 
   const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
   const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
+
+  const {
+    value: filterCityValue,
+    getCheckboxProps: getCityCheckboxProps,
+    setValue: setCityValue,
+  } = useCheckboxGroup()
 
   useEffect(() => {
     setCollectionType(type)
@@ -73,7 +79,7 @@ function Collections() {
   // useUpdateEffect(updateCityFilter, advacedFilteredCafes)
 
   return (
-    <Flex w="full" maxW="1170px" direction="column" align="center">
+    <Flex w="full" maxW="1170px" h="100%" direction="column" align="center">
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
         {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
@@ -128,6 +134,8 @@ function Collections() {
                 collectionType === 'work' ? cafesForWork : cafesForHangout
               }
               setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+              filterCityValue={filterCityValue}
+              getCityCheckboxProps={getCityCheckboxProps}
             />
           </VStack>
 
