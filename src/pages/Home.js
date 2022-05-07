@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
+import {
+  Flex,
+  Heading,
+  Text,
+  Spinner,
+  SimpleGrid,
+  Skeleton,
+} from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -104,13 +111,10 @@ function Home() {
         </Text>
 
         {isLoading ? (
-          <Spinner
-            thickness="5px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="teal"
-            size="lg"
-            mt="6"
+          <Skeleton
+            height="350px"
+            w="100%"
+            isLoaded={isLoading ? false : true}
           />
         ) : (
           <>
