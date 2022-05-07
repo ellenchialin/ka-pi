@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 // prettier-ignore
 import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
 
@@ -17,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
 const db = getFirestore(app)
 const storage = getStorage(app)
 
@@ -51,6 +52,27 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => alert(error.message))
+    })
+  },
+  googleSignIn() {
+    return new Promise(resolve => {
+      signInWithPopup(auth, provider)
+        .then(result => {
+          // const credential = GoogleAuthProvider.credentialFromResult(result)
+          // const token = credential.accessToken
+          const user = result.user
+          console.log('Google Signed In: ', user)
+
+          setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            name: user.displayName,
+            favCafes: [],
+            photo: user.photoURL,
+          }).then(() => resolve(user))
+        })
+        .catch(error => {
+          alert(error.message)
+        })
     })
   },
   getUser(id) {

@@ -54,6 +54,8 @@ function User() {
   }, [])
 
   useEffect(() => {
+    console.log('current user from user page: ', currentUser.uid)
+
     firebase
       .getUser(currentUser.uid)
       .then(data => {

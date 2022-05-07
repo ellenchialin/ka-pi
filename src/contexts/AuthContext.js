@@ -23,6 +23,10 @@ export function AuthProvider({ children }) {
     return firebase.nativeSignUp(name, email, password)
   }
 
+  const googleSignIn = () => {
+    return firebase.googleSignIn()
+  }
+
   useEffect(() => {
     firebase.checkAuthState(user => {
       console.log('current user from checkAuthState: ', user)
@@ -36,6 +40,7 @@ export function AuthProvider({ children }) {
     signin,
     signout,
     signup,
+    googleSignIn,
   }
 
   return (
