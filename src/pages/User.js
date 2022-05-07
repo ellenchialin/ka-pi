@@ -155,6 +155,7 @@ function User() {
                 name={userInfo.name}
                 size="xl"
                 showBorder={false}
+                referrerPolicy="no-referrer"
               />
               <IconButton
                 colorScheme="yellow"
@@ -310,7 +311,7 @@ function User() {
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <Button variant="auth-buttons" onClick={handleSignout}>
+          <Button variant="auth-buttons" w="113px" onClick={handleSignout}>
             Sign out
           </Button>
         </>

@@ -29,7 +29,6 @@ const SignInForm = () => {
   }
 
   const handleGoogleSignIn = () => {
-    console.log('click google sign in')
     googleSignIn().then(user => console.log('Signed in from google', user))
   }
 
