@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 // prettier-ignore
 import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, Text, IconButton, InputGroup, InputRightElement } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { FaFacebookF, FaGoogle } from 'react-icons/fa'
+import { FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { useAuth } from '../../contexts/AuthContext'
@@ -11,7 +11,7 @@ import { useAuth } from '../../contexts/AuthContext'
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const { signin } = useAuth()
+  const { signin, googleSignIn } = useAuth()
 
   const SigninSchema = Yup.object().shape({
     email: Yup.string()
@@ -26,6 +26,10 @@ const SignInForm = () => {
     signin(email, password).then(user => {
       navigate(-1)
     })
+  }
+
+  const handleGoogleSignIn = () => {
+    googleSignIn().then(user => console.log('Signed in from google', user))
   }
 
   return (
@@ -69,31 +73,24 @@ const SignInForm = () => {
                   </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
-                <Button mt={4} variant="auth-buttons" type="submit">
+                <Button mt={4} variant="auth-buttons" w="113px" type="submit">
                   Sign In
                 </Button>
               </Flex>
             </Form>
           )}
         </Formik>
-        {/*<Text my="6">or sign in with...</Text>
-        <Flex justify="center">
-          <IconButton
-            colorScheme="facebook"
-            aria-label="Facebook 登入"
-            size="lg"
-            icon={<FaFacebookF />}
-            isRound
-            mr="2"
-          />
-          <IconButton
-            colorScheme="facebook"
-            aria-label="Google 登入"
-            size="lg"
-            icon={<FaGoogle />}
-            isRound
-          />
-        </Flex>*/}
+        <Text my="6">or sign in with...</Text>
+        <Button
+          size="md"
+          leftIcon={<FaGoogle fontSize="18px" />}
+          variant="auth-thirdParty"
+          w="113px"
+          alignSelf="center"
+          onClick={handleGoogleSignIn}
+        >
+          Google
+        </Button>
       </Flex>
     </Flex>
   )

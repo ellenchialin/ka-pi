@@ -1,9 +1,9 @@
 import { initializeApp } from 'firebase/app'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, onSnapshot, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -17,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
 const db = getFirestore(app)
 const storage = getStorage(app)
 
@@ -29,8 +30,6 @@ export const firebase = {
       createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user
-          // console.log('Signed Up', user.uid)
-
           setDoc(doc(db, 'users', user.uid), {
             email: user.email,
             name,
@@ -40,7 +39,10 @@ export const firebase = {
 
           resolve(user)
         })
-        .catch(error => alert(error.message))
+        .catch(error => {
+          alert(`🤯🤯🤯 註冊失敗，請重新嘗試 (${error.message})`)
+          console.error(error.message)
+        })
     })
   },
   nativeSignIn(email, password) {
@@ -50,7 +52,36 @@ export const firebase = {
           const user = userCredential.user
           resolve(user)
         })
-        .catch(error => alert(error.message))
+        .catch(error => {
+          alert(`🤯🤯🤯 登入失敗，請重新嘗試 (${error.message})`)
+          console.error(error.message)
+        })
+    })
+  },
+  googleSignIn() {
+    return new Promise(resolve => {
+      signInWithPopup(auth, provider)
+        .then(result => {
+          // const credential = GoogleAuthProvider.credentialFromResult(result)
+          // const token = credential.accessToken
+          const user = result.user
+          getDoc(doc(db, `users/${user.uid}`)).then(docsnap => {
+            if (docsnap.exists()) {
+              resolve(user)
+            } else {
+              setDoc(doc(db, 'users', user.uid), {
+                email: user.email,
+                name: user.displayName,
+                favCafes: [],
+                photo: user.photoURL,
+              }).then(() => resolve(user))
+            }
+          })
+        })
+        .catch(error => {
+          alert(`🤯🤯🤯 登入失敗，請重新嘗試 (${error.message})`)
+          console.error(error.message)
+        })
     })
   },
   getUser(id) {
@@ -64,7 +95,10 @@ export const firebase = {
             return
           }
         })
-        .catch(error => alert(error.message))
+        .catch(error => {
+          alert('🤯🤯🤯 取得會員資料失敗，請重新嘗試')
+          console.error(error.message)
+        })
     })
   },
   updateUserName(userId, newName) {

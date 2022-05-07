@@ -28,7 +28,7 @@ function App() {
         <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
           <DrawerOverlay />
           <DrawerContent>
-            <SidebarContent onClose={onClose} />
+            <SidebarContent onClose={onClose} w="full" />
           </DrawerContent>
         </Drawer>
         <Box ml={{ base: 0, md: 60 }} transition=".3s ease">

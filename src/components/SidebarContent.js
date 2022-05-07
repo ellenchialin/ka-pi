@@ -49,7 +49,7 @@ NavItem.propTypes = {
   children: PropTypes.node,
 }
 
-function SidebarContent({ onClose }) {
+function SidebarContent({ onClose, ...rest }) {
   const { isOpen: discoverIsOpen, onToggle: discoverOnToggle } = useDisclosure()
   const { isOpen: collectionsIsOpen, onToggle: collectionsOnToggle } =
     useDisclosure()
@@ -70,6 +70,7 @@ function SidebarContent({ onClose }) {
       boxShadow="base"
       overflowX="hidden"
       overflowY="auto"
+      {...rest}
     >
       <Flex px="4" py="5" alignItems="center" justifyContent="space-between">
         <Text fontSize="3xl" ml="2" color={textColor} fontWeight="semibold">
