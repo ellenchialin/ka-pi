@@ -29,7 +29,7 @@ const SignInForm = () => {
   }
 
   const handleGoogleSignIn = () => {
-    googleSignIn().then(user => console.log('Signed in from google', user))
+    googleSignIn().then(user => navigate(-1))
   }
 
   return (
