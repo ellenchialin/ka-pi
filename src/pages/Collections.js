@@ -5,7 +5,6 @@ import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, W
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import Pagination from '@choc-ui/paginator'
-import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 import CafeCard from '../components/cafe/CafeCard'
 
@@ -39,6 +38,8 @@ function Collections() {
 
   useEffect(() => {
     setCollectionType(type)
+    setAdvacedFilteredCafes([])
+    setCityValue([])
   }, [type])
 
   useEffect(() => {
@@ -66,17 +67,7 @@ function Collections() {
         console.error(error)
       })
       .finally(() => setIsLoading(false))
-  }, [])
-
-  const updateCityFilter = () => {
-    if (collectionType === 'work') {
-      setCafesForWork(advacedFilteredCafes)
-    } else {
-      setCafesForHangout(advacedFilteredCafes)
-    }
-  }
-
-  // useUpdateEffect(updateCityFilter, advacedFilteredCafes)
+  }, [type])
 
   return (
     <Flex w="full" maxW="1170px" h="100%" direction="column" align="center">

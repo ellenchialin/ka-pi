@@ -105,7 +105,6 @@ function Comment({
           >
             <Icon as={CheckCircleIcon} />
             <Text>成功回覆留言</Text>
-            <Button onClick={() => successToast.closeAll()}>X</Button>
           </HStack>
         ),
         isClosable: true,

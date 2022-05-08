@@ -74,8 +74,6 @@ function Cafe() {
             .then(data => setToggleSaved(data.favCafes.includes(cafe.id)))
         }
 
-        // TODO
-        // 為了不要一直打 google maps api 先關掉，之後demo時打開
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
           .then(res => res.json())
           .then(data => {
@@ -91,9 +89,6 @@ function Cafe() {
         console.error(error)
       })
   }, [])
-
-  // Google maps search url
-  // https://www.google.com/maps/place/25.01893400,121.46774700/@25.01893400,121.46774700,16z
 
   const checkLimitedTime = limited => {
     if (limited === 'no') {
