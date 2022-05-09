@@ -223,15 +223,7 @@ function Cafe() {
   const subtagTextColor = useColorModeValue('thirdDark', 'secondaryLight')
 
   return (
-    <Flex
-      as="section"
-      direction="column"
-      align="center"
-      position="relative"
-      w="100%"
-      maxW="1170px"
-      minH="100vh"
-    >
+    <Flex as="section" direction="column" align="center" w="100%" maxW="1170px">
       {isLoading ? (
         <Spinner
           thickness="5px"
@@ -240,10 +232,6 @@ function Cafe() {
           color="teal"
           size="lg"
           mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
         />
       ) : (
         <>
