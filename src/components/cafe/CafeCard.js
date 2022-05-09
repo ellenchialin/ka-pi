@@ -41,12 +41,12 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
       >
         <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
           <Image
-            src={coverPhoto ? coverPhoto : ''}
+            src={coverPhoto ? coverPhoto : thumbnailUrl}
             alt={`${cafe.name} 店內照片`}
             roundedTop="lg"
             objectFit="cover"
             align="center"
-            fallbackSrc={thumbnailUrl}
+            // fallbackSrc={thumbnailUrl}
           />
         </AspectRatio>
         {canDeleteCafe && (
@@ -76,7 +76,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             >
               {cafe.name}
             </Heading>
-            <Link to={`/cafe/${cafe.id}`}>
+            <Link to={`/cafe/${cafe.id}`} target="_blank">
               <ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />
             </Link>
           </Flex>
