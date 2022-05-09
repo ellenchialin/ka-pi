@@ -250,7 +250,6 @@ function Comment({
                     isDisabled={newReplyText === '' ? true : false}
                     onClick={submitReply}
                     _hover={{
-                      bg: 'primaryDark',
                       _disabled: { bg: 'secondaryLight' },
                     }}
                   >

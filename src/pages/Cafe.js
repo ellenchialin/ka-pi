@@ -543,7 +543,6 @@ function Cafe() {
                       isDisabled={commentText === '' ? true : false}
                       onClick={handleAddComment}
                       _hover={{
-                        bg: 'primaryDark',
                         _disabled: { bg: 'secondaryLight' },
                       }}
                     >
