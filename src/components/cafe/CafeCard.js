@@ -10,13 +10,20 @@ import { thumbnails } from '../../cafeThumbnails'
 
 function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const [coverPhoto, setCoverPhoto] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    firebase.getAllBlogs(cafe.id).then(blogs => {
-      if (blogs.length > 0) {
-        setCoverPhoto(blogs[0].image)
-      }
-    })
+    firebase
+      .getAllBlogs(cafe.id)
+      .then(blogs => {
+        if (blogs.length > 0) {
+          setCoverPhoto(blogs[0].image)
+        } else {
+          const fallback = thumbnailUrl
+          setCoverPhoto(fallback)
+        }
+      })
+      .finally(() => setIsLoading(false))
   }, [])
 
   const getRandomCafeThumbnail = () => {
@@ -39,16 +46,17 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
         color="primaryDark"
         position="relative"
       >
-        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
-          <Image
-            src={coverPhoto ? coverPhoto : ''}
-            alt={`${cafe.name} 店內照片`}
-            roundedTop="lg"
-            objectFit="cover"
-            align="center"
-            fallbackSrc={thumbnailUrl}
-          />
-        </AspectRatio>
+        {!isLoading && (
+          <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
+            <Image
+              src={coverPhoto}
+              alt={`${cafe.name} 店內照片`}
+              roundedTop="lg"
+              objectFit="cover"
+              align="center"
+            />
+          </AspectRatio>
+        )}
         {canDeleteCafe && (
           <IconButton
             icon={<RiDeleteBin5Line />}
@@ -76,7 +84,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             >
               {cafe.name}
             </Heading>
-            <Link to={`/cafe/${cafe.id}`}>
+            <Link to={`/cafe/${cafe.id}`} target="_blank">
               <ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />
             </Link>
           </Flex>

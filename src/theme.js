@@ -91,6 +91,14 @@ const custumTheme = extendTheme({
     Divider: {
       colorScheme: 'secondaryLight',
     },
+    Skeleton: {
+      sizes: {
+        sm: {
+          width: '270px',
+          height: '300px',
+        },
+      },
+    },
   },
   colors: {
     primaryDark: '#121212',

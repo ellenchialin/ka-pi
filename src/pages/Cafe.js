@@ -227,10 +227,10 @@ function Cafe() {
       as="section"
       direction="column"
       align="center"
-      position="relative"
       w="100%"
-      maxW="1170px"
+      h="100%"
       minH="100vh"
+      maxW="1170px"
     >
       {isLoading ? (
         <Spinner
@@ -240,10 +240,6 @@ function Cafe() {
           color="teal"
           size="lg"
           mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
         />
       ) : (
         <>
@@ -262,6 +258,7 @@ function Cafe() {
             direction="column"
             align="center"
             justify="center"
+            position="relative"
           >
             <HStack spacing="5px">
               <Text color="primaryLight">{cafe.tasty}</Text>

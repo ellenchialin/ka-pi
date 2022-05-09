@@ -111,11 +111,25 @@ function Home() {
         </Text>
 
         {isLoading ? (
-          <Skeleton
-            height="350px"
-            w="100%"
-            isLoaded={isLoading ? false : true}
-          />
+          <Flex w="full" direction="column">
+            <Skeleton
+              height="350px"
+              w="100%"
+              isLoaded={isLoading ? false : true}
+              mb="6"
+            />
+            <SimpleGrid
+              w="full"
+              minChildWidth="270px"
+              spacing="20px"
+              mb="6"
+              justifyItems="center"
+            >
+              {[0, 1, 2, 3].map(item => (
+                <Skeleton key={item} size="sm" />
+              ))}
+            </SimpleGrid>
+          </Flex>
         ) : (
           <>
             <Map
