@@ -96,6 +96,7 @@ const custumTheme = extendTheme({
         sm: {
           width: '270px',
           height: '300px',
+          rounded: 'lg',
         },
       },
     },
