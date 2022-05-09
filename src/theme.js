@@ -51,12 +51,8 @@ const custumTheme = extendTheme({
     Button: {
       variants: {
         'auth-buttons': props => ({
-          bg: mode('thirdDark', 'secondaryLight')(props),
-          color: mode('primaryLight', 'primaryDark')(props),
-          _hover: {
-            bg: mode('primaryDark', 'primaryLight')(props),
-            color: mode('primaryLight', 'primaryDark')(props),
-          },
+          bg: 'thirdDark',
+          color: 'primaryLight',
         }),
         'auth-thirdParty': props => ({
           bg: 'transparent',
