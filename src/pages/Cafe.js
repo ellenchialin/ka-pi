@@ -95,18 +95,22 @@ function Cafe() {
       return '不限時'
     } else if (limited === 'maybe') {
       return '視平假日狀況'
-    } else {
+    } else if (limited === 'yes') {
       return '有限時'
+    } else {
+      return '未提供資訊'
     }
   }
 
   const checkSocket = socket => {
-    if (socket === 'no') {
+    if (socket === 'yes') {
       return '很多'
     } else if (socket === 'maybe') {
-      return '還好'
-    } else {
+      return '部分'
+    } else if (socket === 'no') {
       return '很少'
+    } else {
+      return '未提供資訊'
     }
   }
 
@@ -115,6 +119,8 @@ function Cafe() {
       return '沒有'
     } else if (standing === 'yes') {
       return '部分'
+    } else {
+      return '未提供資訊'
     }
   }
 
