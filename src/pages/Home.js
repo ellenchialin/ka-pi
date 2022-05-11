@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
-import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, SimpleGrid, Skeleton, HStack, VStack, Icon, useDisclosure } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
+import Intro from '../components/Intro.js'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
@@ -19,9 +20,10 @@ function Home() {
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const scrollRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(10)
+  const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
@@ -129,14 +131,26 @@ function Home() {
       .catch(error => onLocationAlertOpen())
   }
 
+  const handleScroll = () =>
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' })
+
   return (
     <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
-      <Flex as="section" mb="4" w="100%" direction="column" alignItems="center">
+      <Intro handleScroll={handleScroll} />
+
+      <Flex
+        ref={scrollRef}
+        as="section"
+        my="4"
+        w="100%"
+        direction="column"
+        alignItems="center"
+      >
         <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-          來點 ka-pi
+          Coffee, please
         </Heading>
-        <Text my="3" fontSize={{ base: '18px', md: '24px' }} textAlign="center">
-          探索鄰近咖啡廳，點擊圖示看更多資訊
+        <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
+          Discover nearby cafes. Click marker to learn more.
         </Text>
 
         <AlertModal
@@ -216,7 +230,7 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          為週末做準備
+          Discover the Cities
         </Heading>
 
         <Flex

@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Input, Image, Button, AspectRatio, Text, HStack } from '@chakra-ui/react'
+import { Flex, Input, Image, Button, AspectRatio, Text, HStack, useDisclosure } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
-import TextEditor from '../components/TextEditor'
 import { useAuth } from '../contexts/AuthContext'
+import TextEditor from '../components/TextEditor'
+import AlertModal from '../components/AlertModal'
 
 function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')
@@ -19,6 +20,12 @@ function EditBlog() {
   const { currentUser } = useAuth()
   const { cafeId } = useParams()
   const navigate = useNavigate()
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     titleInputRef.current.focus()
@@ -36,7 +43,7 @@ function EditBlog() {
         .getBlogPhotoUrl(e.target.files[0])
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
-          alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          onAlertOpen()
           console.error(error)
         })
     }
@@ -102,7 +109,10 @@ function EditBlog() {
 
       <HStack spacing="2" mb="6" alignSelf="flex-end">
         <WarningIcon />
-        <Text fontSize="sm">圖片、標題與內容，皆需完整填入才可發佈</Text>
+        <Text fontSize="sm">
+          Please make sure blog cover, title and content are all filled in
+          before publish.
+        </Text>
       </HStack>
 
       <Button
@@ -113,6 +123,12 @@ function EditBlog() {
       >
         Publish
       </Button>
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="圖片上傳失敗"
+        alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

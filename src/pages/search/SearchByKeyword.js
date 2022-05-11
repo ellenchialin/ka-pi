@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl } from '@chakra-ui/react'
+import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl, Text } from '@chakra-ui/react'
 // prettier-ignore
 import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete'
 import { BiSearchAlt } from 'react-icons/bi'
@@ -38,9 +38,12 @@ function SearchByKeyword() {
 
   return (
     <Flex w="100%" h="100%" direction="column" align="center">
-      <Heading as="h1" mb="6" fontSize={{ base: '28px', md: '40px' }}>
-        關鍵字搜尋
+      <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
+        Discover by Keywords
       </Heading>
+      <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
+        Enter the name of cafe to find one.
+      </Text>
 
       <FormControl
         maxW="400px"

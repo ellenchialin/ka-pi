@@ -27,8 +27,17 @@ function Collections() {
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
 
-  const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
-  const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
+  const workLabels = [
+    'No Time Limits',
+    'Quiet',
+    'Power Socket',
+    'WiFi Stability',
+  ]
+  const hangoutLabels = [
+    'No Time Limits',
+    'Deco & Music',
+    'No/Short Waiting Time',
+  ]
 
   const {
     value: filterCityValue,
@@ -72,12 +81,12 @@ function Collections() {
   return (
     <Flex w="full" maxW="1170px" h="100%" direction="column" align="center">
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-        {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
+        {collectionType === 'work' ? 'No Distractions' : 'Enjoy Gathering'}
       </Heading>
-      <Text my="3" fontSize={{ base: '18px', md: '24px' }} textAlign="center">
+      <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
         {collectionType === 'work'
-          ? '精選全台最適合工作咖啡廳'
-          : '精選適合聚會咖啡廳'}
+          ? 'Perfect to Do Your Work'
+          : 'Perfect to Hangout with friends'}
       </Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {collectionType === 'work'
@@ -112,13 +121,12 @@ function Collections() {
         <>
           <VStack alignSelf="flex-end" mb="4">
             <Text mt="3" alignSelf="flex-end">
-              共有{' '}
               {advacedFilteredCafes.length > 0
                 ? advacedFilteredCafes.length
                 : collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length}{' '}
-              間符合
+              results
             </Text>
             <PopoverCityFilter
               filteredCafes={

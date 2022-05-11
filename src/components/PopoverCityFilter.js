@@ -10,7 +10,7 @@ const PopoverCityFilter = ({
   filterCityValue,
   getCityCheckboxProps,
 }) => {
-  const cities = cityData.map(city => city.place)
+  const cities = cityData.map(city => city.tag)
 
   const advancedSearch = () => {
     const results = filteredCafes.filter(cafe => {
@@ -45,7 +45,7 @@ const PopoverCityFilter = ({
           h="8"
           alignSelf="flex-end"
         >
-          進階搜尋
+          Filter by city
         </Button>
       </PopoverTrigger>
       <Portal>
@@ -61,10 +61,13 @@ const PopoverCityFilter = ({
           <PopoverCloseButton color="primaryDark" bg="secondaryLight" />
 
           <Wrap spacing="10px" justify="center" mb="2">
-            {cities.map(city => (
-              <WrapItem key={city}>
+            {cityData.map(city => (
+              <WrapItem key={city.tag}>
                 <CustomCheckbox
-                  {...getCityCheckboxProps({ value: city, text: city })}
+                  {...getCityCheckboxProps({
+                    value: city.place,
+                    text: city.tag,
+                  })}
                 />
               </WrapItem>
             ))}
@@ -85,7 +88,7 @@ const PopoverCityFilter = ({
             isDisabled={filterCityValue.length === 0 ? true : false}
             onClick={advancedSearch}
           >
-            搜尋
+            Search
           </Button>
         </PopoverContent>
       </Portal>

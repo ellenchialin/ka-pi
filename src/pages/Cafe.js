@@ -327,8 +327,8 @@ function Cafe() {
           {/* Calculate saved numbers & page views section */}
           <Box alignSelf="flex-end">
             <Text>
-              共 {savedNumber.length > 0 ? savedNumber.length : 0} 人收藏 /{' '}
-              {pageViews} 次瀏覽
+              {savedNumber.length > 0 ? savedNumber.length : 0} Saved /{' '}
+              {pageViews} Views
             </Text>
           </Box>
 
