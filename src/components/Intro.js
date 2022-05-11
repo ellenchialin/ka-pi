@@ -1,10 +1,11 @@
 // prettier-ignore
 import { Flex, Text, HStack, VStack, IconButton, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
 import { BsChevronDoubleDown } from 'react-icons/bs'
+import PropTypes from 'prop-types'
 
 const arrowAnimation = keyframes`
- 0%, 20%, 50%, 80%, 100% { transform: translateY(0)}
- 40% { transform: translateY(10px)}
+ 0%, 100% { transform: translateY(0)}
+ 50% { transform: translateY(8px)}
 `
 
 function Intro({ handleScroll }) {
@@ -47,6 +48,10 @@ function Intro({ handleScroll }) {
       </VStack>
     </Flex>
   )
+}
+
+Intro.propTypes = {
+  handleScroll: PropTypes.func,
 }
 
 export default Intro
