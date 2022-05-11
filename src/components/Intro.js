@@ -27,7 +27,7 @@ function Intro({ handleScroll }) {
           icon={<BsChevronDoubleDown />}
           fontSize="20px"
           cursor="pointer"
-          _hover={{ transform: 'scale(1.1)' }}
+          _hover={{ transform: 'scale(1.2)' }}
           transition="transform 450ms ease"
           onClick={handleScroll}
           isRound
