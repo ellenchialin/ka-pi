@@ -9,9 +9,9 @@ import TextEditor from '../components/TextEditor'
 import { useAuth } from '../contexts/AuthContext'
 
 function EditBlog() {
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogContent, setBlogContent] = useState('')
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState('')
+  const [blogTitle, setBlogTitle] = useState(null)
+  const [blogContent, setBlogContent] = useState(null)
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState(null)
   const [disablePublish, setDisablePublish] = useState(true)
 
   const titleInputRef = useRef(null)
@@ -25,7 +25,7 @@ function EditBlog() {
   }, [])
 
   useEffect(() => {
-    blogTitle && blogContent && coverPhotoUrl
+    blogTitle && blogContent.blocks[0].text !== '' && coverPhotoUrl
       ? setDisablePublish(false)
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])

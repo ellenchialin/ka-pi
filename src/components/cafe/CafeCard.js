@@ -40,7 +40,6 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
         h="100%"
         minH={{ sm: '300px', md: '360px' }}
         bg="white"
-        borderWidth={useColorModeValue('1px', '0px')}
         rounded="lg"
         shadow="lg"
         color="primaryDark"
