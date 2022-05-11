@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Button } from '@chakra-ui/react'
+import { Button, Text } from '@chakra-ui/react'
 
 const StyleButton = ({ style, onToggle, active, label }) => {
   const onToggleChange = e => {
@@ -15,7 +15,6 @@ const StyleButton = ({ style, onToggle, active, label }) => {
       borderRadius="lg"
       bg="#EDF2F7"
       color="gray.800"
-      fontWeight="semibold"
       transition="all 0.2s"
       _hover={{ bg: '#464C5A', color: 'white' }}
       _active={{
@@ -27,7 +26,13 @@ const StyleButton = ({ style, onToggle, active, label }) => {
       onMouseDown={onToggleChange}
       isActive={active ? true : false}
     >
-      {label}
+      <Text
+        textDecoration={label === 'U' ? 'underline' : ''}
+        fontWeight={label === 'B' ? 'bold' : 'medium'}
+        as={label === 'I' ? 'i' : ''}
+      >
+        {label}
+      </Text>
     </Button>
   )
 }
