@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import App from './App'
 import custumTheme from './theme'
 import '@fontsource/rubik'
+import '@fontsource/noto-sans-tc'
 
 ReactDOM.render(
   <StrictMode>

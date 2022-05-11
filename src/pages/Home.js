@@ -155,12 +155,7 @@ function Home() {
 
         {isLoading ? (
           <Flex w="full" direction="column">
-            <Skeleton
-              height="350px"
-              w="100%"
-              isLoaded={isLoading ? false : true}
-              mb="6"
-            />
+            <Skeleton size="lg" isLoaded={isLoading ? false : true} mb="6" />
             <SimpleGrid
               w="full"
               minChildWidth="270px"

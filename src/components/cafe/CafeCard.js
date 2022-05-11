@@ -86,8 +86,6 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             >
               {cafe.name}
             </Heading>
-
-            {/*<ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />*/}
           </Flex>
           <Text w="full" fontSize={{ base: '14px', md: '16px' }} isTruncated>
             {cafe.address}

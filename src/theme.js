@@ -5,7 +5,7 @@ const custumTheme = extendTheme({
   styles: {
     global: props => ({
       'html, body': {
-        fontFamily: 'Rubik, sans-serif',
+        fontFamily: 'Rubik, Noto Sans TC, sans-serif',
         color: mode('#212121', '#fff')(props),
         bg: mode('#fff', '#212121')(props),
         lineHeight: 'base',
@@ -92,6 +92,11 @@ const custumTheme = extendTheme({
         sm: {
           width: '270px',
           height: '300px',
+          rounded: 'lg',
+        },
+        lg: {
+          width: '100%',
+          height: '350px',
           rounded: 'lg',
         },
       },
