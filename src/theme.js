@@ -109,7 +109,6 @@ const custumTheme = extendTheme({
   },
   config: {
     initialColorMode: 'dark',
-    useSystemColorMode: true,
   },
 })
 

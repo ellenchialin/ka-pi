@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  SimpleGrid,
-  Skeleton,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
+import AlertModal from '../components/AlertModal'
 import Pagination from '@choc-ui/paginator'
 
 function Home() {
@@ -20,6 +15,8 @@ function Home() {
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
+  const [defaultLatitude, setDefaultLatitude] = useState(null)
+  const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -28,10 +25,26 @@ function Home() {
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
+  const {
+    isOpen: isLocationAlertOpen,
+    onOpen: onLocationAlertOpen,
+    onClose: onLocationAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isGetCafesAlertOpen,
+    onOpen: onGetCafesAlertOpen,
+    onClose: onGetCafesAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
     if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+      onLocationAlertOpen()
+      setDefaultLatitude(25.0384851)
+      setDefaultLongitude(121.530177)
+      getDefaultCafes()
     }
+
     navigator.geolocation.getCurrentPosition(
       position => {
         setUserLatitude(position.coords.latitude)
@@ -39,10 +52,28 @@ function Home() {
         getNearbyCafes(position.coords.latitude, position.coords.longitude)
       },
       () => {
-        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
+        onLocationAlertOpen()
+        setDefaultLatitude(25.0384851)
+        setDefaultLongitude(121.530177)
+        getDefaultCafes()
       }
     )
   }, [])
+
+  const getDefaultCafes = () => {
+    api
+      .getCityCafes('taipei')
+      .then(cafes =>
+        setUserNearbyCafes(
+          cafes.filter(cafe => cafe.address.includes('台北')).slice(0, 50)
+        )
+      )
+      .catch(error => {
+        onGetCafesAlertOpen()
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
+  }
 
   const getNearbyCafes = (lat, lng) => {
     fetch(
@@ -64,7 +95,7 @@ function Home() {
               )
             )
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -77,7 +108,7 @@ function Home() {
               )
             )
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -89,15 +120,13 @@ function Home() {
             .getCityCafes(city)
             .then(cafes => setUserNearbyCafes(cafes.slice(0, 50)))
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
         }
       })
-      .catch(error =>
-        alert('無法取得當前位置，歡迎透過下方台灣地圖前往各縣市咖啡廳地圖')
-      )
+      .catch(error => onLocationAlertOpen())
   }
 
   return (
@@ -109,6 +138,20 @@ function Home() {
         <Text my="3" fontSize={{ base: '18px', md: '24px' }} textAlign="center">
           探索鄰近咖啡廳，點擊圖示看更多資訊
         </Text>
+
+        <AlertModal
+          isAlertOpen={isLocationAlertOpen}
+          onAlertClose={onLocationAlertClose}
+          alertHeader="Oops! 無法取得當前位置"
+          alertBody="目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）"
+        />
+
+        <AlertModal
+          isAlertOpen={isGetCafesAlertOpen}
+          onAlertClose={onGetCafesAlertClose}
+          alertHeader="Oops! 暫無法取得咖啡廳資料"
+          alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+        />
 
         {isLoading ? (
           <Flex w="full" direction="column">
@@ -135,6 +178,8 @@ function Home() {
             <Map
               userLatitude={userLatitude}
               userLongitude={userLongitude}
+              defaultLatitude={defaultLatitude}
+              defaultLongitude={defaultLongitude}
               cafes={userNearbyCafes}
             />
             <SimpleGrid

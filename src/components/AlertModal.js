@@ -18,7 +18,7 @@ function AlertModal({
         <ModalCloseButton />
         <ModalBody>{alertBody}</ModalBody>
         <ModalFooter>
-          <Button onClick={alertAction}>{actionText}</Button>
+          {alertAction && <Button onClick={alertAction}>{actionText}</Button>}
           <Button onClick={onAlertClose} ml="3">
             Close
           </Button>
