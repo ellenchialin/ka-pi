@@ -23,14 +23,14 @@ function SearchByFeature() {
       ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
 
-  const defaultFeatures = ['不限時', '有插座']
+  const defaultFeatures = ['No Time Limits', 'Power Socket']
   const ratingFeatures = [
-    { text: 'WiFi穩定', tag: 'wifi' },
-    { text: '通常有位', tag: 'seat' },
-    { text: '店內安靜', tag: 'quiet' },
-    { text: '咖啡好喝', tag: 'tasty' },
-    { text: '價格親民', tag: 'cheap' },
-    { text: '裝潢音樂', tag: 'music' },
+    { text: 'WiFi Stability', tag: 'wifi' },
+    { text: 'No/Short Waiting Time', tag: 'seat' },
+    { text: 'Quiet', tag: 'quiet' },
+    { text: 'Tasty', tag: 'tasty' },
+    { text: 'Affordable Price', tag: 'cheap' },
+    { text: 'Deco & Music', tag: 'music' },
   ]
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
@@ -59,7 +59,7 @@ function SearchByFeature() {
         setFilteredCafes(filterResults)
       })
       .catch(error => {
-        alert('篩選發生錯誤，請確認網路連線，或聯繫開發人員')
+        alert('發生錯誤，請確認網路連線，或聯繫開發人員')
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -83,9 +83,11 @@ function SearchByFeature() {
       wrap="wrap"
     >
       <Heading as="h1" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-        根據需求，快速搜尋
+        Discover by Your Needs
       </Heading>
-      <Text fontSize={{ base: '16px', md: '18px' }}>預設必備條件</Text>
+      <Text fontSize={{ base: '16px', md: '18px' }}>
+        Default selected features
+      </Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {defaultFeatures.map((feature, i) => (
           <WrapItem key={i}>
@@ -128,7 +130,7 @@ function SearchByFeature() {
             isDisabled={value.length === 0 ? true : false}
             onClick={handleResetFilter}
           >
-            清除全部
+            Clear
           </Button>
           <Button
             colorScheme="blackAlpha"
@@ -139,7 +141,7 @@ function SearchByFeature() {
             onClick={handleFeatureSearch}
             isDisabled={value.length === 0 ? true : false}
           >
-            條件搜尋
+            Search
           </Button>
         </HStack>
       </Flex>
@@ -157,12 +159,11 @@ function SearchByFeature() {
         <Flex w="full" direction="column" align="center">
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
-              <Text mb="2">
-                共篩選{' '}
+              <Text mb="2" alignSelf="flex-end">
                 {advacedFilteredCafes.length > 0
                   ? advacedFilteredCafes.length
                   : filteredCafes.length}{' '}
-                間咖啡廳
+                results
               </Text>
               <PopoverCityFilter
                 filteredCafes={filteredCafes}

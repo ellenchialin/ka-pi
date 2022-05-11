@@ -112,10 +112,10 @@ function Picks() {
       align="center"
     >
       <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
-        不用思考，無腦跟喝
+        Guided by Ratings
       </Heading>
-      <Text my="3" align="center" fontSize={{ base: '18px', md: '24px' }}>
-        根據所在地區，隨機挑選 100 間，評價 4 分以上咖啡廳
+      <Text my="3" align="center" fontSize={{ base: '18px', md: '20px' }}>
+        Here's our picks based on your current location. All rated over 4 stars.
       </Text>
 
       {isLoading ? (

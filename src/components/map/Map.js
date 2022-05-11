@@ -9,11 +9,20 @@ const cafeIcon = new Icon({
   iconSize: [35, 35],
 })
 
-function Map({ userLatitude, userLongitude, cafes }) {
+function Map({
+  userLatitude,
+  userLongitude,
+  defaultLatitude,
+  defaultLongitude,
+  cafes,
+}) {
   return (
     <Box w="100%" h="350px" mb="8">
       <MapContainer
-        center={[userLatitude, userLongitude]}
+        center={[
+          userLatitude ? userLatitude : defaultLatitude,
+          userLongitude ? userLongitude : defaultLongitude,
+        ]}
         zoom={13}
         style={{ height: '100%' }}
       >
@@ -53,6 +62,8 @@ function Map({ userLatitude, userLongitude, cafes }) {
 Map.propTypes = {
   userLatitude: PropTypes.number,
   userLongitude: PropTypes.number,
+  defaultLatitude: PropTypes.number,
+  defaultLongitude: PropTypes.number,
   cafes: PropTypes.array,
 }
 
