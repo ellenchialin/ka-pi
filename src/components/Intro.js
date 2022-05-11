@@ -1,7 +1,18 @@
-import { Flex, Text, HStack, VStack, IconButton } from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Text, HStack, VStack, IconButton, keyframes, usePrefersReducedMotion } from '@chakra-ui/react'
 import { BsChevronDoubleDown } from 'react-icons/bs'
 
+const arrowAnimation = keyframes`
+ 0%, 20%, 50%, 80%, 100% { transform: translateY(0)}
+ 40% { transform: translateY(10px)}
+`
+
 function Intro({ handleScroll }) {
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const animation = prefersReducedMotion
+    ? undefined
+    : `${arrowAnimation} infinite 2s ease-in-out`
+
   return (
     <Flex
       as="section"
@@ -27,6 +38,7 @@ function Intro({ handleScroll }) {
           icon={<BsChevronDoubleDown />}
           fontSize="20px"
           cursor="pointer"
+          animation={animation}
           _hover={{ transform: 'scale(1.2)' }}
           transition="transform 450ms ease"
           onClick={handleScroll}
