@@ -9,9 +9,9 @@ import TextEditor from '../components/TextEditor'
 import { useAuth } from '../contexts/AuthContext'
 
 function EditBlog() {
-  const [blogTitle, setBlogTitle] = useState(null)
-  const [blogContent, setBlogContent] = useState(null)
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState(null)
+  const [blogTitle, setBlogTitle] = useState('')
+  const [blogContent, setBlogContent] = useState('')
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState('')
   const [disablePublish, setDisablePublish] = useState(true)
 
   const titleInputRef = useRef(null)

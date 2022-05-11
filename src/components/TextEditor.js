@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Divider } from '@chakra-ui/react'
 // prettier-ignore
@@ -8,6 +8,7 @@ import InlineStyleControls from './editorStyles/InlineStyles'
 import BlockStyleControls from './editorStyles/BlockStyles'
 
 function TextEditor({ setBlogContent }) {
+  const editorRef = useRef(null)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   const onEditorStateChange = editorState => {
@@ -59,13 +60,22 @@ function TextEditor({ setBlogContent }) {
       />
       <Divider my="4" />
 
-      <Editor
-        editorState={editorState}
-        onChange={onEditorStateChange}
-        handleKeyCommand={handleKeyCommand}
-        keyBindingFn={mapKeyToEditorCommand}
-        spellCheck
-      />
+      <Box
+        w="100%"
+        h="100%"
+        minH="300px"
+        onClick={() => editorRef.current.focus()}
+        cursor="text"
+      >
+        <Editor
+          editorState={editorState}
+          onChange={onEditorStateChange}
+          handleKeyCommand={handleKeyCommand}
+          keyBindingFn={mapKeyToEditorCommand}
+          ref={editorRef}
+          spellCheck
+        />
+      </Box>
     </Box>
   )
 }
