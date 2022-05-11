@@ -34,7 +34,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const thumbnailUrl = useMemo(() => getRandomCafeThumbnail(), [])
 
   return (
-    <>
+    <Link to={`/cafe/${cafe.id}`} target="_blank">
       <Box
         w="270px"
         h="100%"
@@ -45,6 +45,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
         shadow="lg"
         color="primaryDark"
         position="relative"
+        _hover={{ transform: 'scale(1.03)' }}
+        transition="transform 350ms ease"
       >
         {!isLoading && (
           <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
@@ -84,9 +86,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             >
               {cafe.name}
             </Heading>
-            <Link to={`/cafe/${cafe.id}`} target="_blank">
-              <ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />
-            </Link>
+
+            {/*<ArrowRightIcon w="3" h="3" _hover={{ color: 'thirdDark' }} />*/}
           </Flex>
           <Text w="full" fontSize={{ base: '14px', md: '16px' }} isTruncated>
             {cafe.address}
@@ -141,7 +142,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
           </Box>
         </VStack>
       </Box>
-    </>
+    </Link>
   )
 }
 
