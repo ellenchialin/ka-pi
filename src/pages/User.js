@@ -202,13 +202,13 @@ function User() {
           </VStack>
           <Tabs variant="enclosed" w="full" colorScheme="teal">
             <TabList>
-              <Tab>咖啡因足跡</Tab>
-              <Tab>咖啡廳食記</Tab>
+              <Tab>Caffeine Footprints</Tab>
+              <Tab>Cafe Blogs</Tab>
             </TabList>
             <TabPanels>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  共蒐藏 {savedCafes.length > 0 ? savedCafes.length : 0} 間
+                  {savedCafes.length > 0 ? savedCafes.length : 0} Cafes
                 </Text>
                 <Flex
                   w="100%"
@@ -264,7 +264,7 @@ function User() {
               </TabPanel>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  共發表 {userBlogs.length > 0 ? userBlogs.length : 0} 篇
+                  {userBlogs.length > 0 ? userBlogs.length : 0} Blogs
                 </Text>
                 <Flex w="full" direction="column">
                   <SimpleGrid

@@ -112,10 +112,10 @@ function Picks() {
       align="center"
     >
       <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
-        Guided by Ratings
+        Guided by Stars
       </Heading>
-      <Text my="3" align="center" fontSize={{ base: '18px', md: '20px' }}>
-        Here's our picks based on your current location. All rated over 4 stars.
+      <Text my="3" align="center" fontSize={{ base: '16px', md: '18px' }}>
+        Here's our picks based on your current location, rating over 4 stars.
       </Text>
 
       {isLoading ? (
