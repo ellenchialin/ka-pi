@@ -1,5 +1,5 @@
-import { Flex, Text, HStack, VStack, Icon } from '@chakra-ui/react'
-import { BiChevronDownCircle } from 'react-icons/bi'
+import { Flex, Text, HStack, VStack, IconButton } from '@chakra-ui/react'
+import { BsChevronDoubleDown } from 'react-icons/bs'
 
 function Intro({ handleScroll }) {
   return (
@@ -23,13 +23,14 @@ function Intro({ handleScroll }) {
       </Text>
       <VStack mt="32">
         <Text>Get me a cuppa NOW</Text>
-        <Icon
-          as={BiChevronDownCircle}
-          fontSize="28px"
+        <IconButton
+          icon={<BsChevronDoubleDown />}
+          fontSize="20px"
           cursor="pointer"
-          _hover={{ transform: 'scale(1.2)' }}
+          _hover={{ transform: 'scale(1.1)' }}
           transition="transform 450ms ease"
           onClick={handleScroll}
+          isRound
         />
       </VStack>
     </Flex>
