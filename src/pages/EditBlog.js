@@ -22,9 +22,15 @@ function EditBlog() {
   const navigate = useNavigate()
 
   const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
+    isOpen: isPublishAlertOpen,
+    onOpen: onPublishAlertOpen,
+    onClose: onPublishAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isUploadAlertOpen,
+    onOpen: onUploadAlertOpen,
+    onClose: onUploadAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -43,7 +49,7 @@ function EditBlog() {
         .getBlogPhotoUrl(e.target.files[0])
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
-          onAlertOpen()
+          onUploadAlertOpen()
           console.error(error)
         })
     }
@@ -56,9 +62,15 @@ function EditBlog() {
       image: coverPhotoUrl,
     }
 
-    firebase.uploadBlog(cafeId, currentUser.uid, blogData).then(blogId => {
-      navigate(`/cafe/${cafeId}/blog/${blogId}`)
-    })
+    firebase
+      .uploadBlog(cafeId, currentUser.uid, blogData)
+      .then(blogId => {
+        navigate(`/cafe/${cafeId}/blog/${blogId}`)
+      })
+      .catch(error => {
+        onPublishAlertOpen()
+        console.error(error)
+      })
   }
 
   return (
@@ -121,9 +133,15 @@ function EditBlog() {
         發佈
       </Button>
       <AlertModal
-        isAlertOpen={isAlertOpen}
-        onAlertClose={onAlertClose}
+        isAlertOpen={isUploadAlertOpen}
+        onAlertClose={onUploadAlertClose}
         alertHeader="圖片上傳失敗"
+        alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
+      />
+      <AlertModal
+        isAlertOpen={isPublishAlertOpen}
+        onAlertClose={onPublishAlertClose}
+        alertHeader="發佈失敗"
         alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
       />
     </Flex>

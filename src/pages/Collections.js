@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
+import AlertModal from '../components/AlertModal'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 import CafeCard from '../components/cafe/CafeCard'
@@ -18,6 +19,12 @@ function Collections() {
   const [isLoading, setIsLoading] = useState(true)
   const scrollToTopRef = useRef(null)
   const scrollCardRef = useRef(null)
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -67,7 +74,7 @@ function Collections() {
         setCafesForWork(forWork)
       })
       .catch(error => {
-        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        onAlertOpen()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -182,6 +189,12 @@ function Collections() {
           />
         </>
       )}
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得咖啡廳資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

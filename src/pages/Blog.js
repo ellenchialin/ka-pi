@@ -3,12 +3,12 @@ import { useParams, Link } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Text, Spinner, Heading, Avatar, Box, Image, AspectRatio, Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink, } from '@chakra-ui/react'
+  BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
-// import ImageSlider from '../components/ImageSlider'
+import AlertModal from '../components/AlertModal'
 
 function Blog() {
   const [cafeName, setCafeName] = useState(null)
@@ -17,6 +17,12 @@ function Blog() {
   const [blogAuthor, setBlogAuthor] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const { cafeId, blogId } = useParams()
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     firebase
@@ -29,8 +35,8 @@ function Blog() {
           .getUser(blog.userId)
           .then(user => setBlogAuthor(user))
           .catch(error => {
+            onAlertOpen()
             console.error(error)
-            alert('無法取得食記作者資訊，請先確認網路連線，或通知網站開發人員')
           })
 
         api
@@ -40,15 +46,16 @@ function Blog() {
             setCafeName(cafe.name)
           })
           .catch(error => {
+            onAlertOpen()
             console.error(error)
-            alert('無法取得食記作者資訊，請先確認網路連線，或通知網站開發人員')
           })
           .finally(() => setIsLoading(false))
       })
       .catch(error => {
-        alert('暫無法取得食記資料，請先確認網路連線，或通知網站開發人員')
+        onAlertOpen()
         console.error(error)
       })
+      .finally(() => setIsLoading(false))
   }, [])
 
   return (
@@ -61,6 +68,12 @@ function Blog() {
       maxW="800px"
       h="100%"
     >
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
       {isLoading ? (
         <Spinner
           thickness="5px"

@@ -26,7 +26,7 @@ export const firebase = {
     onAuthStateChanged(auth, user => func(user))
   },
   nativeSignUp(name, email, password) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user
@@ -36,30 +36,29 @@ export const firebase = {
             favCafes: [],
             photo: '',
           })
-
           resolve(user)
         })
         .catch(error => {
-          alert(`🤯🤯🤯 註冊失敗，請重新嘗試 (${error.message})`)
+          reject(new Error('註冊失敗，請重新操作'))
           console.error(error.message)
         })
     })
   },
   nativeSignIn(email, password) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user
           resolve(user)
         })
         .catch(error => {
-          alert(`🤯🤯🤯 登入失敗，請重新嘗試 (${error.message})`)
+          reject(new Error('登入失敗，請確認網路重新操作'))
           console.error(error.message)
         })
     })
   },
   googleSignIn() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       signInWithPopup(auth, provider)
         .then(result => {
           // const credential = GoogleAuthProvider.credentialFromResult(result)
@@ -79,91 +78,106 @@ export const firebase = {
           })
         })
         .catch(error => {
-          alert(`🤯🤯🤯 登入失敗，請重新嘗試 (${error.message})`)
+          reject(new Error('登入失敗，請確認網路重新操作'))
           console.error(error.message)
         })
     })
   },
   getUser(id) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       getDoc(doc(db, 'users', id))
         .then(docsnap => {
           if (docsnap.exists()) {
             resolve(docsnap.data())
-          } else {
-            alert('尚未擁有帳號，請先註冊')
-            return
           }
+          return
         })
         .catch(error => {
-          // alert('🤯🤯🤯 取得會員資料失敗，請重新嘗試')
+          reject(new Error('取得用戶資訊發生錯誤，請確認網路重新操作'))
           console.error(error.message)
         })
     })
   },
   updateUserName(userId, newName) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       updateDoc(doc(db, `users/${userId}`), {
         name: newName,
-      }).then(() => resolve())
+      })
+        .then(() => resolve())
+        .catch(error => {
+          reject(new Error('更新名稱發生錯誤，請確認網路重新操作'))
+          console.error(error.message)
+        })
     })
   },
   getUserPhotoUrl(userId, file) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const imageRef = ref(storage, `users/${file.name}`)
       uploadBytes(imageRef, file).then(() => {
-        getDownloadURL(imageRef).then(url => {
-          updateDoc(doc(db, `users/${userId}`), { photo: url })
-          resolve(url)
-        })
+        getDownloadURL(imageRef)
+          .then(url => {
+            updateDoc(doc(db, `users/${userId}`), { photo: url })
+            resolve(url)
+          })
+          .catch(error => {
+            reject(new Error('取得用戶頭貼發生錯誤'))
+            console.error(error)
+          })
       })
     })
   },
   saveCafe(userId, cafeId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       updateDoc(doc(db, 'users', userId), {
         favCafes: arrayUnion(cafeId),
-      }).then(() => resolve())
+      })
+        .then(() => resolve())
+        .catch(error => {
+          reject(new Error('蒐藏咖啡廳發生錯誤'))
+          console.error(error)
+        })
     })
   },
   deleteSavedCafe(userId, cafeId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       updateDoc(doc(db, 'users', userId), {
         favCafes: arrayRemove(cafeId),
-      }).then(() => resolve())
+      })
+        .then(() => resolve())
+        .catch(error => {
+          reject(new Error('移除蒐藏咖啡廳發生錯誤'))
+          console.error(error)
+        })
     })
   },
   signout() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       signOut(auth)
-        .then(() => {
-          // console.log('Logged out')
-          resolve()
-        })
+        .then(() => resolve())
         .catch(error => {
-          alert('登出失敗，請重新嘗試')
+          reject(new Error('登出失敗，請重新嘗試'))
           console.error(error)
         })
     })
   },
   checkSavedNumber(cafeId) {
-    // console.log(cafeId)
     const q = query(
       collection(db, 'users'),
       where('favCafes', 'array-contains', cafeId)
     )
 
-    return new Promise(resolve => {
-      getDocs(q).then(querySnapshot => {
-        const savedUserArray = []
-        querySnapshot.forEach(doc => savedUserArray.push(doc.id))
-        resolve(savedUserArray)
-      })
+    return new Promise((resolve, reject) => {
+      getDocs(q)
+        .then(querySnapshot => {
+          const savedUserArray = []
+          querySnapshot.forEach(doc => savedUserArray.push(doc.id))
+          resolve(savedUserArray)
+        })
+        .catch(error => {
+          reject(new Error('取得蒐藏數發生錯誤'))
+          console.error(error)
+        })
     })
-  },
-  addCafeDoc(cafeId, initData) {
-    const cafeDocRef = doc(db, `cafes/${cafeId}`)
-    setDoc(cafeDocRef, initData)
   },
   updatePageViews(cafeId) {
     getDoc(doc(db, `pageViews/${cafeId}`)).then(docSnap => {
@@ -175,38 +189,23 @@ export const firebase = {
     })
   },
   getPageViews(cafeId) {
-    return new Promise(resolve => {
-      getDoc(doc(db, `pageViews/${cafeId}`)).then(docSnap => {
-        if (docSnap.exists()) {
-          resolve(docSnap.data().pageViews)
-        } else {
-          resolve(1)
-        }
-      })
+    return new Promise((resolve, reject) => {
+      getDoc(doc(db, `pageViews/${cafeId}`))
+        .then(docSnap => {
+          if (docSnap.exists()) {
+            resolve(docSnap.data().pageViews)
+          } else {
+            resolve(1)
+          }
+        })
+        .catch(error => {
+          reject(new Error('取得瀏覽數發生錯誤'))
+          console.error(error)
+        })
     })
   },
-  /*
-  getBlogId(cafeId) {
-    const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
-    return blogRef.id
-  },
-  addBlog(cafeId, userId) {
-    return new Promise(resolve => {
-      const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
-      setDoc(blogRef, {
-        blogId: blogRef.id,
-        cafeId,
-        userId,
-        title: '',
-        content: '',
-        image: '',
-        createdAt: serverTimestamp(),
-      }).then(() => resolve(blogRef.id))
-    })
-  },
-  */
   uploadBlog(cafeId, userId, data) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
 
       setDoc(blogRef, {
@@ -217,109 +216,158 @@ export const firebase = {
         content: data.content,
         image: data.image,
         createdAt: serverTimestamp(),
-      }).then(() => resolve(blogRef.id))
+      })
+        .then(() => resolve(blogRef.id))
+        .catch(error => {
+          reject(new Error('發佈食記發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getAllBlogs(cafeId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const q = query(
         collection(db, `cafes/${cafeId}/blogs`),
         orderBy('createdAt', 'desc')
       )
 
-      getDocs(q).then(docsSnapshot => {
-        const blogsArray = docsSnapshot.docs.map(doc => ({
-          blogId: doc.data().blogId,
-          cafeId: doc.data().cafeId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
-          userId: doc.data().userId,
-          title: doc.data().title,
-          content: doc.data().content,
-          image: doc.data().image,
-        }))
-        resolve(blogsArray)
-      })
+      getDocs(q)
+        .then(docsSnapshot => {
+          const blogsArray = docsSnapshot.docs.map(doc => ({
+            blogId: doc.data().blogId,
+            cafeId: doc.data().cafeId,
+            createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+            userId: doc.data().userId,
+            title: doc.data().title,
+            content: doc.data().content,
+            image: doc.data().image,
+          }))
+          resolve(blogsArray)
+        })
+        .catch(error => {
+          reject(new Error('取得食記發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getBlog(cafeId, blogId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
-      getDoc(blogRef).then(docsnap => {
-        if (docsnap.exists()) {
-          resolve(docsnap.data())
-        } else {
-          alert('找不到此blog')
-          return
-        }
-      })
+      getDoc(blogRef)
+        .then(docsnap => {
+          if (docsnap.exists()) {
+            resolve(docsnap.data())
+          } else {
+            return
+          }
+        })
+        .catch(error => {
+          reject(new Error('取得食記發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   deleteBlog(cafeId, blogId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
-      deleteDoc(blogRef).then(() => {
-        console.log('Blog Deleted')
-        resolve()
-      })
+      deleteDoc(blogRef)
+        .then(() => {
+          console.log('Blog Deleted')
+          resolve()
+        })
+        .catch(error => {
+          reject(new Error('刪除食記發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getBlogPhotoUrl(file) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const imageRef = ref(storage, `blogs/${file.name}`)
-      uploadBytes(imageRef, file).then(() => {
-        getDownloadURL(imageRef).then(url => {
-          resolve(url)
+      uploadBytes(imageRef, file)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then(url => {
+              resolve(url)
+            })
+            .catch(error => {
+              reject(new Error('取得照片連結發生錯誤，請重新嘗試'))
+              console.error(error)
+            })
         })
-      })
+        .catch(error => {
+          reject(new Error('上傳發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getUserBlogs(userId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const blogs = query(
         collectionGroup(db, `blogs`),
         where('userId', '==', `${userId}`),
         orderBy('createdAt', 'desc')
       )
-      getDocs(blogs).then(docsSnapshot => {
-        const blogsArray = docsSnapshot.docs.map(doc => ({
-          blogId: doc.data().blogId,
-          cafeId: doc.data().cafeId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
-          userId: doc.data().userId,
-          title: doc.data().title,
-          content: doc.data().content,
-          image: doc.data().image,
-        }))
-        resolve(blogsArray)
-      })
+      getDocs(blogs)
+        .then(docsSnapshot => {
+          const blogsArray = docsSnapshot.docs.map(doc => ({
+            blogId: doc.data().blogId,
+            cafeId: doc.data().cafeId,
+            createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
+            userId: doc.data().userId,
+            title: doc.data().title,
+            content: doc.data().content,
+            image: doc.data().image,
+          }))
+          resolve(blogsArray)
+        })
+        .catch(error => {
+          reject(new Error('取得用戶食記發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getComments(cafeId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const q = query(
         collection(db, `cafes/${cafeId}/comments`),
         orderBy('createdAt', 'desc')
       )
 
-      getDocs(q).then(docsSnapshot => {
-        const commentList = []
-        docsSnapshot.forEach(doc => {
-          commentList.push(doc.data())
+      getDocs(q)
+        .then(docsSnapshot => {
+          const commentList = []
+          docsSnapshot.forEach(doc => {
+            commentList.push(doc.data())
+          })
+          resolve(commentList)
         })
-        resolve(commentList)
-      })
+        .catch(error => {
+          reject(new Error('取得留言發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getCommentPhotoUrl(file) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const imageRef = ref(storage, `comments/${file.name}`)
-      uploadBytes(imageRef, file).then(() => {
-        getDownloadURL(imageRef).then(url => resolve(url))
-      })
+      uploadBytes(imageRef, file)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then(url => resolve(url))
+            .catch(error => {
+              reject(new Error('取得照片連結發生錯誤，請重新嘗試'))
+              console.error(error)
+            })
+        })
+        .catch(error => {
+          reject(new Error('上傳發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   addComment(data) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const newDocRef = doc(collection(db, `cafes/${data.cafeId}/comments`))
 
       setDoc(newDocRef, {
@@ -328,55 +376,55 @@ export const firebase = {
         text: data.text,
         image: data.image,
         createdAt: serverTimestamp(),
-      }).then(() => resolve())
-    })
-  },
-  /*
-  listenCommentsChanges(cafeId) {
-    return new Promise(resolve => {
-      const q = query(
-        collection(db, `cafes/${cafeId}/comments`),
-        orderBy('createdAt', 'desc')
-      )
-      onSnapshot(q, querySnapshot => {
-        const commentArray = querySnapshot.docs.map(doc => ({
-          commentId: doc.data().commentId,
-          createdAt: doc.data().createdAt.toDate().toLocaleDateString(),
-          userId: doc.data().userId,
-          text: doc.data().text,
-          replies: doc.data().replies,
-        }))
-        resolve(commentArray)
       })
+        .then(() => resolve())
+        .catch(error => {
+          reject(new Error('新增留言發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
-  */
   getReplyList(cafeId, commentId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const q = query(
         collection(db, `cafes/${cafeId}/comments/${commentId}/replies`),
         orderBy('repliedAt', 'desc')
       )
 
-      getDocs(q).then(querySnapshot => {
-        const replyList = []
-        querySnapshot.forEach(doc => {
-          replyList.push(doc.data())
+      getDocs(q)
+        .then(querySnapshot => {
+          const replyList = []
+          querySnapshot.forEach(doc => {
+            replyList.push(doc.data())
+          })
+          resolve(replyList)
         })
-        resolve(replyList)
-      })
+        .catch(error => {
+          reject(new Error('取得回覆發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   getReplyPhotoUrl(file) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const imageRef = ref(storage, `replies/${file.name}`)
-      uploadBytes(imageRef, file).then(() => {
-        getDownloadURL(imageRef).then(url => resolve(url))
-      })
+      uploadBytes(imageRef, file)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then(url => resolve(url))
+            .catch(error => {
+              reject(new Error('取得照片連結發生錯誤，請重新嘗試'))
+              console.error(error)
+            })
+        })
+        .catch(error => {
+          reject(new Error('上傳發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
   addReply(data) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const newDocRef = doc(
         collection(
           db,
@@ -388,7 +436,12 @@ export const firebase = {
         text: data.text,
         image: data.image,
         repliedAt: serverTimestamp(),
-      }).then(() => resolve())
+      })
+        .then(() => resolve())
+        .catch(error => {
+          reject(new Error('新增回覆發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
     })
   },
 }
