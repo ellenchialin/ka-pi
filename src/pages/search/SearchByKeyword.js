@@ -67,6 +67,9 @@ function SearchByKeyword() {
               variant="filled"
               placeholder="Search..."
               autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter') submitSearch()
+              }}
             />
           </InputGroup>
           <AutoCompleteList>
