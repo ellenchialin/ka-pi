@@ -28,6 +28,12 @@ function EditBlog() {
   } = useDisclosure()
 
   const {
+    isOpen: isInvalidContentAlertOpen,
+    onOpen: onInvalidContentAlertOpen,
+    onClose: onInvalidContentAlertClose,
+  } = useDisclosure()
+
+  const {
     isOpen: isUploadAlertOpen,
     onOpen: onUploadAlertOpen,
     onClose: onUploadAlertClose,
@@ -38,7 +44,7 @@ function EditBlog() {
   }, [])
 
   useEffect(() => {
-    blogTitle && blogContent && coverPhotoUrl
+    blogTitle && blogContent !== '' && coverPhotoUrl
       ? setDisablePublish(false)
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
@@ -56,13 +62,16 @@ function EditBlog() {
   }
 
   const handlePublishBlog = () => {
+    if (blogContent.blocks[0].text === '') {
+      onInvalidContentAlertOpen()
+      return
+    }
+
     const blogData = {
       title: blogTitle,
       content: blogContent,
       image: coverPhotoUrl,
     }
-
-    // 檢查是否都有填
 
     firebase
       .uploadBlog(cafeId, currentUser.uid, blogData)
@@ -139,6 +148,12 @@ function EditBlog() {
         onAlertClose={onUploadAlertClose}
         alertHeader="圖片上傳失敗"
         alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
+      />
+      <AlertModal
+        isAlertOpen={isInvalidContentAlertOpen}
+        onAlertClose={onInvalidContentAlertClose}
+        alertHeader="發佈失敗"
+        alertBody="請確認圖片、標題與內容皆不可為空。"
       />
       <AlertModal
         isAlertOpen={isPublishAlertOpen}

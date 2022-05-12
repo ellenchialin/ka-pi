@@ -501,6 +501,7 @@ function Cafe() {
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                h="9"
                 fontSize="16px"
                 onClick={handleClickAddBlog}
               >
@@ -548,6 +549,7 @@ function Cafe() {
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                h="9"
                 fontSize="16px"
                 onClick={handleClickAddComment}
               >
