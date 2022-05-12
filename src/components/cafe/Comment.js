@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon } from '@chakra-ui/react'
+import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon, Avatar } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
@@ -46,6 +46,12 @@ function Comment({
     onClose: onAlertClose,
   } = useDisclosure()
 
+  const {
+    isOpen: isUploadAlertOpen,
+    onOpen: onUploadAlertOpen,
+    onClose: onUploadAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
     firebase.getUser(commentUserId).then(data => {
       setUserInfo(data)
@@ -64,7 +70,7 @@ function Comment({
         .getReplyPhotoUrl(e.target.files[0])
         .then(url => setReplyPhotoUrl(url))
         .catch(error => {
-          alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          onUploadAlertOpen()
           console.error(error)
         })
     }
@@ -121,13 +127,7 @@ function Comment({
   return (
     <Flex w="100%" direction="column" my="2">
       <Flex w="100%" justify="space-between" align="flex-start" mb="1">
-        <Image
-          borderRadius="full"
-          boxSize="35px"
-          src={userInfo.photo}
-          alt={userInfo.name}
-          objectFit="cover"
-        />
+        <Avatar size="md" name={userInfo.name} src={userInfo.photo} />
         <Flex w="full" direction="column" ml="4">
           <Box
             w="full"
@@ -231,7 +231,7 @@ function Comment({
                       mt="auto"
                       onClick={() => replyPhotoRef.current.click()}
                     >
-                      Upload
+                      上傳
                     </Button>
                     <Input
                       ref={replyPhotoRef}
@@ -240,6 +240,12 @@ function Comment({
                       accept="image/*"
                       onChange={e => handleReplyPhotoUpload(e)}
                       hidden
+                    />
+                    <AlertModal
+                      isAlertOpen={isUploadAlertOpen}
+                      onAlertClose={onUploadAlertClose}
+                      alertHeader="Oops! 圖片上傳失敗"
+                      alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
                     />
                   </Flex>
                 </ModalBody>

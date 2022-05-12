@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
-import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack } from '@chakra-ui/react'
+import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack, Avatar } from '@chakra-ui/react'
 import { firebase } from '../../utils/firebase'
+import AlertModal from '../AlertModal'
 
 function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   const [userInfo, setUserInfo] = useState({})
@@ -14,24 +15,27 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
     onClose: onReplyPhotoClose,
   } = useDisclosure()
 
+  const {
+    isOpen: isGetUserAlertOpen,
+    onOpen: onGetUserAlertOpen,
+    onClose: onGetUserAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
-    firebase.getUser(replyUserId).then(data => {
-      setUserInfo(data)
-    })
+    firebase
+      .getUser(replyUserId)
+      .then(data => {
+        setUserInfo(data)
+      })
+      .catch(error => {
+        onGetUserAlertOpen()
+        console.error(error)
+      })
   }, [])
 
   return (
     <HStack w="100%" pl="12" spacing="0" mt="1">
-      <Image
-        borderRadius="full"
-        boxSize="35px"
-        mr="2"
-        alignSelf="flex-start"
-        src={userInfo.photo}
-        alt={userInfo.name}
-        objectFit="cover"
-        fallbackSrc="https://images.unsplash.com/photo-1639628735078-ed2f038a193e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-      />
+      <Avatar size="md" name={userInfo.name} src={userInfo.photo} />
       <Flex w="100%" direction="column">
         <Box
           w="100%"
@@ -79,6 +83,13 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
         </Box>
         <Text fontSize="0.75rem">{convertedReplyDate}</Text>
       </Flex>
+
+      <AlertModal
+        isAlertOpen={isGetUserAlertOpen}
+        onAlertClose={onGetUserAlertClose}
+        alertHeader="Oops! 暫無法取得回覆資訊"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
+      />
     </HStack>
   )
 }

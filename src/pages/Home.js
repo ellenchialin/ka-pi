@@ -183,8 +183,8 @@ function Home() {
               mb="6"
               justifyItems="center"
             >
-              {[...Array(8)].map(item => (
-                <Skeleton key={item} size="sm" />
+              {[...Array(8)].map((item, i) => (
+                <Skeleton key={i} size="sm" />
               ))}
             </SimpleGrid>
           </Flex>

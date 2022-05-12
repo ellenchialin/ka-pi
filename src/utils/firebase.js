@@ -96,7 +96,7 @@ export const firebase = {
           }
         })
         .catch(error => {
-          alert('🤯🤯🤯 取得會員資料失敗，請重新嘗試')
+          // alert('🤯🤯🤯 取得會員資料失敗，請重新嘗試')
           console.error(error.message)
         })
     })
