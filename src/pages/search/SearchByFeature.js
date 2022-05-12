@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
@@ -14,6 +14,7 @@ function SearchByFeature() {
   const [filteredCafes, setFilteredCafes] = useState([])
   const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -71,6 +72,11 @@ function SearchByFeature() {
     setCityValue([])
     setFilteredCafes([])
     setAdvacedFilteredCafes([])
+  }
+
+  const handlePageChange = page => {
+    setCurrentPage(page)
+    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -155,7 +161,7 @@ function SearchByFeature() {
           mt="6"
         />
       ) : (
-        <Flex w="full" direction="column" align="center">
+        <Flex w="full" direction="column" align="center" ref={scrollCardRef}>
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
@@ -194,7 +200,7 @@ function SearchByFeature() {
                   : filteredCafes.length
               }
               current={currentPage}
-              onChange={page => setCurrentPage(page)}
+              onChange={page => handlePageChange(page)}
               pageSize={cafesPerPage}
               paginationProps={{
                 display: 'flex',

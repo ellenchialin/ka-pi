@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup } from '@chakra-ui/react'
@@ -16,6 +16,8 @@ function Collections() {
   const [cafesForHangout, setCafesForHangout] = useState([])
   const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const scrollToTopRef = useRef(null)
+  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -41,6 +43,7 @@ function Collections() {
     setCurrentPage(1)
     setAdvacedFilteredCafes([])
     setCityValue([])
+    scrollToTopRef.current.scrollIntoView({ behavior: 'smooth' })
   }, [type])
 
   useEffect(() => {
@@ -70,8 +73,20 @@ function Collections() {
       .finally(() => setIsLoading(false))
   }, [type])
 
+  const handlePageChange = page => {
+    setCurrentPage(page)
+    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <Flex w="full" maxW="1170px" h="100%" direction="column" align="center">
+    <Flex
+      w="full"
+      maxW="1170px"
+      h="100%"
+      direction="column"
+      align="center"
+      ref={scrollToTopRef}
+    >
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
         {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
@@ -111,7 +126,7 @@ function Collections() {
         />
       ) : (
         <>
-          <VStack alignSelf="flex-end" mb="4">
+          <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>
             <Text mt="3" alignSelf="flex-end">
               {advacedFilteredCafes.length > 0
                 ? advacedFilteredCafes.length
@@ -152,7 +167,7 @@ function Collections() {
                 : cafesForHangout.length
             }
             current={currentPage}
-            onChange={page => setCurrentPage(page)}
+            onChange={page => handlePageChange(page)}
             pageSize={cafesPerPage}
             paginationProps={{
               display: 'flex',
