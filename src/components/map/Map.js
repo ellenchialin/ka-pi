@@ -25,6 +25,7 @@ function Map({
         ]}
         zoom={13}
         style={{ height: '100%' }}
+        tap={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
