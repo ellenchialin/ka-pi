@@ -84,6 +84,10 @@ function EditBlog() {
       })
   }
 
+  const handleDiscardBlog = () => {
+    navigate(`/cafe/${cafeId}`)
+  }
+
   return (
     <Flex direction="column" w="100%" h="100%" maxWidth="800px">
       <Flex mb="6" maxWidth="800px" position="relative">
@@ -130,19 +134,25 @@ function EditBlog() {
       />
       <TextEditor setBlogContent={setBlogContent} />
 
-      <HStack spacing="2" mb="6" alignSelf="flex-end">
+      <HStack spacing="2" mb="10" alignSelf="flex-end">
         <WarningIcon />
         <Text fontSize="sm">發佈前，請確認圖片、標題與內容皆需完整填入</Text>
       </HStack>
 
-      <Button
-        alignSelf="center"
-        w="150px"
-        onClick={handlePublishBlog}
-        isDisabled={disablePublish}
-      >
-        發佈
-      </Button>
+      <HStack spacing="6" alignSelf="center">
+        <Button alignSelf="center" w="150px" onClick={handleDiscardBlog}>
+          取消
+        </Button>
+
+        <Button
+          alignSelf="center"
+          w="150px"
+          onClick={handlePublishBlog}
+          isDisabled={disablePublish}
+        >
+          發佈
+        </Button>
+      </HStack>
       <AlertModal
         isAlertOpen={isUploadAlertOpen}
         onAlertClose={onUploadAlertClose}
