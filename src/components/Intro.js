@@ -24,17 +24,15 @@ function Intro({ handleScroll }) {
       mb="12"
     >
       <Text fontSize={{ base: '40px', md: '60px' }} fontWeight="bold">
-        Coffee
+        咖啡
       </Text>
       <HStack mb="2">
         <Text as="i" fontWeight="bold">{`[ ka-pi ]`}</Text>
-        <Text>noun.</Text>
+        <Text>名詞</Text>
       </HStack>
-      <Text>
-        A magical brown liquid, ground from beans and necessary for human life.
-      </Text>
+      <Text>神奇咖啡色液體，產自豆子，人類生活必需品。</Text>
       <VStack mt="32">
-        <Text>Get me a cuppa NOW</Text>
+        <Text>來一杯</Text>
         <IconButton
           icon={<BsChevronDoubleDown />}
           fontSize="20px"
