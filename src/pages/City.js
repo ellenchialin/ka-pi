@@ -106,7 +106,7 @@ function City() {
           <Flex w="100%" direction="column" as="section">
             <Text alignSelf="center" mb="6">
               {updatedCafes.length > 0
-                ? `共篩選 ${updatedCafes.length} 間咖啡廳`
+                ? `${updatedCafes.length} 間符合`
                 : '所有收錄咖啡廳'}
             </Text>
             <SimpleGrid

@@ -5,7 +5,7 @@ import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useD
 import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
-import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
+import { BsBookmark, BsFillBookmarkFill, BsEyeFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
@@ -326,10 +326,16 @@ function Cafe() {
 
           {/* Calculate saved numbers & page views section */}
           <Box alignSelf="flex-end">
-            <Text>
-              {savedNumber.length > 0 ? savedNumber.length : 0} Saved /{' '}
-              {pageViews} Views
-            </Text>
+            <HStack>
+              <HStack align="center">
+                <Text>{savedNumber.length > 0 ? savedNumber.length : 0}</Text>
+                <Icon as={BsFillBookmarkFill} />
+              </HStack>
+              <HStack align="center">
+                <Text>{pageViews}</Text>
+                <Icon as={BsEyeFill} />
+              </HStack>
+            </HStack>
           </Box>
 
           {/* Features section */}
@@ -394,13 +400,13 @@ function Cafe() {
 
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column" mb="10">
-            <Text color={subtagTextColor}>Google Reviews</Text>
+            <Text color={subtagTextColor}>Google 評論</Text>
             <Text
               fontSize={{ base: '20px', md: '28px' }}
               fontWeight="bold"
               mb="4"
             >
-              More Photos
+              網友照片分享
             </Text>
             <SimpleGrid
               w="full"
@@ -419,13 +425,13 @@ function Cafe() {
           <Flex w="full" direction="column" mb="10">
             <Flex w="full" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>Blogs</Text>
+                <Text color={subtagTextColor}>食記</Text>
                 <Text
                   fontSize={{ base: '20px', md: '28px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  Explore Others' Experience
+                  網友體驗分享
                 </Text>
               </VStack>
               <Button
@@ -434,7 +440,7 @@ function Cafe() {
                 fontSize="16px"
                 onClick={handleClickAddBlog}
               >
-                blog
+                撰寫食記
               </Button>
             </Flex>
 
@@ -466,13 +472,13 @@ function Cafe() {
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>Comments</Text>
+                <Text color={subtagTextColor}>留言</Text>
                 <Text
                   fontSize={{ base: '20px', md: '28px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  Interact With Others
+                  對咖啡廳的任何想法...
                 </Text>
               </VStack>
               <Button
@@ -481,7 +487,7 @@ function Cafe() {
                 fontSize="16px"
                 onClick={handleClickAddComment}
               >
-                comment
+                發表留言
               </Button>
               <Modal
                 isOpen={isCommentOpen}
@@ -524,7 +530,7 @@ function Cafe() {
                         mt="auto"
                         onClick={() => commentPhotoRef.current.click()}
                       >
-                        Upload
+                        上傳
                       </Button>
                       <Input
                         ref={commentPhotoRef}
@@ -546,7 +552,7 @@ function Cafe() {
                         _disabled: { bg: 'secondaryLight' },
                       }}
                     >
-                      Submit
+                      送出
                     </Button>
                   </ModalFooter>
                 </ModalContent>

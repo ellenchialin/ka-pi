@@ -147,10 +147,10 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-          Coffee, please
+          來點 ka-pi
         </Heading>
         <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
-          Discover nearby cafes. Click marker to learn more.
+          探索鄰近咖啡廳，點擊圖示看更多資訊
         </Text>
 
         <AlertModal
@@ -230,7 +230,7 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          Discover the Cities
+          探索城市咖啡廳
         </Heading>
 
         <Flex

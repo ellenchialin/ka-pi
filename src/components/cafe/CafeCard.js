@@ -69,6 +69,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             variant="solid"
             colorScheme="blackAlpha"
             size="sm"
+            zIndex="docked"
             onClick={handleDeleteCafe}
           />
         )}

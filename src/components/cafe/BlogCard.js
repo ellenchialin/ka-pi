@@ -76,7 +76,7 @@ function BlogCard({
             fontSize="0.75rem"
             _hover={{ bg: 'primaryDark' }}
           >
-            Read More
+            看更多
           </Button>
         </Flex>
       </Box>

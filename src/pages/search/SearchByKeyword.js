@@ -39,10 +39,10 @@ function SearchByKeyword() {
   return (
     <Flex w="100%" h="100%" direction="column" align="center">
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-        Discover by Keywords
+        關鍵字搜尋
       </Heading>
       <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
-        Enter the name of cafe to find one.
+        輸入咖啡廳名稱進行搜尋
       </Text>
 
       <FormControl

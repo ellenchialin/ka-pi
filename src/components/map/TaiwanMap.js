@@ -87,7 +87,7 @@ function TaiwanMap() {
         color={useColorModeValue('primaryLight', 'primaryDark')}
       >
         {hoveredCity === '' ? (
-          <Text>點擊縣市看更多</Text>
+          <Text>點擊城市看更多</Text>
         ) : (
           <CityInfoCard
             hoveredCity={hoveredCity}

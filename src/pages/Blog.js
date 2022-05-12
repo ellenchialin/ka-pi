@@ -84,7 +84,7 @@ function Blog() {
           >
             <BreadcrumbItem>
               <BreadcrumbLink as={Link} to="/" isExternal>
-                Home
+                首頁
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>

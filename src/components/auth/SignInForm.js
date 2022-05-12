@@ -74,13 +74,13 @@ const SignInForm = () => {
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button mt={4} variant="auth-buttons" w="113px" type="submit">
-                  Sign In
+                  登入
                 </Button>
               </Flex>
             </Form>
           )}
         </Formik>
-        <Text my="6">or sign in with...</Text>
+        <Text my="6">或透過以下方式登入</Text>
         <Button
           size="md"
           leftIcon={<FaGoogle fontSize="18px" />}

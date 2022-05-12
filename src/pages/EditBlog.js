@@ -84,7 +84,7 @@ function EditBlog() {
           right="20px"
           onClick={() => coverPhototRef.current.click()}
         >
-          Upload
+          上傳
         </Button>
         <Input
           ref={coverPhototRef}
@@ -109,10 +109,7 @@ function EditBlog() {
 
       <HStack spacing="2" mb="6" alignSelf="flex-end">
         <WarningIcon />
-        <Text fontSize="sm">
-          Please make sure blog cover, title and content are all filled in
-          before publish.
-        </Text>
+        <Text fontSize="sm">發佈前，請確認圖片、標題與內容皆需完整填入</Text>
       </HStack>
 
       <Button
@@ -121,7 +118,7 @@ function EditBlog() {
         onClick={handlePublishBlog}
         isDisabled={disablePublish}
       >
-        Publish
+        發佈
       </Button>
       <AlertModal
         isAlertOpen={isAlertOpen}

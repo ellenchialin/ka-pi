@@ -141,10 +141,6 @@ function User() {
           color="teal"
           size="lg"
           mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
         />
       ) : (
         <>
@@ -202,8 +198,8 @@ function User() {
           </VStack>
           <Tabs variant="enclosed" w="full" colorScheme="teal">
             <TabList>
-              <Tab>Caffeine Footprints</Tab>
-              <Tab>Cafe Blogs</Tab>
+              <Tab>咖啡因足跡</Tab>
+              <Tab>咖啡廳食記</Tab>
             </TabList>
             <TabPanels>
               <TabPanel p="0" pt="4">
@@ -312,7 +308,7 @@ function User() {
             </TabPanels>
           </Tabs>
           <Button variant="auth-buttons" w="113px" onClick={handleSignout}>
-            Sign out
+            登出
           </Button>
         </>
       )}

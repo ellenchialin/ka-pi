@@ -112,10 +112,10 @@ function Picks() {
       align="center"
     >
       <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
-        Guided by Stars
+        不用思考，無腦跟喝
       </Heading>
       <Text my="3" align="center" fontSize={{ base: '16px', md: '18px' }}>
-        Here's our picks based on your current location, rating over 4 stars.
+        根據所在地區，精選評價 4 分以上咖啡廳
       </Text>
 
       {isLoading ? (

@@ -75,7 +75,7 @@ const SignUpForm = () => {
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button mt={4} type="submit" w="113px" variant="auth-buttons">
-                  Sign up
+                  註冊
                 </Button>
               </Flex>
             </Form>
