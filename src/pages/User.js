@@ -62,7 +62,9 @@ function User() {
         setUserInfo(data)
         getFavCafes(data.favCafes)
       })
-      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
+      .catch(error =>
+        alert('無法取得個人資訊，請確認網路重新嘗試，或聯繫開發人員')
+      )
   }, [])
 
   useEffect(() => {
@@ -81,7 +83,7 @@ function User() {
         setSavedCafes(cafeList)
       })
       .catch(error =>
-        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        alert('無法取得咖啡廳資訊，請確認網路重新嘗試，或聯繫開發人員')
       )
       .finally(() => setIsLoading(false))
   }
@@ -114,7 +116,9 @@ function User() {
         .getUserPhotoUrl(currentUser.uid, e.target.files[0])
         .then(url => setUserPhotoUrl(url))
         .catch(error => {
-          alert('頭貼上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          alert(
+            '頭貼上傳失敗，請確認網路重新嘗試；如連續失敗請通知網站開發人員'
+          )
           console.error(error)
         })
     }

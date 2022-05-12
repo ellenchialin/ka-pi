@@ -402,7 +402,7 @@ function Cafe() {
           <Flex w="100%" direction="column" mb="10">
             <Text color={subtagTextColor}>Google 評論</Text>
             <Text
-              fontSize={{ base: '20px', md: '28px' }}
+              fontSize={{ base: '20px', md: '24px' }}
               fontWeight="bold"
               mb="4"
             >
@@ -427,7 +427,7 @@ function Cafe() {
               <VStack align="flex-start" spacing="0">
                 <Text color={subtagTextColor}>食記</Text>
                 <Text
-                  fontSize={{ base: '20px', md: '28px' }}
+                  fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
                   mt="0"
                 >
@@ -474,11 +474,11 @@ function Cafe() {
               <VStack align="flex-start" spacing="0">
                 <Text color={subtagTextColor}>留言</Text>
                 <Text
-                  fontSize={{ base: '20px', md: '28px' }}
+                  fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  對咖啡廳的任何想法...
+                  留下任何想法...
                 </Text>
               </VStack>
               <Button

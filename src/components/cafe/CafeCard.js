@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack, useColorModeValue, Portal } from '@chakra-ui/react'
 import { ArrowRightIcon, StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { firebase } from '../../utils/firebase'
@@ -34,46 +34,45 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const thumbnailUrl = useMemo(() => getRandomCafeThumbnail(), [])
 
   return (
-    <Link to={`/cafe/${cafe.id}`} target="_blank">
-      <Box
-        w="270px"
-        h="100%"
-        minH={{ sm: '300px', md: '360px' }}
-        bg="white"
-        rounded="lg"
-        shadow="lg"
-        color="primaryDark"
-        position="relative"
-        _hover={{ transform: 'scale(1.03)' }}
-        transition="transform 350ms ease"
-      >
-        {!isLoading && (
-          <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
-            <Image
-              src={coverPhoto}
-              alt={`${cafe.name} 店內照片`}
-              roundedTop="lg"
-              objectFit="cover"
-              align="center"
-            />
-          </AspectRatio>
-        )}
-        {canDeleteCafe && (
-          <IconButton
-            icon={<RiDeleteBin5Line />}
-            aria-label="刪除此蒐藏"
-            fontSize="20px"
-            position="absolute"
-            top="10px"
-            right="10px"
-            variant="solid"
-            colorScheme="blackAlpha"
-            size="sm"
-            zIndex="docked"
-            onClick={handleDeleteCafe}
+    <Box
+      w="270px"
+      h="100%"
+      minH={{ sm: '300px', md: '360px' }}
+      bg="white"
+      rounded="lg"
+      shadow="lg"
+      color="primaryDark"
+      position="relative"
+      _hover={{ transform: 'scale(1.03)' }}
+      transition="transform 350ms ease"
+    >
+      {!isLoading && (
+        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
+          <Image
+            src={coverPhoto}
+            alt={`${cafe.name} 店內照片`}
+            roundedTop="lg"
+            objectFit="cover"
+            align="center"
           />
-        )}
+        </AspectRatio>
+      )}
+      {canDeleteCafe && (
+        <IconButton
+          icon={<RiDeleteBin5Line />}
+          aria-label="刪除此蒐藏"
+          fontSize="20px"
+          position="absolute"
+          top="10px"
+          right="10px"
+          variant="solid"
+          colorScheme="blackAlpha"
+          size="sm"
+          onClick={handleDeleteCafe}
+        />
+      )}
 
+      <Link to={`/cafe/${cafe.id}`} target="_blank">
         <VStack spacing="2" p="4" align="flex-start">
           <Flex w="full" align="center" justify="space-between">
             <Heading
@@ -139,8 +138,8 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             )}
           </Box>
         </VStack>
-      </Box>
-    </Link>
+      </Link>
+    </Box>
   )
 }
 
