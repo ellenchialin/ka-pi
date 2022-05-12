@@ -20,10 +20,11 @@ function Home() {
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const scrollRef = useRef(null)
+  const scrollIntroRef = useRef(null)
+  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(20)
+  const [cafesPerPage] = useState(24)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
@@ -132,14 +133,19 @@ function Home() {
   }
 
   const handleScroll = () =>
-    scrollRef.current.scrollIntoView({ behavior: 'smooth' })
+    scrollIntroRef.current.scrollIntoView({ behavior: 'smooth' })
+
+  const handlePageChange = page => {
+    setCurrentPage(page)
+    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
       <Intro handleScroll={handleScroll} />
 
       <Flex
-        ref={scrollRef}
+        ref={scrollIntroRef}
         as="section"
         my="4"
         w="100%"
@@ -147,10 +153,10 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-          Coffee, please
+          來點 ka-pi
         </Heading>
         <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
-          Discover nearby cafes. Click marker to learn more.
+          探索鄰近咖啡廳，點擊圖示看更多資訊
         </Text>
 
         <AlertModal
@@ -177,8 +183,8 @@ function Home() {
               mb="6"
               justifyItems="center"
             >
-              {[0, 1, 2, 3].map(item => (
-                <Skeleton key={item} size="sm" />
+              {[...Array(8)].map((item, i) => (
+                <Skeleton key={i} size="sm" />
               ))}
             </SimpleGrid>
           </Flex>
@@ -197,6 +203,7 @@ function Home() {
               spacing="20px"
               mb="6"
               justifyItems="center"
+              ref={scrollCardRef}
             >
               {currentCafes.map(cafe => (
                 <CafeCard key={cafe.id} cafe={cafe} />
@@ -207,7 +214,7 @@ function Home() {
               defaultCurrent={1}
               total={userNearbyCafes.length}
               current={currentPage}
-              onChange={page => setCurrentPage(page)}
+              onChange={page => handlePageChange(page)}
               pageSize={cafesPerPage}
               paginationProps={{ display: 'flex', justifyContent: 'center' }}
               pageNeighbours={2}
@@ -230,7 +237,7 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          Discover the Cities
+          探索城市咖啡廳
         </Heading>
 
         <Flex

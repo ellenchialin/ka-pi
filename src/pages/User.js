@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -10,6 +10,7 @@ import Map from '../components/map/Map'
 import EditableText from '../components/EditableText'
 import CafeCard from '../components/cafe/CafeCard'
 import BlogCard from '../components/cafe/BlogCard'
+import AlertModal from '../components/AlertModal'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
@@ -18,11 +19,16 @@ function User() {
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
+  const [defaultLatitude, setDefaultLatitude] = useState(null)
+  const [defaultLongitude, setDefaultLongitude] = useState(null)
+  const [hasLocation, setHasLocation] = useState(false)
   const [userInfo, setUserInfo] = useState({})
   const [updatedUserName, setUpdatedUserName] = useState('')
   const [userPhotoUrl, setUserPhotoUrl] = useState(null)
   const [userBlogs, setUserBlogs] = useState([])
   const [savedCafes, setSavedCafes] = useState([])
+  const [alertHeader, setAlertHeader] = useState('')
+  const [alertBody, setAlertBody] = useState('')
   const [canDeleteCafe] = useState(true)
   const [canDeleteBlog] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
@@ -38,17 +44,54 @@ function User() {
   const currentCafes = savedCafes.slice(offset, offset + cardsPerPage)
   const currentBlogs = userBlogs.slice(offset, offset + cardsPerPage)
 
+  const {
+    isOpen: isLocationAlertOpen,
+    onOpen: onLocationAlertOpen,
+    onClose: onLocationAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isGetCafesAlertOpen,
+    onOpen: onGetCafesAlertOpen,
+    onClose: onGetCafesAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isGetUserAlertOpen,
+    onOpen: onGetUserAlertOpen,
+    onClose: onGetUserAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isUploadAlertOpen,
+    onOpen: onUploadAlertOpen,
+    onClose: onUploadAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
     if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+      onLocationAlertOpen()
+      setDefaultLatitude(25.0384851)
+      setDefaultLongitude(121.530177)
+      setHasLocation(true)
+      setAlertHeader('Oops! 無法取得當前位置')
+      setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
     }
+
     navigator.geolocation.getCurrentPosition(
       position => {
+        console.log('position: ', position)
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
+        setHasLocation(true)
       },
       () => {
-        alert('請開啟允許取得當前位置，以獲得附近咖啡廳地圖 ☕️ ')
+        onLocationAlertOpen()
+        setAlertHeader('Oops! 無法取得當前位置')
+        setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
+        setDefaultLatitude(25.0384851)
+        setDefaultLongitude(121.530177)
+        setHasLocation(true)
       }
     )
   }, [])
@@ -62,7 +105,14 @@ function User() {
         setUserInfo(data)
         getFavCafes(data.favCafes)
       })
-      .catch(error => alert('無法取得個人資訊，請確認網路連線，或聯繫開發人員'))
+      .catch(error => {
+        onGetUserAlertOpen()
+        setAlertHeader('Oops! 暫無法取得個人資訊')
+        setAlertBody(
+          '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
+        )
+        console.error(error)
+      })
   }, [])
 
   useEffect(() => {
@@ -80,9 +130,14 @@ function User() {
         })
         setSavedCafes(cafeList)
       })
-      .catch(error =>
-        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
-      )
+      .catch(error => {
+        onGetCafesAlertOpen()
+        setAlertHeader('Oops! 暫無法取得咖啡廳資料')
+        setAlertBody(
+          '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
+        )
+        console.error(error)
+      })
       .finally(() => setIsLoading(false))
   }
 
@@ -114,7 +169,11 @@ function User() {
         .getUserPhotoUrl(currentUser.uid, e.target.files[0])
         .then(url => setUserPhotoUrl(url))
         .catch(error => {
-          alert('頭貼上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          onUploadAlertOpen()
+          setAlertHeader('Oops! 頭貼上傳失敗')
+          setAlertBody(
+            '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
+          )
           console.error(error)
         })
     }
@@ -133,6 +192,34 @@ function User() {
       spacing="20px"
       position="relative"
     >
+      <AlertModal
+        isAlertOpen={isLocationAlertOpen}
+        onAlertClose={onLocationAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isGetCafesAlertOpen}
+        onAlertClose={onGetCafesAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isGetUserAlertOpen}
+        onAlertClose={onGetUserAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isUploadAlertOpen}
+        onAlertClose={onUploadAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
       {isLoading ? (
         <Spinner
           thickness="5px"
@@ -141,10 +228,6 @@ function User() {
           color="teal"
           size="lg"
           mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
         />
       ) : (
         <>
@@ -199,11 +282,14 @@ function User() {
             <Text fontSize={{ base: '16px', md: '18px' }} fontWeight="semibold">
               {userInfo.email}
             </Text>
+            <Button variant="auth-buttons" w="113px" onClick={handleSignout}>
+              登出
+            </Button>
           </VStack>
           <Tabs variant="enclosed" w="full" colorScheme="teal">
             <TabList>
-              <Tab>Caffeine Footprints</Tab>
-              <Tab>Cafe Blogs</Tab>
+              <Tab>咖啡因足跡</Tab>
+              <Tab>咖啡廳食記</Tab>
             </TabList>
             <TabPanels>
               <TabPanel p="0" pt="4">
@@ -218,10 +304,12 @@ function User() {
                   as="section"
                   mb="6"
                 >
-                  {userLatitude && userLongitude && (
+                  {hasLocation && (
                     <Map
                       userLatitude={userLatitude}
                       userLongitude={userLongitude}
+                      defaultLatitude={defaultLatitude}
+                      defaultLongitude={defaultLongitude}
                       cafes={savedCafes}
                     />
                   )}
@@ -233,32 +321,38 @@ function User() {
                       justifyItems="center"
                       mb="4"
                     >
-                      {currentCafes.map(cafe => (
-                        <CafeCard
-                          key={cafe.id}
-                          cafe={cafe}
-                          canDeleteCafe={canDeleteCafe}
-                          handleDeleteCafe={() => deleteCafe(cafe.id)}
-                        />
-                      ))}
+                      {currentCafes.length > 0 ? (
+                        currentCafes.map(cafe => (
+                          <CafeCard
+                            key={cafe.id}
+                            cafe={cafe}
+                            canDeleteCafe={canDeleteCafe}
+                            handleDeleteCafe={() => deleteCafe(cafe.id)}
+                          />
+                        ))
+                      ) : (
+                        <Text>尚未收藏任何咖啡廳</Text>
+                      )}
                     </SimpleGrid>
-                    <Pagination
-                      defaultCurrent={1}
-                      total={savedCafes.length}
-                      current={currentPage}
-                      onChange={page => setCurrentPage(page)}
-                      pageSize={cardsPerPage}
-                      paginationProps={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                      }}
-                      pageNeighbours={2}
-                      rounded="full"
-                      baseStyles={{ bg: 'transparent' }}
-                      activeStyles={{ bg: 'gray.400' }}
-                      hoverStyles={{ bg: 'gray.400' }}
-                      responsive={{ activePage: true }}
-                    />
+                    {savedCafes.length > cardsPerPage && (
+                      <Pagination
+                        defaultCurrent={1}
+                        total={savedCafes.length}
+                        current={currentPage}
+                        onChange={page => setCurrentPage(page)}
+                        pageSize={cardsPerPage}
+                        paginationProps={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                        pageNeighbours={2}
+                        rounded="full"
+                        baseStyles={{ bg: 'transparent' }}
+                        activeStyles={{ bg: 'gray.400' }}
+                        hoverStyles={{ bg: 'gray.400' }}
+                        responsive={{ activePage: true }}
+                      />
+                    )}
                   </Flex>
                 </Flex>
               </TabPanel>
@@ -274,46 +368,49 @@ function User() {
                     justifyItems="center"
                     mb="4"
                   >
-                    {currentBlogs.map(blog => (
-                      <BlogCard
-                        key={blog.blogId}
-                        cafeId={blog.cafeId}
-                        blogId={blog.blogId}
-                        content={blog.content}
-                        title={blog.title}
-                        date={blog.createdAt}
-                        image={blog.image}
-                        canDeleteBlog={canDeleteBlog}
-                        handleBlogDelete={() =>
-                          deleteBlog(blog.cafeId, blog.blogId)
-                        }
-                      />
-                    ))}
+                    {currentBlogs.length > 0 ? (
+                      currentBlogs.map(blog => (
+                        <BlogCard
+                          key={blog.blogId}
+                          cafeId={blog.cafeId}
+                          blogId={blog.blogId}
+                          content={blog.content}
+                          title={blog.title}
+                          date={blog.createdAt}
+                          image={blog.image}
+                          canDeleteBlog={canDeleteBlog}
+                          handleBlogDelete={() =>
+                            deleteBlog(blog.cafeId, blog.blogId)
+                          }
+                        />
+                      ))
+                    ) : (
+                      <Text>尚未發佈任何食記</Text>
+                    )}
                   </SimpleGrid>
-                  <Pagination
-                    defaultCurrent={1}
-                    total={userBlogs.length}
-                    current={currentPage}
-                    onChange={page => setCurrentPage(page)}
-                    pageSize={cardsPerPage}
-                    paginationProps={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                    pageNeighbours={2}
-                    rounded="full"
-                    baseStyles={{ bg: 'transparent' }}
-                    activeStyles={{ bg: 'gray.400' }}
-                    hoverStyles={{ bg: 'gray.400' }}
-                    responsive={{ activePage: true }}
-                  />
+                  {userBlogs.length > cardsPerPage && (
+                    <Pagination
+                      defaultCurrent={1}
+                      total={userBlogs.length}
+                      current={currentPage}
+                      onChange={page => setCurrentPage(page)}
+                      pageSize={cardsPerPage}
+                      paginationProps={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                      pageNeighbours={2}
+                      rounded="full"
+                      baseStyles={{ bg: 'transparent' }}
+                      activeStyles={{ bg: 'gray.400' }}
+                      hoverStyles={{ bg: 'gray.400' }}
+                      responsive={{ activePage: true }}
+                    />
+                  )}
                 </Flex>
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <Button variant="auth-buttons" w="113px" onClick={handleSignout}>
-            Sign out
-          </Button>
         </>
       )}
     </VStack>

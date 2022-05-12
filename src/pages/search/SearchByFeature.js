@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
@@ -14,6 +14,7 @@ function SearchByFeature() {
   const [filteredCafes, setFilteredCafes] = useState([])
   const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -23,14 +24,14 @@ function SearchByFeature() {
       ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
 
-  const defaultFeatures = ['No Time Limits', 'Power Socket']
+  const defaultFeatures = ['不限時', '有插座']
   const ratingFeatures = [
-    { text: 'WiFi Stability', tag: 'wifi' },
-    { text: 'No/Short Waiting Time', tag: 'seat' },
-    { text: 'Quiet', tag: 'quiet' },
-    { text: 'Tasty', tag: 'tasty' },
-    { text: 'Affordable Price', tag: 'cheap' },
-    { text: 'Deco & Music', tag: 'music' },
+    { text: 'WiFi穩定', tag: 'wifi' },
+    { text: '通常有位', tag: 'seat' },
+    { text: '店內安靜', tag: 'quiet' },
+    { text: '咖啡好喝', tag: 'tasty' },
+    { text: '價格親民', tag: 'cheap' },
+    { text: '裝潢音樂', tag: 'music' },
   ]
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
@@ -57,6 +58,7 @@ function SearchByFeature() {
         })
 
         setFilteredCafes(filterResults)
+        setCurrentPage(1)
       })
       .catch(error => {
         alert('發生錯誤，請確認網路連線，或聯繫開發人員')
@@ -72,6 +74,11 @@ function SearchByFeature() {
     setAdvacedFilteredCafes([])
   }
 
+  const handlePageChange = page => {
+    setCurrentPage(page)
+    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <Flex
       w="full"
@@ -83,11 +90,9 @@ function SearchByFeature() {
       wrap="wrap"
     >
       <Heading as="h1" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-        Discover by Your Needs
+        根據需求，快速搜尋
       </Heading>
-      <Text fontSize={{ base: '16px', md: '18px' }}>
-        Default selected features
-      </Text>
+      <Text fontSize={{ base: '16px', md: '18px' }}>預設必備條件</Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {defaultFeatures.map((feature, i) => (
           <WrapItem key={i}>
@@ -130,7 +135,7 @@ function SearchByFeature() {
             isDisabled={value.length === 0 ? true : false}
             onClick={handleResetFilter}
           >
-            Clear
+            清除全部
           </Button>
           <Button
             colorScheme="blackAlpha"
@@ -141,7 +146,7 @@ function SearchByFeature() {
             onClick={handleFeatureSearch}
             isDisabled={value.length === 0 ? true : false}
           >
-            Search
+            條件搜尋
           </Button>
         </HStack>
       </Flex>
@@ -156,20 +161,21 @@ function SearchByFeature() {
           mt="6"
         />
       ) : (
-        <Flex w="full" direction="column" align="center">
+        <Flex w="full" direction="column" align="center" ref={scrollCardRef}>
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
                 {advacedFilteredCafes.length > 0
                   ? advacedFilteredCafes.length
                   : filteredCafes.length}{' '}
-                results
+                間符合
               </Text>
               <PopoverCityFilter
                 filteredCafes={filteredCafes}
                 setAdvacedFilteredCafes={setAdvacedFilteredCafes}
                 filterCityValue={filterCityValue}
                 getCityCheckboxProps={getCityCheckboxProps}
+                setCurrentPage={setCurrentPage}
               />
             </VStack>
           )}
@@ -184,27 +190,32 @@ function SearchByFeature() {
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
-          <Pagination
-            defaultCurrent={1}
-            total={
-              advacedFilteredCafes.length > 0
-                ? advacedFilteredCafes.length
-                : filteredCafes.length
-            }
-            current={currentPage}
-            onChange={page => setCurrentPage(page)}
-            pageSize={cafesPerPage}
-            paginationProps={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
-          />
+          {filteredCafes.length > cafesPerPage ||
+          advacedFilteredCafes.length > cafesPerPage ? (
+            <Pagination
+              defaultCurrent={1}
+              total={
+                advacedFilteredCafes.length > 0
+                  ? advacedFilteredCafes.length
+                  : filteredCafes.length
+              }
+              current={currentPage}
+              onChange={page => handlePageChange(page)}
+              pageSize={cafesPerPage}
+              paginationProps={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              pageNeighbours={2}
+              rounded="full"
+              baseStyles={{ bg: 'transparent' }}
+              activeStyles={{ bg: 'gray.400' }}
+              hoverStyles={{ bg: 'gray.400' }}
+              responsive={{ activePage: true }}
+            />
+          ) : (
+            ''
+          )}
         </Flex>
       )}
     </Flex>

@@ -22,9 +22,21 @@ function EditBlog() {
   const navigate = useNavigate()
 
   const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
+    isOpen: isPublishAlertOpen,
+    onOpen: onPublishAlertOpen,
+    onClose: onPublishAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isInvalidContentAlertOpen,
+    onOpen: onInvalidContentAlertOpen,
+    onClose: onInvalidContentAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isUploadAlertOpen,
+    onOpen: onUploadAlertOpen,
+    onClose: onUploadAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -32,7 +44,7 @@ function EditBlog() {
   }, [])
 
   useEffect(() => {
-    blogTitle && blogContent.blocks[0].text !== '' && coverPhotoUrl
+    blogTitle && blogContent !== '' && coverPhotoUrl
       ? setDisablePublish(false)
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
@@ -43,22 +55,37 @@ function EditBlog() {
         .getBlogPhotoUrl(e.target.files[0])
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
-          onAlertOpen()
+          onUploadAlertOpen()
           console.error(error)
         })
     }
   }
 
   const handlePublishBlog = () => {
+    if (blogContent.blocks[0].text === '') {
+      onInvalidContentAlertOpen()
+      return
+    }
+
     const blogData = {
       title: blogTitle,
       content: blogContent,
       image: coverPhotoUrl,
     }
 
-    firebase.uploadBlog(cafeId, currentUser.uid, blogData).then(blogId => {
-      navigate(`/cafe/${cafeId}/blog/${blogId}`)
-    })
+    firebase
+      .uploadBlog(cafeId, currentUser.uid, blogData)
+      .then(blogId => {
+        navigate(`/cafe/${cafeId}/blog/${blogId}`)
+      })
+      .catch(error => {
+        onPublishAlertOpen()
+        console.error(error)
+      })
+  }
+
+  const handleDiscardBlog = () => {
+    navigate(`/cafe/${cafeId}`)
   }
 
   return (
@@ -84,7 +111,7 @@ function EditBlog() {
           right="20px"
           onClick={() => coverPhototRef.current.click()}
         >
-          Upload
+          上傳
         </Button>
         <Input
           ref={coverPhototRef}
@@ -107,26 +134,41 @@ function EditBlog() {
       />
       <TextEditor setBlogContent={setBlogContent} />
 
-      <HStack spacing="2" mb="6" alignSelf="flex-end">
+      <HStack spacing="2" mb="10" alignSelf="flex-end">
         <WarningIcon />
-        <Text fontSize="sm">
-          Please make sure blog cover, title and content are all filled in
-          before publish.
-        </Text>
+        <Text fontSize="sm">發佈前，請確認圖片、標題與內容皆需完整填入</Text>
       </HStack>
 
-      <Button
-        alignSelf="center"
-        w="150px"
-        onClick={handlePublishBlog}
-        isDisabled={disablePublish}
-      >
-        Publish
-      </Button>
+      <HStack spacing="6" alignSelf="center">
+        <Button alignSelf="center" w="150px" onClick={handleDiscardBlog}>
+          取消
+        </Button>
+
+        <Button
+          alignSelf="center"
+          w="150px"
+          onClick={handlePublishBlog}
+          isDisabled={disablePublish}
+        >
+          發佈
+        </Button>
+      </HStack>
       <AlertModal
-        isAlertOpen={isAlertOpen}
-        onAlertClose={onAlertClose}
+        isAlertOpen={isUploadAlertOpen}
+        onAlertClose={onUploadAlertClose}
         alertHeader="圖片上傳失敗"
+        alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
+      />
+      <AlertModal
+        isAlertOpen={isInvalidContentAlertOpen}
+        onAlertClose={onInvalidContentAlertClose}
+        alertHeader="發佈失敗"
+        alertBody="請確認圖片、標題與內容皆不可為空。"
+      />
+      <AlertModal
+        isAlertOpen={isPublishAlertOpen}
+        onAlertClose={onPublishAlertClose}
+        alertHeader="發佈失敗"
         alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
       />
     </Flex>

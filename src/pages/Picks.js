@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react'
-import { Flex, Heading, Text, Spinner, SimpleGrid } from '@chakra-ui/react'
+import {
+  Flex,
+  Heading,
+  Text,
+  Spinner,
+  SimpleGrid,
+  useDisclosure,
+} from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import CafeCard from '../components/cafe/CafeCard'
+import AlertModal from '../components/AlertModal'
 import Map from '../components/map/Map'
 import usePageTracking from '../usePageTracking'
 
@@ -12,6 +20,8 @@ function Picks() {
 
   const [userLatitude, setUserLatitude] = useState(null)
   const [userLongitude, setUserLongitude] = useState(null)
+  const [defaultLatitude, setDefaultLatitude] = useState(null)
+  const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -20,10 +30,26 @@ function Picks() {
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = pickedCafes.slice(offset, offset + cafesPerPage)
 
+  const {
+    isOpen: isLocationAlertOpen,
+    onOpen: onLocationAlertOpen,
+    onClose: onLocationAlertClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: isGetCafesAlertOpen,
+    onOpen: onGetCafesAlertOpen,
+    onClose: onGetCafesAlertClose,
+  } = useDisclosure()
+
   useEffect(() => {
     if (!navigator.geolocation) {
-      alert('目前使用的瀏覽器版本不支援取得當前位置 😰 ')
+      onLocationAlertOpen()
+      setDefaultLatitude(25.0384851)
+      setDefaultLongitude(121.530177)
+      getDefaultCafes()
     }
+
     navigator.geolocation.getCurrentPosition(
       position => {
         setUserLatitude(position.coords.latitude)
@@ -31,10 +57,28 @@ function Picks() {
         getNearbyCafes(position.coords.latitude, position.coords.longitude)
       },
       () => {
-        alert('請開啟允許取得當前位置，以成功顯示鄰近咖啡廳 ☕️ ')
+        onLocationAlertOpen()
+        setDefaultLatitude(25.0384851)
+        setDefaultLongitude(121.530177)
+        getDefaultCafes()
       }
     )
   }, [])
+
+  const getDefaultCafes = () => {
+    api
+      .getCityCafes('taipei')
+      .then(cafes =>
+        setPickedCafes(
+          cafes.filter(cafe => cafe.address.includes('台北')).slice(0, 50)
+        )
+      )
+      .catch(error => {
+        onGetCafesAlertOpen()
+        console.error(error)
+      })
+      .finally(() => setIsLoading(false))
+  }
 
   const getNearbyCafes = (lat, lng) => {
     fetch(
@@ -60,7 +104,7 @@ function Picks() {
               )
             )
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -77,7 +121,7 @@ function Picks() {
               )
             )
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -93,13 +137,13 @@ function Picks() {
               )
             )
             .catch(error => {
-              alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+              onGetCafesAlertOpen()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
         }
       })
-      .catch(error => alert('無法取得當前行政區位置，請確認網路連線'))
+      .catch(error => onLocationAlertOpen())
   }
 
   return (
@@ -112,10 +156,10 @@ function Picks() {
       align="center"
     >
       <Heading as="h1" align="center" fontSize={{ base: '28px', md: '40px' }}>
-        Guided by Stars
+        不用思考，無腦跟喝
       </Heading>
       <Text my="3" align="center" fontSize={{ base: '16px', md: '18px' }}>
-        Here's our picks based on your current location, rating over 4 stars.
+        根據所在地區，精選評價 4 分以上咖啡廳
       </Text>
 
       {isLoading ? (
@@ -132,6 +176,8 @@ function Picks() {
           <Map
             userLatitude={userLatitude}
             userLongitude={userLongitude}
+            defaultLatitude={defaultLatitude}
+            defaultLongitude={defaultLongitude}
             cafes={pickedCafes}
           />
           <SimpleGrid
@@ -161,6 +207,19 @@ function Picks() {
           />
         </>
       )}
+      <AlertModal
+        isAlertOpen={isLocationAlertOpen}
+        onAlertClose={onLocationAlertClose}
+        alertHeader="Oops! 無法取得當前位置"
+        alertBody="目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）"
+      />
+
+      <AlertModal
+        isAlertOpen={isGetCafesAlertOpen}
+        onAlertClose={onGetCafesAlertClose}
+        alertHeader="Oops! 暫無法取得咖啡廳資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Flex, Heading, Text, Spinner, Box, SimpleGrid } from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, Spinner, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 import FilteredByDist from '../components/FilteredByDist'
 import CafeCard from '../components/cafe/CafeCard'
+import AlertModal from '../components/AlertModal'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
@@ -18,6 +20,12 @@ function City() {
   const [isLoading, setIsLoading] = useState(true)
 
   const { cityName } = useParams()
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(10)
@@ -57,7 +65,7 @@ function City() {
         }
       })
       .catch(error => {
-        alert('暫無法取得該縣市咖啡廳總數，請通知開發人員')
+        onAlertOpen()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -106,7 +114,7 @@ function City() {
           <Flex w="100%" direction="column" as="section">
             <Text alignSelf="center" mb="6">
               {updatedCafes.length > 0
-                ? `共篩選 ${updatedCafes.length} 間咖啡廳`
+                ? `${updatedCafes.length} 間符合`
                 : '所有收錄咖啡廳'}
             </Text>
             <SimpleGrid
@@ -144,6 +152,12 @@ function City() {
           </Flex>
         </>
       )}
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得咖啡廳資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

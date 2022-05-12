@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
+import AlertModal from '../components/AlertModal'
 import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 import CafeCard from '../components/cafe/CafeCard'
@@ -16,6 +17,14 @@ function Collections() {
   const [cafesForHangout, setCafesForHangout] = useState([])
   const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const scrollToTopRef = useRef(null)
+  const scrollCardRef = useRef(null)
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -27,17 +36,8 @@ function Collections() {
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
 
-  const workLabels = [
-    'No Time Limits',
-    'Quiet',
-    'Power Socket',
-    'WiFi Stability',
-  ]
-  const hangoutLabels = [
-    'No Time Limits',
-    'Deco & Music',
-    'No/Short Waiting Time',
-  ]
+  const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
+  const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
 
   const {
     value: filterCityValue,
@@ -47,8 +47,10 @@ function Collections() {
 
   useEffect(() => {
     setCollectionType(type)
+    setCurrentPage(1)
     setAdvacedFilteredCafes([])
     setCityValue([])
+    scrollToTopRef.current.scrollIntoView({ behavior: 'smooth' })
   }, [type])
 
   useEffect(() => {
@@ -72,21 +74,33 @@ function Collections() {
         setCafesForWork(forWork)
       })
       .catch(error => {
-        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        onAlertOpen()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
   }, [type])
 
+  const handlePageChange = page => {
+    setCurrentPage(page)
+    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <Flex w="full" maxW="1170px" h="100%" direction="column" align="center">
+    <Flex
+      w="full"
+      maxW="1170px"
+      h="100%"
+      direction="column"
+      align="center"
+      ref={scrollToTopRef}
+    >
       <Heading as="h1" fontSize={{ base: '28px', md: '40px' }}>
-        {collectionType === 'work' ? 'No Distractions' : 'Enjoy Gathering'}
+        {collectionType === 'work' ? '不受打擾' : '盡情暢聊'}
       </Heading>
       <Text my="3" fontSize={{ base: '18px', md: '20px' }} textAlign="center">
         {collectionType === 'work'
-          ? 'Perfect to Do Your Work'
-          : 'Perfect to Hangout with friends'}
+          ? '精選適合工作咖啡廳'
+          : '精選適合聚會咖啡廳'}
       </Text>
       <Wrap spacing="15px" justify="center" mb="4">
         {collectionType === 'work'
@@ -119,14 +133,14 @@ function Collections() {
         />
       ) : (
         <>
-          <VStack alignSelf="flex-end" mb="4">
+          <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>
             <Text mt="3" alignSelf="flex-end">
               {advacedFilteredCafes.length > 0
                 ? advacedFilteredCafes.length
                 : collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length}{' '}
-              results
+              間符合
             </Text>
             <PopoverCityFilter
               filteredCafes={
@@ -135,6 +149,7 @@ function Collections() {
               setAdvacedFilteredCafes={setAdvacedFilteredCafes}
               filterCityValue={filterCityValue}
               getCityCheckboxProps={getCityCheckboxProps}
+              setCurrentPage={setCurrentPage}
             />
           </VStack>
 
@@ -159,7 +174,7 @@ function Collections() {
                 : cafesForHangout.length
             }
             current={currentPage}
-            onChange={page => setCurrentPage(page)}
+            onChange={page => handlePageChange(page)}
             pageSize={cafesPerPage}
             paginationProps={{
               display: 'flex',
@@ -174,6 +189,12 @@ function Collections() {
           />
         </>
       )}
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得咖啡廳資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

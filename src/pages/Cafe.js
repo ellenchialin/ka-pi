@@ -5,7 +5,7 @@ import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useD
 import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
-import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
+import { BsBookmark, BsFillBookmarkFill, BsEyeFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import RatingStat from '../components/cafe/RatingStat'
@@ -48,6 +48,16 @@ function Cafe() {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
+  const {
+    isOpen: isGetCafesAlertOpen,
+    onOpen: onGetCafesAlertOpen,
+    onClose: onGetCafesAlertClose,
+  } = useDisclosure()
+  const {
+    isOpen: isUploadAlertOpen,
+    onOpen: onUploadAlertOpen,
+    onClose: onUploadAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     api
@@ -77,15 +87,22 @@ function Cafe() {
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
           .then(res => res.json())
           .then(data => {
+            if (data.length === 0) {
+              setGooglePhotoRefs([])
+            }
+
             const references = data
               .slice(0, 6)
               .map(photo => photo.photo_reference)
             setGooglePhotoRefs(references)
           })
+          .catch(error => {
+            console.error(error)
+          })
           .finally(() => setIsLoading(false))
       })
       .catch(error => {
-        alert('無法取得咖啡廳資料庫，請確認網路連線，或聯繫開發人員')
+        onGetCafesAlertOpen()
         console.error(error)
       })
   }, [])
@@ -157,7 +174,7 @@ function Cafe() {
         .getCommentPhotoUrl(e.target.files[0])
         .then(url => setCommentPhotoUrl(url))
         .catch(error => {
-          alert('圖片上傳失敗，請重新操作一次；如連續失敗請通知網站開發人員')
+          onUploadAlertOpen()
           console.error(error)
         })
     }
@@ -206,12 +223,46 @@ function Cafe() {
     }
 
     if (toggleSaved) {
-      firebase
-        .deleteSavedCafe(currentUser.uid, cafe.id)
-        .then(() => setToggleSaved(prev => !prev))
+      firebase.deleteSavedCafe(currentUser.uid, cafe.id).then(() => {
+        setToggleSaved(prev => !prev)
+        successToast({
+          position: 'top-right',
+          duration: 3000,
+          render: () => (
+            <HStack
+              spacing="4"
+              color="primaryDark"
+              p={3}
+              bg="teal.200"
+              borderRadius="md"
+            >
+              <Icon as={CheckCircleIcon} />
+              <Text>已移除蒐藏</Text>
+            </HStack>
+          ),
+          isClosable: true,
+        })
+      })
     } else {
       firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
         setToggleSaved(prev => !prev)
+        successToast({
+          position: 'top-right',
+          duration: 3000,
+          render: () => (
+            <HStack
+              spacing="4"
+              color="primaryDark"
+              p={3}
+              bg="teal.200"
+              borderRadius="md"
+            >
+              <Icon as={CheckCircleIcon} />
+              <Text>已成功蒐藏</Text>
+            </HStack>
+          ),
+          isClosable: true,
+        })
       })
     }
   }
@@ -225,6 +276,16 @@ function Cafe() {
   }
 
   const handleAlertAction = () => navigate('/auth')
+
+  const cafeCoverUrl = () => {
+    if (googlePhotoRefs.length === 0) {
+      if (blogs.length > 0) {
+        return blogs[0].image
+      }
+      return
+    }
+    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
+  }
 
   const subtagTextColor = useColorModeValue('thirdDark', 'secondaryLight')
 
@@ -256,7 +317,7 @@ function Cafe() {
             px="2"
             mb="4"
             minH="300px"
-            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
+            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(${cafeCoverUrl()})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
@@ -326,10 +387,16 @@ function Cafe() {
 
           {/* Calculate saved numbers & page views section */}
           <Box alignSelf="flex-end">
-            <Text>
-              {savedNumber.length > 0 ? savedNumber.length : 0} Saved /{' '}
-              {pageViews} Views
-            </Text>
+            <HStack>
+              <HStack align="center">
+                <Text>{savedNumber.length > 0 ? savedNumber.length : 0}</Text>
+                <Icon as={BsFillBookmarkFill} />
+              </HStack>
+              <HStack align="center">
+                <Text>{pageViews}</Text>
+                <Icon as={BsEyeFill} />
+              </HStack>
+            </HStack>
           </Box>
 
           {/* Features section */}
@@ -394,13 +461,13 @@ function Cafe() {
 
           {/* Google Reviews Photos section */}
           <Flex w="100%" direction="column" mb="10">
-            <Text color={subtagTextColor}>Google Reviews</Text>
+            <Text color={subtagTextColor}>Google 評論</Text>
             <Text
-              fontSize={{ base: '20px', md: '28px' }}
+              fontSize={{ base: '20px', md: '24px' }}
               fontWeight="bold"
               mb="4"
             >
-              More Photos
+              網友照片分享
             </Text>
             <SimpleGrid
               w="full"
@@ -408,10 +475,13 @@ function Cafe() {
               minChildWidth="220px"
               justifyItems="center"
             >
-              {googlePhotoRefs.length > 0 &&
+              {googlePhotoRefs.length > 0 ? (
                 googlePhotoRefs.map(ref => (
                   <GooglePlaceCard key={ref} photoRef={ref} />
-                ))}
+                ))
+              ) : (
+                <Text color={subtagTextColor}>Google 評論暫無提供資料</Text>
+              )}
             </SimpleGrid>
           </Flex>
 
@@ -419,33 +489,34 @@ function Cafe() {
           <Flex w="full" direction="column" mb="10">
             <Flex w="full" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>Blogs</Text>
+                <Text color={subtagTextColor}>食記</Text>
                 <Text
-                  fontSize={{ base: '20px', md: '28px' }}
+                  fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  Explore Others' Experience
+                  網友體驗分享
                 </Text>
               </VStack>
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                h="9"
                 fontSize="16px"
                 onClick={handleClickAddBlog}
               >
-                blog
+                撰寫食記
               </Button>
             </Flex>
 
-            {blogs.length > 0 ? (
-              <SimpleGrid
-                w="full"
-                spacing="20px"
-                minChildWidth="270px"
-                justifyItems="center"
-              >
-                {blogs.map(blog => (
+            <SimpleGrid
+              w="full"
+              spacing="20px"
+              minChildWidth="270px"
+              justifyItems="center"
+            >
+              {blogs.length > 0 ? (
+                blogs.map(blog => (
                   <BlogCard
                     key={blog.blogId}
                     cafeId={blog.cafeId}
@@ -455,33 +526,34 @@ function Cafe() {
                     date={blog.createdAt}
                     image={blog.image}
                   />
-                ))}
-              </SimpleGrid>
-            ) : (
-              <Text color={subtagTextColor}>尚未有任何食記</Text>
-            )}
+                ))
+              ) : (
+                <Text color={subtagTextColor}>尚未有任何食記</Text>
+              )}
+            </SimpleGrid>
           </Flex>
 
           {/* Comments section */}
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="4">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>Comments</Text>
+                <Text color={subtagTextColor}>留言</Text>
                 <Text
-                  fontSize={{ base: '20px', md: '28px' }}
+                  fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  Interact With Others
+                  留下任何想法
                 </Text>
               </VStack>
               <Button
                 leftIcon={<RiAddFill />}
                 size="sm"
+                h="9"
                 fontSize="16px"
                 onClick={handleClickAddComment}
               >
-                comment
+                發表留言
               </Button>
               <Modal
                 isOpen={isCommentOpen}
@@ -524,7 +596,7 @@ function Cafe() {
                         mt="auto"
                         onClick={() => commentPhotoRef.current.click()}
                       >
-                        Upload
+                        上傳
                       </Button>
                       <Input
                         ref={commentPhotoRef}
@@ -546,11 +618,17 @@ function Cafe() {
                         _disabled: { bg: 'secondaryLight' },
                       }}
                     >
-                      Submit
+                      送出
                     </Button>
                   </ModalFooter>
                 </ModalContent>
               </Modal>
+              <AlertModal
+                isAlertOpen={isUploadAlertOpen}
+                onAlertClose={onUploadAlertClose}
+                alertHeader="Oops! 圖片上傳失敗"
+                alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
+              />
             </Flex>
             {comments.length > 0 ? (
               comments.map(comment => (
@@ -566,7 +644,9 @@ function Cafe() {
                 />
               ))
             ) : (
-              <Text color={subtagTextColor}>尚未有任何留言</Text>
+              <Text alignSelf="center" color={subtagTextColor}>
+                尚未有任何留言
+              </Text>
             )}
           </Flex>
 
@@ -577,6 +657,13 @@ function Cafe() {
             alertBody="請先登入或註冊：）"
             actionText="前往登入"
             alertAction={() => handleAlertAction()}
+          />
+
+          <AlertModal
+            isAlertOpen={isGetCafesAlertOpen}
+            onAlertClose={onGetCafesAlertClose}
+            alertHeader="Oops! 暫無法取得咖啡廳資料"
+            alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
           />
         </>
       )}

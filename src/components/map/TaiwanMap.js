@@ -1,6 +1,13 @@
 import { useState } from 'react'
-import { Flex, Text, Box, useColorModeValue } from '@chakra-ui/react'
+import {
+  Flex,
+  Text,
+  Box,
+  useColorModeValue,
+  useDisclosure,
+} from '@chakra-ui/react'
 import CityInfoCard from './CityInfoCard'
+import AlertModal from '../../components/AlertModal'
 import { api } from '../../utils/api'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'
@@ -12,6 +19,12 @@ function TaiwanMap() {
   const [taipeiCafes, setTaipeiCafes] = useState([])
   const [newTaipeiCafes, setNewTaipeiCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const {
+    isOpen: isGetCafesAlertOpen,
+    onOpen: onGetCafesAlertOpen,
+    onClose: onGetCafesAlertClose,
+  } = useDisclosure()
 
   const convertFetchCityName = city => {
     if (city === 'taipei') {
@@ -36,7 +49,7 @@ function TaiwanMap() {
         }
       })
       .catch(error => {
-        alert('暫無法取得該縣市咖啡廳總數，請通知開發人員')
+        onGetCafesAlertOpen()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -50,7 +63,7 @@ function TaiwanMap() {
     setHoveredCity(cityChName)
     setIsLoading(true)
 
-    console.log('cityEngName: ', cityEngName)
+    // console.log('cityEngName: ', cityEngName)
 
     if (cityEngName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setNewTaipeiCafes)
@@ -87,7 +100,7 @@ function TaiwanMap() {
         color={useColorModeValue('primaryLight', 'primaryDark')}
       >
         {hoveredCity === '' ? (
-          <Text>點擊縣市看更多</Text>
+          <Text>點擊城市看更多</Text>
         ) : (
           <CityInfoCard
             hoveredCity={hoveredCity}
@@ -231,6 +244,12 @@ function TaiwanMap() {
           />
         </svg>
       </Box>
+      <AlertModal
+        isAlertOpen={isGetCafesAlertOpen}
+        onAlertClose={onGetCafesAlertClose}
+        alertHeader="Oops! 暫無法取得咖啡廳資料"
+        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+      />
     </>
   )
 }

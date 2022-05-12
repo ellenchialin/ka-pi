@@ -14,9 +14,9 @@ function NoMatch() {
         Oops
       </Text>
       <Text mb="4" fontSize={{ base: '18px', md: '24px' }}>
-        We can't seem to find the page you're looking for.
+        這個頁面不存在
       </Text>
-      <Button onClick={handleClick}>Back Home</Button>
+      <Button onClick={handleClick}>回到首頁</Button>
     </Flex>
   )
 }

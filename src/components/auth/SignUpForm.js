@@ -1,16 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react'
+import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, InputGroup, InputRightElement, IconButton, useDisclosure } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+import AlertModal from '../../components/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const { signup } = useAuth()
   const navigate = useNavigate()
+
+  const {
+    isOpen: isSignUpAlertOpen,
+    onOpen: onSignUpAlertOpen,
+    onClose: onSignUpAlertClose,
+  } = useDisclosure()
 
   const SignupSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -23,9 +30,14 @@ const SignUpForm = () => {
   })
 
   const handleSignUp = (name, email, password) => {
-    signup(name, email, password).then(user => {
-      navigate(-1)
-    })
+    signup(name, email, password)
+      .then(user => {
+        navigate(-1)
+      })
+      .catch(error => {
+        onSignUpAlertOpen()
+        console.error(error)
+      })
   }
 
   return (
@@ -75,8 +87,15 @@ const SignUpForm = () => {
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button mt={4} type="submit" w="113px" variant="auth-buttons">
-                  Sign up
+                  註冊
                 </Button>
+
+                <AlertModal
+                  isAlertOpen={isSignUpAlertOpen}
+                  onAlertClose={onSignUpAlertClose}
+                  alertHeader="Oops! 註冊失敗"
+                  alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+                />
               </Flex>
             </Form>
           )}

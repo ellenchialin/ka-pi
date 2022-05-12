@@ -92,10 +92,10 @@ function SidebarContent({ onClose, ...rest }) {
           icon={HiOutlineHome}
           _activeLink={{ color: 'red.400' }}
         >
-          Home
+          首頁
         </NavItem>
         <NavItem icon={BsSearch} onClick={discoverOnToggle}>
-          Discover
+          探索
           <Icon
             as={MdKeyboardArrowRight}
             ml="3"
@@ -104,14 +104,14 @@ function SidebarContent({ onClose, ...rest }) {
         </NavItem>
         <Collapse in={discoverIsOpen}>
           <NavItem as={NavLink} to="search" pl="12" py="2">
-            by Keywords
+            關鍵字搜尋
           </NavItem>
           <NavItem as={NavLink} to="search/features" pl="12" py="2">
-            by Features
+            條件搜尋
           </NavItem>
         </Collapse>
         <NavItem icon={VscLibrary} onClick={collectionsOnToggle}>
-          Collections
+          系列
           <Icon
             as={MdKeyboardArrowRight}
             ml="3"
@@ -120,17 +120,17 @@ function SidebarContent({ onClose, ...rest }) {
         </NavItem>
         <Collapse in={collectionsIsOpen}>
           <NavItem as={NavLink} to="collections/work" pl="12" py="2">
-            for Work
+            適合工作
           </NavItem>
           <NavItem as={NavLink} to="collections/hangout" pl="12" py="2">
-            for HangOut
+            適合聚會
           </NavItem>
         </Collapse>
         <NavItem as={NavLink} to="picks" icon={RiStarSmileLine}>
-          Picks For you
+          精選
         </NavItem>
         <NavItem as={NavLink} to="user" icon={CgCoffee}>
-          Your Cafe Map
+          你的咖啡廳地圖
         </NavItem>
       </Flex>
       <Box px="4" pb="5" mt="auto">
@@ -139,7 +139,7 @@ function SidebarContent({ onClose, ...rest }) {
           © 2022 ka-pi. All rights reserved.
         </Text>
         <Text fontSize="0.75em">
-          Cafes data source:{' '}
+          咖啡廳資料來源:{' '}
           <Link href="https://cafenomad.tw/developers/docs/v1.2" color="teal">
             Cafe Nomad
           </Link>
