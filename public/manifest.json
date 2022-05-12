@@ -3,9 +3,19 @@
   "name": "Find Cafes With Ease",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "32x32 16x16"
+    },
+    {
+      "src": "android-chrome-192x192.png",
       "type": "image/png",
-      "sizes": "500x500"
+      "sizes": "192x192"
+    },
+    {
+      "src": "android-chrome-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384"
     }
   ],
   "start_url": ".",
