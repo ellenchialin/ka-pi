@@ -38,6 +38,7 @@ function Collections() {
 
   useEffect(() => {
     setCollectionType(type)
+    setCurrentPage(1)
     setAdvacedFilteredCafes([])
     setCityValue([])
   }, [type])
