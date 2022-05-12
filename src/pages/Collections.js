@@ -126,6 +126,7 @@ function Collections() {
               setAdvacedFilteredCafes={setAdvacedFilteredCafes}
               filterCityValue={filterCityValue}
               getCityCheckboxProps={getCityCheckboxProps}
+              setCurrentPage={setCurrentPage}
             />
           </VStack>
 

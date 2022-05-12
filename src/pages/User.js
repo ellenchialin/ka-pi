@@ -242,23 +242,25 @@ function User() {
                         />
                       ))}
                     </SimpleGrid>
-                    <Pagination
-                      defaultCurrent={1}
-                      total={savedCafes.length}
-                      current={currentPage}
-                      onChange={page => setCurrentPage(page)}
-                      pageSize={cardsPerPage}
-                      paginationProps={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                      }}
-                      pageNeighbours={2}
-                      rounded="full"
-                      baseStyles={{ bg: 'transparent' }}
-                      activeStyles={{ bg: 'gray.400' }}
-                      hoverStyles={{ bg: 'gray.400' }}
-                      responsive={{ activePage: true }}
-                    />
+                    {savedCafes.length > cardsPerPage && (
+                      <Pagination
+                        defaultCurrent={1}
+                        total={savedCafes.length}
+                        current={currentPage}
+                        onChange={page => setCurrentPage(page)}
+                        pageSize={cardsPerPage}
+                        paginationProps={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                        pageNeighbours={2}
+                        rounded="full"
+                        baseStyles={{ bg: 'transparent' }}
+                        activeStyles={{ bg: 'gray.400' }}
+                        hoverStyles={{ bg: 'gray.400' }}
+                        responsive={{ activePage: true }}
+                      />
+                    )}
                   </Flex>
                 </Flex>
               </TabPanel>
@@ -290,23 +292,25 @@ function User() {
                       />
                     ))}
                   </SimpleGrid>
-                  <Pagination
-                    defaultCurrent={1}
-                    total={userBlogs.length}
-                    current={currentPage}
-                    onChange={page => setCurrentPage(page)}
-                    pageSize={cardsPerPage}
-                    paginationProps={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                    pageNeighbours={2}
-                    rounded="full"
-                    baseStyles={{ bg: 'transparent' }}
-                    activeStyles={{ bg: 'gray.400' }}
-                    hoverStyles={{ bg: 'gray.400' }}
-                    responsive={{ activePage: true }}
-                  />
+                  {userBlogs.length > cardsPerPage && (
+                    <Pagination
+                      defaultCurrent={1}
+                      total={userBlogs.length}
+                      current={currentPage}
+                      onChange={page => setCurrentPage(page)}
+                      pageSize={cardsPerPage}
+                      paginationProps={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                      pageNeighbours={2}
+                      rounded="full"
+                      baseStyles={{ bg: 'transparent' }}
+                      activeStyles={{ bg: 'gray.400' }}
+                      hoverStyles={{ bg: 'gray.400' }}
+                      responsive={{ activePage: true }}
+                    />
+                  )}
                 </Flex>
               </TabPanel>
             </TabPanels>

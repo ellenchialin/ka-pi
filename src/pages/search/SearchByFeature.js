@@ -57,6 +57,7 @@ function SearchByFeature() {
         })
 
         setFilteredCafes(filterResults)
+        setCurrentPage(1)
       })
       .catch(error => {
         alert('發生錯誤，請確認網路連線，或聯繫開發人員')
@@ -168,6 +169,7 @@ function SearchByFeature() {
                 setAdvacedFilteredCafes={setAdvacedFilteredCafes}
                 filterCityValue={filterCityValue}
                 getCityCheckboxProps={getCityCheckboxProps}
+                setCurrentPage={setCurrentPage}
               />
             </VStack>
           )}
@@ -182,27 +184,32 @@ function SearchByFeature() {
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
-          <Pagination
-            defaultCurrent={1}
-            total={
-              advacedFilteredCafes.length > 0
-                ? advacedFilteredCafes.length
-                : filteredCafes.length
-            }
-            current={currentPage}
-            onChange={page => setCurrentPage(page)}
-            pageSize={cafesPerPage}
-            paginationProps={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
-          />
+          {filteredCafes.length > cafesPerPage ||
+          advacedFilteredCafes.length > cafesPerPage ? (
+            <Pagination
+              defaultCurrent={1}
+              total={
+                advacedFilteredCafes.length > 0
+                  ? advacedFilteredCafes.length
+                  : filteredCafes.length
+              }
+              current={currentPage}
+              onChange={page => setCurrentPage(page)}
+              pageSize={cafesPerPage}
+              paginationProps={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              pageNeighbours={2}
+              rounded="full"
+              baseStyles={{ bg: 'transparent' }}
+              activeStyles={{ bg: 'gray.400' }}
+              hoverStyles={{ bg: 'gray.400' }}
+              responsive={{ activePage: true }}
+            />
+          ) : (
+            ''
+          )}
         </Flex>
       )}
     </Flex>

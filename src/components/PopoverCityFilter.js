@@ -9,6 +9,7 @@ const PopoverCityFilter = ({
   setAdvacedFilteredCafes,
   filterCityValue,
   getCityCheckboxProps,
+  setCurrentPage,
 }) => {
   const cities = cityData.map(city => city.place)
 
@@ -19,6 +20,7 @@ const PopoverCityFilter = ({
       })
     })
     setAdvacedFilteredCafes(results)
+    setCurrentPage(1)
   }
 
   const {
@@ -101,6 +103,7 @@ PopoverCityFilter.propTypes = {
   setAdvacedFilteredCafes: PropTypes.func,
   filterCityValue: PropTypes.array,
   getCityCheckboxProps: PropTypes.func,
+  setCurrentPage: PropTypes.func,
 }
 
 export default PopoverCityFilter
