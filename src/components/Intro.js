@@ -26,11 +26,13 @@ function Intro({ handleScroll }) {
       <Text fontSize={{ base: '40px', md: '60px' }} fontWeight="bold">
         咖啡
       </Text>
-      <HStack mb="2">
+      <HStack mb="2" fontSize="18px">
         <Text as="i" fontWeight="bold">{`[ ka-pi ]`}</Text>
         <Text>名詞</Text>
       </HStack>
-      <Text>神奇咖啡色液體，產自豆子，人類生活必需品。</Text>
+      <Text fontSize={{ base: '18px', md: '20px' }}>
+        神奇咖啡色液體，產自豆子，人類生活必需品。
+      </Text>
       <VStack mt="32">
         <Text>來一杯</Text>
         <IconButton

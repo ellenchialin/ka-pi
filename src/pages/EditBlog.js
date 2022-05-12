@@ -38,7 +38,7 @@ function EditBlog() {
   }, [])
 
   useEffect(() => {
-    blogTitle && blogContent.blocks[0].text !== '' && coverPhotoUrl
+    blogTitle && blogContent && coverPhotoUrl
       ? setDisablePublish(false)
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
@@ -61,6 +61,8 @@ function EditBlog() {
       content: blogContent,
       image: coverPhotoUrl,
     }
+
+    // 檢查是否都有填
 
     firebase
       .uploadBlog(cafeId, currentUser.uid, blogData)

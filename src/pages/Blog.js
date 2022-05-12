@@ -55,7 +55,6 @@ function Blog() {
         onAlertOpen()
         console.error(error)
       })
-      .finally(() => setIsLoading(false))
   }, [])
 
   return (
@@ -96,12 +95,12 @@ function Blog() {
             fontSize="14px"
           >
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/" isExternal>
+              <BreadcrumbLink as={Link} to="/">
                 首頁
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to={`/cafe/${cafeId}`} isExternal>
+              <BreadcrumbLink as={Link} to={`/cafe/${cafeId}`}>
                 {cafeName}
               </BreadcrumbLink>
             </BreadcrumbItem>

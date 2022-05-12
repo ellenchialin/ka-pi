@@ -87,6 +87,10 @@ function Cafe() {
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
           .then(res => res.json())
           .then(data => {
+            if (data.length === 0) {
+              setGooglePhotoRefs([])
+            }
+
             const references = data
               .slice(0, 6)
               .map(photo => photo.photo_reference)
@@ -273,6 +277,16 @@ function Cafe() {
 
   const handleAlertAction = () => navigate('/auth')
 
+  const cafeCoverUrl = () => {
+    if (googlePhotoRefs.length === 0) {
+      if (blogs.length > 0) {
+        return blogs[0].image
+      }
+      return
+    }
+    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
+  }
+
   const subtagTextColor = useColorModeValue('thirdDark', 'secondaryLight')
 
   return (
@@ -303,7 +317,7 @@ function Cafe() {
             px="2"
             mb="4"
             minH="300px"
-            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY})`}
+            bgImage={`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(${cafeCoverUrl()})`}
             bgSize="cover"
             bgPosition="center"
             bgRepeat="no-repeat"
@@ -466,7 +480,7 @@ function Cafe() {
                   <GooglePlaceCard key={ref} photoRef={ref} />
                 ))
               ) : (
-                <Text color={subtagTextColor}>暫無法取得 Google 評論資訊</Text>
+                <Text color={subtagTextColor}>Google 評論暫無提供資料</Text>
               )}
             </SimpleGrid>
           </Flex>
