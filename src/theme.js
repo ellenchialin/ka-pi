@@ -53,6 +53,9 @@ const custumTheme = extendTheme({
         'auth-buttons': props => ({
           bg: 'thirdDark',
           color: 'primaryLight',
+          _hover: {
+            bg: 'primaryDark',
+          },
         }),
         'auth-thirdParty': props => ({
           bg: 'transparent',
