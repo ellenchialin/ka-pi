@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon, Avatar } from '@chakra-ui/react'
+import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon, Avatar, VStack } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+import { BiSmile } from 'react-icons/bi'
 import { firebase } from '../../utils/firebase'
+import Picker from 'emoji-picker-react'
 import AlertModal from '../AlertModal'
 import Reply from './Reply'
 
@@ -18,9 +20,11 @@ function Comment({
   date,
   image,
 }) {
-  const [userInfo, setUserInfo] = useState({})
-  const [newReplyText, setNewReplyText] = useState('')
+  const [currentUserInfo, setCurrentUserInfo] = useState({})
+  const [commentUserInfo, setCommentUserInfo] = useState({})
+  const [replyText, setReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
+  const [showEmoji, setShowEmoji] = useState(false)
   const [replyList, setReplyList] = useState([])
   const convertedCommentDate = date.toDate().toLocaleDateString()
 
@@ -54,8 +58,10 @@ function Comment({
 
   useEffect(() => {
     firebase.getUser(commentUserId).then(data => {
-      setUserInfo(data)
+      setCommentUserInfo(data)
     })
+
+    firebase.getUser(currentUser.uid).then(data => setCurrentUserInfo(data))
   }, [])
 
   useEffect(() => {
@@ -91,11 +97,11 @@ function Comment({
       commentId,
       userId: currentUser.uid,
       image: replyPhotoUrl,
-      text: newReplyText,
+      text: replyText,
     }
 
     firebase.addReply(repliedDetails).then(() => {
-      setNewReplyText('')
+      setReplyText('')
       onReplyClose()
 
       successToast({
@@ -122,12 +128,20 @@ function Comment({
     })
   }
 
+  const onEmojiClick = (event, emojiObject) => {
+    setReplyText(prevReplyText => prevReplyText + emojiObject.emoji)
+  }
+
   const handleAlertAction = () => navigate('/auth')
 
   return (
     <Flex w="100%" direction="column" my="2">
       <Flex w="100%" justify="space-between" align="flex-start" mb="1">
-        <Avatar size="md" name={userInfo.name} src={userInfo.photo} />
+        <Avatar
+          size="md"
+          name={commentUserInfo.name}
+          src={commentUserInfo.photo}
+        />
         <Flex w="full" direction="column" ml="4">
           <Box
             w="full"
@@ -137,6 +151,9 @@ function Comment({
             p="4"
             mb="2"
           >
+            <Text color="primaryDark" fontWeight="bold">
+              {commentUserInfo.name}
+            </Text>
             <Text color="primaryDark">{text}</Text>
             {image && (
               <>
@@ -198,27 +215,67 @@ function Comment({
               variant="comment"
             >
               <ModalOverlay />
-              <ModalContent>
+              <ModalContent mx="2">
                 <ModalCloseButton color="primaryDark" />
                 <ModalBody>
-                  <Textarea
-                    value={newReplyText}
-                    onChange={e => setNewReplyText(e.target.value)}
-                    placeholder="Leave your reply here..."
-                    size="md"
+                  <VStack
+                    position="relative"
                     mt="10"
                     mb="6"
+                    borderWidth="1px"
                     borderColor="secondaryLight"
-                    color="primaryDark"
-                    _hover={{ borderColor: 'secondaryDark' }}
-                  />
-                  <Flex mb="6">
-                    <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                    borderRadius="md"
+                  >
+                    <HStack w="100%" px="4" pt="2" alignSelf="flex-start">
+                      <Avatar
+                        size="sm"
+                        name={currentUserInfo.name}
+                        src={currentUserInfo.photo}
+                      />
+                      <Text color="primaryDark">{currentUserInfo.name}</Text>
+                    </HStack>
+                    <Textarea
+                      value={replyText}
+                      onChange={e => setReplyText(e.target.value)}
+                      onFocus={() => setShowEmoji(false)}
+                      placeholder="Leave your reply here..."
+                      size="md"
+                      border="none"
+                      color="primaryDark"
+                      resize="none"
+                      focusBorderColor="transparent"
+                      _hover={{ borderColor: 'secondaryDark' }}
+                    />
+                    <Box position="absolute" bottom="0" right="4" zIndex="2">
+                      <Icon
+                        as={BiSmile}
+                        fontSize="24px"
+                        color="secondaryLight"
+                        cursor="pointer"
+                        onClick={() => setShowEmoji(prev => !prev)}
+                      />
+                    </Box>
+                    {showEmoji && (
+                      <Picker
+                        onEmojiClick={onEmojiClick}
+                        disableSearchBar
+                        pickerStyle={{
+                          height: '200px',
+                          position: 'absolute',
+                          bottom: '-200px',
+                          right: '0',
+                          zIndex: '2',
+                        }}
+                      />
+                    )}
+                  </VStack>
+                  <Flex mb="6" position="relative">
+                    <AspectRatio w="100%" maxWidth="150px" ratio={1}>
                       <Image
                         src={replyPhotoUrl ? replyPhotoUrl : ''}
                         alt="留言照片"
                         fit="cover"
-                        maxW="100px"
+                        borderRadius="md"
                         fallbackSrc="https://via.placeholder.com/100?text=photo"
                       />
                     </AspectRatio>
@@ -227,8 +284,9 @@ function Comment({
                       aria-label="上傳留言照"
                       leftIcon={<RiAddFill />}
                       size="xs"
-                      ml="2"
-                      mt="auto"
+                      position="absolute"
+                      top="10px"
+                      left="80px"
                       onClick={() => replyPhotoRef.current.click()}
                     >
                       上傳
@@ -241,29 +299,30 @@ function Comment({
                       onChange={e => handleReplyPhotoUpload(e)}
                       hidden
                     />
-                    <AlertModal
-                      isAlertOpen={isUploadAlertOpen}
-                      onAlertClose={onUploadAlertClose}
-                      alertHeader="Oops! 圖片上傳失敗"
-                      alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
-                    />
                   </Flex>
                 </ModalBody>
 
                 <ModalFooter>
                   <Button
                     variant="auth-buttons"
-                    isDisabled={newReplyText === '' ? true : false}
+                    isDisabled={replyText === '' ? true : false}
                     onClick={submitReply}
                     _hover={{
+                      bg: 'primaryDark',
                       _disabled: { bg: 'secondaryLight' },
                     }}
                   >
-                    Submit
+                    回覆
                   </Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            <AlertModal
+              isAlertOpen={isUploadAlertOpen}
+              onAlertClose={onUploadAlertClose}
+              alertHeader="Oops! 圖片上傳失敗"
+              alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
+            />
           </HStack>
         </Flex>
       </Flex>

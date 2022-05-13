@@ -32,8 +32,7 @@ function BlogCard({
     <>
       <Box
         w="270px"
-        h="100%"
-        minH={{ sm: '300px', md: '360px' }}
+        h="-webkit-fit-content"
         bg="white"
         borderWidth={useColorModeValue('1px', '0px')}
         rounded="lg"

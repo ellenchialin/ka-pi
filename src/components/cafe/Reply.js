@@ -34,8 +34,13 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   }, [])
 
   return (
-    <HStack w="100%" pl="12" spacing="0" mt="1">
-      <Avatar size="md" name={userInfo.name} src={userInfo.photo} />
+    <HStack w="100%" pl="16" spacing="0" mt="1">
+      <Avatar
+        size="md"
+        name={userInfo.name}
+        src={userInfo.photo}
+        alignSelf="flex-start"
+      />
       <Flex w="100%" direction="column">
         <Box
           w="100%"
@@ -44,7 +49,11 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           borderRadius="xl"
           p="4"
           mb="2"
+          ml="4"
         >
+          <Text color="primaryDark" fontWeight="bold">
+            {userInfo.name}
+          </Text>
           <Text color="primaryDark">{replyText}</Text>
           {replyImage && (
             <>
@@ -81,7 +90,9 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
             </>
           )}
         </Box>
-        <Text fontSize="0.75rem">{convertedReplyDate}</Text>
+        <Text fontSize="0.75rem" ml="4">
+          {convertedReplyDate}
+        </Text>
       </Flex>
 
       <AlertModal
