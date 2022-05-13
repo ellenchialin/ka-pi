@@ -435,14 +435,14 @@ function Cafe() {
                 w="100%"
                 maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
                 h="100%"
-                minH="-webkit-fit-content"
+                minH="fit-content"
                 spacing={{ base: '40px', md: '20px', lg: '40px' }}
                 justify="center"
                 bg="primaryDark"
                 color="primaryLight"
                 rounded="lg"
                 shadow="md"
-                px="2"
+                p="2"
               >
                 <VStack spacing="2" align="flex-start">
                   <Text>{feature.name}</Text>
