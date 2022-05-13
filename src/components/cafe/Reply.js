@@ -34,7 +34,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   }, [])
 
   return (
-    <HStack w="100%" pl="12" spacing="0" mt="1">
+    <HStack w="100%" pl="16" spacing="0" mt="1">
       <Avatar
         size="md"
         name={userInfo.name}
@@ -51,6 +51,9 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           mb="2"
           ml="4"
         >
+          <Text color="primaryDark" fontWeight="bold">
+            {userInfo.name}
+          </Text>
           <Text color="primaryDark">{replyText}</Text>
           {replyImage && (
             <>

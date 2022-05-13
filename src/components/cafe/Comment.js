@@ -137,6 +137,9 @@ function Comment({
             p="4"
             mb="2"
           >
+            <Text color="primaryDark" fontWeight="bold">
+              {userInfo.name}
+            </Text>
             <Text color="primaryDark">{text}</Text>
             {image && (
               <>
