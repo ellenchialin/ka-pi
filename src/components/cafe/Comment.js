@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon, Avatar } from '@chakra-ui/react'
+import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, Textarea, Input, ModalFooter, Button, useDisclosure, AspectRatio, useColorModeValue, Box, HStack, useToast, Icon, Avatar, VStack } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+import { BiSmile } from 'react-icons/bi'
 import { firebase } from '../../utils/firebase'
+import Picker from 'emoji-picker-react'
 import AlertModal from '../AlertModal'
 import Reply from './Reply'
 
@@ -19,8 +21,9 @@ function Comment({
   image,
 }) {
   const [userInfo, setUserInfo] = useState({})
-  const [newReplyText, setNewReplyText] = useState('')
+  const [replyText, setReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
+  const [showEmoji, setShowEmoji] = useState(false)
   const [replyList, setReplyList] = useState([])
   const convertedCommentDate = date.toDate().toLocaleDateString()
 
@@ -91,11 +94,11 @@ function Comment({
       commentId,
       userId: currentUser.uid,
       image: replyPhotoUrl,
-      text: newReplyText,
+      text: replyText,
     }
 
     firebase.addReply(repliedDetails).then(() => {
-      setNewReplyText('')
+      setReplyText('')
       onReplyClose()
 
       successToast({
@@ -120,6 +123,10 @@ function Comment({
         setReplyList(list)
       })
     })
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setReplyText(prevReplyText => prevReplyText + emojiObject.emoji)
   }
 
   const handleAlertAction = () => navigate('/auth')
@@ -204,24 +211,48 @@ function Comment({
               <ModalContent>
                 <ModalCloseButton color="primaryDark" />
                 <ModalBody>
-                  <Textarea
-                    value={newReplyText}
-                    onChange={e => setNewReplyText(e.target.value)}
-                    placeholder="Leave your reply here..."
-                    size="md"
-                    mt="10"
-                    mb="6"
-                    borderColor="secondaryLight"
-                    color="primaryDark"
-                    _hover={{ borderColor: 'secondaryDark' }}
-                  />
+                  <VStack position="relative" mt="10" mb="6">
+                    <Textarea
+                      value={replyText}
+                      onChange={e => setReplyText(e.target.value)}
+                      onFocus={() => setShowEmoji(false)}
+                      placeholder="Leave your reply here..."
+                      size="md"
+                      borderColor="secondaryLight"
+                      color="primaryDark"
+                      resize="none"
+                      _hover={{ borderColor: 'secondaryDark' }}
+                    />
+                    <Box position="absolute" bottom="0" right="4" zIndex="2">
+                      <Icon
+                        as={BiSmile}
+                        fontSize="24px"
+                        color="secondaryLight"
+                        cursor="pointer"
+                        onClick={() => setShowEmoji(prev => !prev)}
+                      />
+                    </Box>
+                    {showEmoji && (
+                      <Picker
+                        onEmojiClick={onEmojiClick}
+                        disableSearchBar
+                        pickerStyle={{
+                          height: '200px',
+                          position: 'absolute',
+                          bottom: '-200px',
+                          right: '0',
+                          zIndex: '2',
+                        }}
+                      />
+                    )}
+                  </VStack>
                   <Flex mb="6">
                     <AspectRatio w="100%" maxWidth="100px" ratio={1}>
                       <Image
                         src={replyPhotoUrl ? replyPhotoUrl : ''}
                         alt="留言照片"
                         fit="cover"
-                        maxW="100px"
+                        borderRadius="md"
                         fallbackSrc="https://via.placeholder.com/100?text=photo"
                       />
                     </AspectRatio>
@@ -244,29 +275,29 @@ function Comment({
                       onChange={e => handleReplyPhotoUpload(e)}
                       hidden
                     />
-                    <AlertModal
-                      isAlertOpen={isUploadAlertOpen}
-                      onAlertClose={onUploadAlertClose}
-                      alertHeader="Oops! 圖片上傳失敗"
-                      alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
-                    />
                   </Flex>
                 </ModalBody>
 
                 <ModalFooter>
                   <Button
                     variant="auth-buttons"
-                    isDisabled={newReplyText === '' ? true : false}
+                    isDisabled={replyText === '' ? true : false}
                     onClick={submitReply}
                     _hover={{
                       _disabled: { bg: 'secondaryLight' },
                     }}
                   >
-                    Submit
+                    送出
                   </Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            <AlertModal
+              isAlertOpen={isUploadAlertOpen}
+              onAlertClose={onUploadAlertClose}
+              alertHeader="Oops! 圖片上傳失敗"
+              alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com"
+            />
           </HStack>
         </Flex>
       </Flex>

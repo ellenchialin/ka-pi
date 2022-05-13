@@ -6,8 +6,9 @@ import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { BsBookmark, BsFillBookmarkFill, BsEyeFill } from 'react-icons/bs'
-import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
+import { BiAlarmExclamation, BiPlug, BiSmile } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
+import Picker from 'emoji-picker-react'
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
@@ -28,6 +29,7 @@ function Cafe() {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
   const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
+  const [showEmoji, setShowEmoji] = useState(false)
   const [googlePhotoRefs, setGooglePhotoRefs] = useState([])
   const [pageViews, setPageViews] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -180,7 +182,7 @@ function Cafe() {
     }
   }
 
-  const handleAddComment = () => {
+  const submitComment = () => {
     const commentDetails = {
       cafeId: cafe.id,
       userId: currentUser.uid,
@@ -285,6 +287,10 @@ function Cafe() {
       return
     }
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setCommentText(prevCommentText => prevCommentText + emojiObject.emoji)
   }
 
   const subtagTextColor = useColorModeValue('thirdDark', 'secondaryLight')
@@ -567,23 +573,48 @@ function Cafe() {
                 <ModalContent>
                   <ModalCloseButton color="primaryDark" />
                   <ModalBody>
-                    <Textarea
-                      value={commentText}
-                      onChange={e => setCommentText(e.target.value)}
-                      placeholder="Leave your comment here..."
-                      size="md"
-                      mt="10"
-                      mb="6"
-                      borderColor="secondaryLight"
-                      color="primaryDark"
-                      _hover={{ borderColor: 'secondaryDark' }}
-                    />
+                    <VStack position="relative" mt="10" mb="6">
+                      <Textarea
+                        value={commentText}
+                        onChange={e => setCommentText(e.target.value)}
+                        onFocus={() => setShowEmoji(false)}
+                        placeholder="Leave your comment here..."
+                        size="md"
+                        borderColor="secondaryLight"
+                        color="primaryDark"
+                        resize="none"
+                        _hover={{ borderColor: 'secondaryDark' }}
+                      />
+                      <Box position="absolute" bottom="0" right="4" zIndex="2">
+                        <Icon
+                          as={BiSmile}
+                          fontSize="24px"
+                          color="secondaryLight"
+                          cursor="pointer"
+                          onClick={() => setShowEmoji(prev => !prev)}
+                        />
+                      </Box>
+                      {showEmoji && (
+                        <Picker
+                          onEmojiClick={onEmojiClick}
+                          disableSearchBar
+                          pickerStyle={{
+                            height: '200px',
+                            position: 'absolute',
+                            bottom: '-200px',
+                            right: '0',
+                            zIndex: '2',
+                          }}
+                        />
+                      )}
+                    </VStack>
                     <Flex mb="6">
                       <AspectRatio w="100%" maxWidth="100px" ratio={1}>
                         <Image
                           src={commentPhotoUrl ? commentPhotoUrl : ''}
                           alt="留言照片"
                           fit="cover"
+                          borderRadius="md"
                           fallbackSrc="https://via.placeholder.com/100?text=photo"
                         />
                       </AspectRatio>
@@ -613,7 +644,7 @@ function Cafe() {
                     <Button
                       variant="auth-buttons"
                       isDisabled={commentText === '' ? true : false}
-                      onClick={handleAddComment}
+                      onClick={submitComment}
                       _hover={{
                         _disabled: { bg: 'secondaryLight' },
                       }}
