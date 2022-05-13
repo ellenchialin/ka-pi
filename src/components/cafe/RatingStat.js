@@ -6,8 +6,7 @@ function RatingStat({ feature1, feature2 }) {
     <Flex
       w="250px"
       maxW={{ base: '300px', md: '500px' }}
-      h="100%"
-      minH="100px"
+      h="100px"
       align="center"
       justify="center"
       p="2"

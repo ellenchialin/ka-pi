@@ -111,7 +111,7 @@ function Cafe() {
     if (limited === 'no') {
       return '不限時'
     } else if (limited === 'maybe') {
-      return '視平假日狀況'
+      return '視平假日'
     } else if (limited === 'yes') {
       return '有限時'
     } else {
@@ -427,7 +427,7 @@ function Cafe() {
             columns={[1, 1, 3]}
             spacing="20px"
             justifyItems="center"
-            mb="10"
+            mb="16"
           >
             {primaryFeatures.map(feature => (
               <HStack
@@ -435,7 +435,7 @@ function Cafe() {
                 w="100%"
                 maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
                 h="100%"
-                minH="100px"
+                minH="-webkit-fit-content"
                 spacing={{ base: '40px', md: '20px', lg: '40px' }}
                 justify="center"
                 bg="primaryDark"
@@ -460,14 +460,14 @@ function Cafe() {
           </SimpleGrid>
 
           {/* Google Reviews Photos section */}
-          <Flex w="100%" direction="column" mb="10">
-            <Text color={subtagTextColor}>Google 評論</Text>
+          <Flex w="100%" direction="column" mb="16">
+            <Text color={subtagTextColor}>快速導覽</Text>
             <Text
               fontSize={{ base: '20px', md: '24px' }}
               fontWeight="bold"
-              mb="4"
+              mb="6"
             >
-              網友照片分享
+              Google 評論照片
             </Text>
             <SimpleGrid
               w="full"
@@ -486,16 +486,16 @@ function Cafe() {
           </Flex>
 
           {/* Blogs section */}
-          <Flex w="full" direction="column" mb="10">
-            <Flex w="full" justify="space-between" align="end" mb="4">
+          <Flex w="full" direction="column" mb="16">
+            <Flex w="full" justify="space-between" align="end" mb="6">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>食記</Text>
+                <Text color={subtagTextColor}>店內細節</Text>
                 <Text
                   fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
                   mt="0"
                 >
-                  網友體驗分享
+                  全站用戶食記
                 </Text>
               </VStack>
               <Button
@@ -535,9 +535,9 @@ function Cafe() {
 
           {/* Comments section */}
           <Flex w="100%" direction="column">
-            <Flex w="100%" justify="space-between" align="end" mb="4">
+            <Flex w="100%" justify="space-between" align="end" mb="6">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>留言</Text>
+                <Text color={subtagTextColor}>有話想說？</Text>
                 <Text
                   fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"
