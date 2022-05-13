@@ -20,7 +20,8 @@ function Comment({
   date,
   image,
 }) {
-  const [userInfo, setUserInfo] = useState({})
+  const [currentUserInfo, setCurrentUserInfo] = useState({})
+  const [commentUserInfo, setCommentUserInfo] = useState({})
   const [replyText, setReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
@@ -57,8 +58,10 @@ function Comment({
 
   useEffect(() => {
     firebase.getUser(commentUserId).then(data => {
-      setUserInfo(data)
+      setCommentUserInfo(data)
     })
+
+    firebase.getUser(currentUser.uid).then(data => setCurrentUserInfo(data))
   }, [])
 
   useEffect(() => {
@@ -134,7 +137,11 @@ function Comment({
   return (
     <Flex w="100%" direction="column" my="2">
       <Flex w="100%" justify="space-between" align="flex-start" mb="1">
-        <Avatar size="md" name={userInfo.name} src={userInfo.photo} />
+        <Avatar
+          size="md"
+          name={commentUserInfo.name}
+          src={commentUserInfo.photo}
+        />
         <Flex w="full" direction="column" ml="4">
           <Box
             w="full"
@@ -145,7 +152,7 @@ function Comment({
             mb="2"
           >
             <Text color="primaryDark" fontWeight="bold">
-              {userInfo.name}
+              {commentUserInfo.name}
             </Text>
             <Text color="primaryDark">{text}</Text>
             {image && (
@@ -208,19 +215,35 @@ function Comment({
               variant="comment"
             >
               <ModalOverlay />
-              <ModalContent>
+              <ModalContent mx="2">
                 <ModalCloseButton color="primaryDark" />
                 <ModalBody>
-                  <VStack position="relative" mt="10" mb="6">
+                  <VStack
+                    position="relative"
+                    mt="10"
+                    mb="6"
+                    borderWidth="1px"
+                    borderColor="secondaryLight"
+                    borderRadius="md"
+                  >
+                    <HStack w="100%" px="4" pt="2" alignSelf="flex-start">
+                      <Avatar
+                        size="sm"
+                        name={currentUserInfo.name}
+                        src={currentUserInfo.photo}
+                      />
+                      <Text color="primaryDark">{currentUserInfo.name}</Text>
+                    </HStack>
                     <Textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
                       onFocus={() => setShowEmoji(false)}
                       placeholder="Leave your reply here..."
                       size="md"
-                      borderColor="secondaryLight"
+                      border="none"
                       color="primaryDark"
                       resize="none"
+                      focusBorderColor="transparent"
                       _hover={{ borderColor: 'secondaryDark' }}
                     />
                     <Box position="absolute" bottom="0" right="4" zIndex="2">
@@ -246,8 +269,8 @@ function Comment({
                       />
                     )}
                   </VStack>
-                  <Flex mb="6">
-                    <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                  <Flex mb="6" position="relative">
+                    <AspectRatio w="100%" maxWidth="150px" ratio={1}>
                       <Image
                         src={replyPhotoUrl ? replyPhotoUrl : ''}
                         alt="留言照片"
@@ -261,8 +284,9 @@ function Comment({
                       aria-label="上傳留言照"
                       leftIcon={<RiAddFill />}
                       size="xs"
-                      ml="2"
-                      mt="auto"
+                      position="absolute"
+                      top="10px"
+                      left="80px"
                       onClick={() => replyPhotoRef.current.click()}
                     >
                       上傳
@@ -284,10 +308,11 @@ function Comment({
                     isDisabled={replyText === '' ? true : false}
                     onClick={submitReply}
                     _hover={{
+                      bg: 'primaryDark',
                       _disabled: { bg: 'secondaryLight' },
                     }}
                   >
-                    送出
+                    回覆
                   </Button>
                 </ModalFooter>
               </ModalContent>

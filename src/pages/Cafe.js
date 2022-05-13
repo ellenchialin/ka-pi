@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue, useToast } from '@chakra-ui/react'
+import { Flex, Heading, Box, Text, Spinner, Icon, IconButton, Button, Link, useDisclosure, Modal, ModalOverlay, ModalContent, Textarea, ModalFooter, ModalBody, ModalCloseButton, Input, AspectRatio, Image, HStack, VStack, Stack, SimpleGrid, useColorModeValue, useToast, Avatar } from '@chakra-ui/react'
 import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { VscPerson } from 'react-icons/vsc'
 import { AiOutlineGlobal } from 'react-icons/ai'
@@ -26,6 +26,7 @@ function Cafe() {
   const [toggleSaved, setToggleSaved] = useState(false)
   const [savedNumber, setSavedNumber] = useState([])
   const [blogs, setBlogs] = useState([])
+  const [userInfo, setUserInfo] = useState({})
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
   const [commentPhotoUrl, setCommentPhotoUrl] = useState('')
@@ -81,9 +82,10 @@ function Cafe() {
 
         if (currentUser) {
           // Check this cafe is saved by user or not and render init icon
-          firebase
-            .getUser(currentUser.uid)
-            .then(data => setToggleSaved(data.favCafes.includes(cafe.id)))
+          firebase.getUser(currentUser.uid).then(data => {
+            setUserInfo(data)
+            setToggleSaved(data.favCafes.includes(cafe.id))
+          })
         }
 
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
@@ -570,19 +572,36 @@ function Cafe() {
                 variant="comment"
               >
                 <ModalOverlay />
-                <ModalContent>
+                <ModalContent mx="2">
                   <ModalCloseButton color="primaryDark" />
                   <ModalBody>
-                    <VStack position="relative" mt="10" mb="6">
+                    <VStack
+                      position="relative"
+                      mt="10"
+                      mb="6"
+                      borderWidth="1px"
+                      borderColor="secondaryLight"
+                      borderRadius="md"
+                    >
+                      <HStack w="100%" px="4" pt="2" alignSelf="flex-start">
+                        <Avatar
+                          size="sm"
+                          name={userInfo.name}
+                          src={userInfo.photo}
+                        />
+                        <Text color="primaryDark">{userInfo.name}</Text>
+                      </HStack>
                       <Textarea
                         value={commentText}
                         onChange={e => setCommentText(e.target.value)}
                         onFocus={() => setShowEmoji(false)}
                         placeholder="Leave your comment here..."
                         size="md"
-                        borderColor="secondaryLight"
+                        h="100px"
+                        border="none"
                         color="primaryDark"
                         resize="none"
+                        focusBorderColor="transparent"
                         _hover={{ borderColor: 'secondaryDark' }}
                       />
                       <Box position="absolute" bottom="0" right="4" zIndex="2">
@@ -608,8 +627,8 @@ function Cafe() {
                         />
                       )}
                     </VStack>
-                    <Flex mb="6">
-                      <AspectRatio w="100%" maxWidth="100px" ratio={1}>
+                    <Flex mb="6" position="relative">
+                      <AspectRatio w="100%" maxWidth="150px" ratio={1}>
                         <Image
                           src={commentPhotoUrl ? commentPhotoUrl : ''}
                           alt="留言照片"
@@ -623,8 +642,9 @@ function Cafe() {
                         aria-label="上傳留言照"
                         leftIcon={<RiAddFill />}
                         size="xs"
-                        ml="2"
-                        mt="auto"
+                        position="absolute"
+                        top="10px"
+                        left="80px"
                         onClick={() => commentPhotoRef.current.click()}
                       >
                         上傳
@@ -646,10 +666,11 @@ function Cafe() {
                       isDisabled={commentText === '' ? true : false}
                       onClick={submitComment}
                       _hover={{
+                        bg: 'primaryDark',
                         _disabled: { bg: 'secondaryLight' },
                       }}
                     >
-                      送出
+                      留言
                     </Button>
                   </ModalFooter>
                 </ModalContent>
