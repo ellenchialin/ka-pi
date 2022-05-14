@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure } from '@chakra-ui/react'
+import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure, HStack, Icon, useToast } from '@chakra-ui/react'
+import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -37,6 +38,7 @@ function User() {
   const fileRef = useRef()
   const navigate = useNavigate()
   const { currentUser, signout } = useAuth()
+  const successToast = useToast()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cardsPerPage] = useState(10)
@@ -97,7 +99,7 @@ function User() {
   }, [])
 
   useEffect(() => {
-    console.log('current user from user page: ', currentUser.uid)
+    // console.log('current user from user page: ', currentUser.uid)
 
     firebase
       .getUser(currentUser.uid)
@@ -148,6 +150,24 @@ function User() {
         .map(cafe => cafe.id)
 
       getFavCafes(updatedList)
+
+      successToast({
+        position: 'top-right',
+        duration: 3000,
+        render: () => (
+          <HStack
+            spacing="4"
+            color="primaryDark"
+            p={3}
+            bg="teal.200"
+            borderRadius="md"
+          >
+            <Icon as={CheckCircleIcon} />
+            <Text>成功移除收藏</Text>
+          </HStack>
+        ),
+        isClosable: true,
+      })
     })
   }
 
@@ -155,6 +175,24 @@ function User() {
     firebase.deleteBlog(cafeId, blogId).then(() => {
       const updatedList = userBlogs.filter(blog => blog.blogId !== blogId)
       setUserBlogs(updatedList)
+
+      successToast({
+        position: 'top-right',
+        duration: 3000,
+        render: () => (
+          <HStack
+            spacing="4"
+            color="primaryDark"
+            p={3}
+            bg="teal.200"
+            borderRadius="md"
+          >
+            <Icon as={CheckCircleIcon} />
+            <Text>成功刪除食記</Text>
+          </HStack>
+        ),
+        isClosable: true,
+      })
     })
   }
 
@@ -294,7 +332,9 @@ function User() {
             <TabPanels>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  {savedCafes.length > 0 ? savedCafes.length : 0} Cafes
+                  {savedCafes.length > 0
+                    ? `${savedCafes.length} Cafes`
+                    : '尚未收藏任何咖啡廳'}
                 </Text>
                 <Flex
                   w="100%"
@@ -321,7 +361,7 @@ function User() {
                       justifyItems="center"
                       mb="4"
                     >
-                      {currentCafes.length > 0 ? (
+                      {currentCafes.length > 0 &&
                         currentCafes.map(cafe => (
                           <CafeCard
                             key={cafe.id}
@@ -329,10 +369,7 @@ function User() {
                             canDeleteCafe={canDeleteCafe}
                             handleDeleteCafe={() => deleteCafe(cafe.id)}
                           />
-                        ))
-                      ) : (
-                        <Text>尚未收藏任何咖啡廳</Text>
-                      )}
+                        ))}
                     </SimpleGrid>
                     {savedCafes.length > cardsPerPage && (
                       <Pagination
@@ -358,7 +395,9 @@ function User() {
               </TabPanel>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  {userBlogs.length > 0 ? userBlogs.length : 0} Blogs
+                  {userBlogs.length > 0
+                    ? `${userBlogs.length} Blogs`
+                    : '尚未發佈任何食記'}
                 </Text>
                 <Flex w="full" direction="column">
                   <SimpleGrid
@@ -368,7 +407,7 @@ function User() {
                     justifyItems="center"
                     mb="4"
                   >
-                    {currentBlogs.length > 0 ? (
+                    {currentBlogs.length > 0 &&
                       currentBlogs.map(blog => (
                         <BlogCard
                           key={blog.blogId}
@@ -383,10 +422,7 @@ function User() {
                             deleteBlog(blog.cafeId, blog.blogId)
                           }
                         />
-                      ))
-                    ) : (
-                      <Text>尚未發佈任何食記</Text>
-                    )}
+                      ))}
                   </SimpleGrid>
                   {userBlogs.length > cardsPerPage && (
                     <Pagination

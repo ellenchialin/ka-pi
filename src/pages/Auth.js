@@ -11,7 +11,7 @@ function Auth() {
       <Tabs w="70%" align="center" colorScheme="teal" maxW="500px">
         <TabList>
           <Tab>登入</Tab>
-          <Tab>登出</Tab>
+          <Tab>註冊</Tab>
         </TabList>
 
         <TabPanels>

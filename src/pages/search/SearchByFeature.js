@@ -1,18 +1,19 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
 import Pagination from '@choc-ui/paginator'
+import AlertModal from '../../components/AlertModal'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
-  const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
+  const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const scrollCardRef = useRef(null)
 
@@ -20,8 +21,8 @@ function SearchByFeature() {
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
-    advacedFilteredCafes.length > 0
-      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
+    districtFilteredCafes.length > 0
+      ? districtFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
 
   const defaultFeatures = ['不限時', '有插座']
@@ -34,15 +35,34 @@ function SearchByFeature() {
     { text: '裝潢音樂', tag: 'music' },
   ]
 
-  const { value, getCheckboxProps, setValue } = useCheckboxGroup()
+  const {
+    value: featureValue,
+    getCheckboxProps,
+    setValue: setFeatureValue,
+  } = useCheckboxGroup()
+
   const {
     value: filterCityValue,
-    getCheckboxProps: getCityCheckboxProps,
+    getRadioProps: getCityRadioProps,
+    getRootProps,
     setValue: setCityValue,
+  } = useRadioGroup()
+
+  const {
+    value: filterDistrictValue,
+    getCheckboxProps: getDistrictCheckboxProps,
+    setValue: setDistrictValue,
   } = useCheckboxGroup()
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   const handleFeatureSearch = () => {
     setIsLoading(true)
+    setCityValue([])
 
     api
       .getAllCafes()
@@ -52,7 +72,7 @@ function SearchByFeature() {
         )
 
         const filterResults = defaultMatched.filter(cafe => {
-          return value.some(feature => {
+          return featureValue.some(feature => {
             return cafe[feature] >= 5
           })
         })
@@ -61,17 +81,18 @@ function SearchByFeature() {
         setCurrentPage(1)
       })
       .catch(error => {
-        alert('發生錯誤，請確認網路連線，或聯繫開發人員')
+        onAlertOpen()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
   }
 
   const handleResetFilter = () => {
-    setValue([])
+    setFeatureValue([])
     setCityValue([])
+    setDistrictValue([])
     setFilteredCafes([])
-    setAdvacedFilteredCafes([])
+    setDistrictFilteredCafes([])
   }
 
   const handlePageChange = page => {
@@ -106,7 +127,7 @@ function SearchByFeature() {
       <Flex
         direction="column"
         align="center"
-        bg="gray.200"
+        bg="gray.100"
         color="primaryDark"
         px="6"
         py="6"
@@ -132,7 +153,7 @@ function SearchByFeature() {
             fontWeight="normal"
             px="6"
             h="8"
-            isDisabled={value.length === 0 ? true : false}
+            isDisabled={featureValue.length === 0 ? true : false}
             onClick={handleResetFilter}
           >
             清除全部
@@ -144,7 +165,7 @@ function SearchByFeature() {
             px="6"
             h="8"
             onClick={handleFeatureSearch}
-            isDisabled={value.length === 0 ? true : false}
+            isDisabled={featureValue.length === 0 ? true : false}
           >
             條件搜尋
           </Button>
@@ -165,16 +186,19 @@ function SearchByFeature() {
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
-                {advacedFilteredCafes.length > 0
-                  ? advacedFilteredCafes.length
+                {districtFilteredCafes.length > 0
+                  ? districtFilteredCafes.length
                   : filteredCafes.length}{' '}
                 間符合
               </Text>
               <PopoverCityFilter
                 filteredCafes={filteredCafes}
-                setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+                setDistrictFilteredCafes={setDistrictFilteredCafes}
                 filterCityValue={filterCityValue}
-                getCityCheckboxProps={getCityCheckboxProps}
+                getCityRadioProps={getCityRadioProps}
+                filterDistrictValue={filterDistrictValue}
+                getDistrictCheckboxProps={getDistrictCheckboxProps}
+                getRootProps={getRootProps}
                 setCurrentPage={setCurrentPage}
               />
             </VStack>
@@ -191,12 +215,12 @@ function SearchByFeature() {
             ))}
           </SimpleGrid>
           {filteredCafes.length > cafesPerPage ||
-          advacedFilteredCafes.length > cafesPerPage ? (
+          districtFilteredCafes.length > cafesPerPage ? (
             <Pagination
               defaultCurrent={1}
               total={
-                advacedFilteredCafes.length > 0
-                  ? advacedFilteredCafes.length
+                districtFilteredCafes.length > 0
+                  ? districtFilteredCafes.length
                   : filteredCafes.length
               }
               current={currentPage}
@@ -218,6 +242,12 @@ function SearchByFeature() {
           )}
         </Flex>
       )}
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得資料"
+        alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }

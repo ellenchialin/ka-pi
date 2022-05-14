@@ -241,7 +241,7 @@ function Cafe() {
               borderRadius="md"
             >
               <Icon as={CheckCircleIcon} />
-              <Text>已移除蒐藏</Text>
+              <Text>已移除收藏</Text>
             </HStack>
           ),
           isClosable: true,
@@ -262,7 +262,7 @@ function Cafe() {
               borderRadius="md"
             >
               <Icon as={CheckCircleIcon} />
-              <Text>已成功蒐藏</Text>
+              <Text>已成功收藏</Text>
             </HStack>
           ),
           isClosable: true,
@@ -393,7 +393,7 @@ function Cafe() {
             ></IconButton>
           </Flex>
 
-          {/* Calculate saved numbers & page views section */}
+          {/* Ｓaved numbers & page views section */}
           <Box alignSelf="flex-end">
             <HStack>
               <HStack align="center">
@@ -517,11 +517,11 @@ function Cafe() {
               </Button>
             </Flex>
 
-            <SimpleGrid
+            <Flex
               w="full"
-              spacing="20px"
-              minChildWidth="270px"
-              justifyItems="center"
+              justify={{ base: 'center', md: 'stretch' }}
+              wrap="wrap"
+              gap="8"
             >
               {blogs.length > 0 ? (
                 blogs.map(blog => (
@@ -536,16 +536,18 @@ function Cafe() {
                   />
                 ))
               ) : (
-                <Text color={subtagTextColor}>尚未有任何食記</Text>
+                <Text w="full" color={subtagTextColor} textAlign="center">
+                  尚未有任何食記
+                </Text>
               )}
-            </SimpleGrid>
+            </Flex>
           </Flex>
 
           {/* Comments section */}
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="6">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>有話想說？</Text>
+                <Text color={subtagTextColor}>有話想說</Text>
                 <Text
                   fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"

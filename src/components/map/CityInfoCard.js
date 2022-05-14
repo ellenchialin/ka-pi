@@ -45,7 +45,7 @@ function CityInfoCard({
           color={useColorModeValue('accent', 'primaryDark')}
           isExternal
         >
-          前往看完整名單
+          看完整名單
         </Link>
       </HStack>
     </VStack>

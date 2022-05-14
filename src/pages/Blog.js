@@ -71,7 +71,7 @@ function Blog() {
         isAlertOpen={isAlertOpen}
         onAlertClose={onAlertClose}
         alertHeader="Oops! 暫無法取得資料"
-        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+        alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com "
       />
       {isLoading ? (
         <Spinner
@@ -114,7 +114,6 @@ function Blog() {
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-          {/*<ImageSlider slides={blog.images} />*/}
           <AspectRatio w="100%" ratio={21 / 9}>
             <Image
               src={blog.image}

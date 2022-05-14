@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
-import { Flex, Heading, Text, SimpleGrid, Skeleton, HStack, VStack, Icon, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -24,7 +24,7 @@ function Home() {
   const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(24)
+  const [cafesPerPage] = useState(12)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
@@ -237,7 +237,7 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          探索城市咖啡廳
+          遊走城市之間
         </Heading>
 
         <Flex

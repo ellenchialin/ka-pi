@@ -1,9 +1,9 @@
-import { useCheckbox, chakra, Box, Text, Flex } from '@chakra-ui/react'
-import PropTypes from 'prop-types'
+import { useRadio, chakra, Box, Text, Flex } from '@chakra-ui/react'
+import React from 'react'
 
-const CustomCheckbox = props => {
+function CustomRadio(props) {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
-    useCheckbox(props)
+    useRadio(props)
 
   return (
     <chakra.label
@@ -12,7 +12,7 @@ const CustomCheckbox = props => {
       alignItems="center"
       justifyContent="center"
       gridColumnGap={2}
-      w="100%"
+      maxW="32"
       bg="transparent"
       border="1px solid"
       borderColor="thirdDark"
@@ -41,8 +41,4 @@ const CustomCheckbox = props => {
   )
 }
 
-CustomCheckbox.propTypes = {
-  text: PropTypes.string,
-}
-
-export default CustomCheckbox
+export default CustomRadio
