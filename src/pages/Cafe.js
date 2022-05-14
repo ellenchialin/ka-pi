@@ -393,7 +393,7 @@ function Cafe() {
             ></IconButton>
           </Flex>
 
-          {/* Calculate saved numbers & page views section */}
+          {/* Ｓaved numbers & page views section */}
           <Box alignSelf="flex-end">
             <HStack>
               <HStack align="center">
@@ -536,7 +536,9 @@ function Cafe() {
                   />
                 ))
               ) : (
-                <Text color={subtagTextColor}>尚未有任何食記</Text>
+                <Text w="full" color={subtagTextColor} textAlign="center">
+                  尚未有任何食記
+                </Text>
               )}
             </Flex>
           </Flex>
@@ -545,7 +547,7 @@ function Cafe() {
           <Flex w="100%" direction="column">
             <Flex w="100%" justify="space-between" align="end" mb="6">
               <VStack align="flex-start" spacing="0">
-                <Text color={subtagTextColor}>有話想說？</Text>
+                <Text color={subtagTextColor}>有話想說</Text>
                 <Text
                   fontSize={{ base: '20px', md: '24px' }}
                   fontWeight="bold"

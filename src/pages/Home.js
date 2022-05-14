@@ -237,7 +237,7 @@ function Home() {
         alignItems="center"
       >
         <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          探索城市咖啡廳
+          遊走城市之間
         </Heading>
 
         <Flex

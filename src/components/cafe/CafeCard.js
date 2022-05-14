@@ -47,98 +47,105 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
       transition="transform 350ms ease"
     >
       {!isLoading && (
-        <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
-          <Image
-            src={coverPhoto}
-            alt={`${cafe.name} 店內照片`}
-            roundedTop="lg"
-            objectFit="cover"
-            align="center"
-          />
-        </AspectRatio>
-      )}
-      {canDeleteCafe && (
-        <IconButton
-          icon={<RiDeleteBin5Line />}
-          aria-label="刪除此蒐藏"
-          fontSize="20px"
-          position="absolute"
-          top="10px"
-          right="10px"
-          variant="solid"
-          colorScheme="blackAlpha"
-          size="sm"
-          onClick={handleDeleteCafe}
-        />
-      )}
+        <>
+          <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
+            <Image
+              src={coverPhoto}
+              alt={`${cafe.name} 店內照片`}
+              roundedTop="lg"
+              objectFit="cover"
+              align="center"
+            />
+          </AspectRatio>
 
-      <Link to={`/cafe/${cafe.id}`} target="_blank">
-        <VStack spacing="2" p="4" align="flex-start">
-          <Flex w="full" align="center" justify="space-between">
-            <Heading
-              w="full"
-              as="h5"
-              pr="1"
-              pt="0.5"
-              fontSize={{ base: '18px', md: '20px' }}
-              isTruncated
-            >
-              {cafe.name}
-            </Heading>
-          </Flex>
-          <Text w="full" fontSize={{ base: '14px', md: '16px' }} isTruncated>
-            {cafe.address}
-          </Text>
-          <Flex align="center">
-            <Text fontSize={{ base: '14px', md: '16px' }} mr="1">
-              {cafe.tasty}
-            </Text>
-            <StarIcon w="3" h="3" />
-          </Flex>
+          {canDeleteCafe && (
+            <IconButton
+              icon={<RiDeleteBin5Line />}
+              aria-label="刪除此蒐藏"
+              fontSize="20px"
+              position="absolute"
+              top="10px"
+              right="10px"
+              variant="solid"
+              colorScheme="blackAlpha"
+              size="sm"
+              onClick={handleDeleteCafe}
+            />
+          )}
 
-          <Box d="flex" alignItems="center" mt="3">
-            {cafe.socket === 'yes' && (
-              <Badge
-                rounded="full"
-                px="2"
-                py="1"
-                mr="1"
-                fontSize="0.75em"
-                bg="red.100"
-                color="red.800"
+          <Link to={`/cafe/${cafe.id}`} target="_blank">
+            <VStack spacing="2" p="4" align="flex-start">
+              <Flex w="full" align="center" justify="space-between">
+                <Heading
+                  w="full"
+                  as="h5"
+                  pr="1"
+                  pt="0.5"
+                  fontSize={{ base: '18px', md: '20px' }}
+                  isTruncated
+                >
+                  {cafe.name}
+                </Heading>
+              </Flex>
+              <Text
+                w="full"
+                fontSize={{ base: '14px', md: '16px' }}
+                isTruncated
               >
-                有插座
-              </Badge>
-            )}
-            {cafe.limited_time === 'no' && (
-              <Badge
-                rounded="full"
-                px="2"
-                py="1"
-                mr="1"
-                fontSize="0.75em"
-                bg="green.100"
-                color="green.800"
-              >
-                不限時
-              </Badge>
-            )}
-            {cafe.wifi >= 4 && (
-              <Badge
-                rounded="full"
-                px="2"
-                py="1"
-                mr="1"
-                fontSize="0.75em"
-                bg="facebook.100"
-                color="facebook.800"
-              >
-                WiFi 穩定
-              </Badge>
-            )}
-          </Box>
-        </VStack>
-      </Link>
+                {cafe.address}
+              </Text>
+              <Flex align="center">
+                <Text fontSize={{ base: '14px', md: '16px' }} mr="1">
+                  {cafe.tasty}
+                </Text>
+                <StarIcon w="3" h="3" />
+              </Flex>
+
+              <Box d="flex" alignItems="center" mt="3">
+                {cafe.socket === 'yes' && (
+                  <Badge
+                    rounded="full"
+                    px="2"
+                    py="1"
+                    mr="1"
+                    fontSize="0.75em"
+                    bg="red.100"
+                    color="red.800"
+                  >
+                    有插座
+                  </Badge>
+                )}
+                {cafe.limited_time === 'no' && (
+                  <Badge
+                    rounded="full"
+                    px="2"
+                    py="1"
+                    mr="1"
+                    fontSize="0.75em"
+                    bg="green.100"
+                    color="green.800"
+                  >
+                    不限時
+                  </Badge>
+                )}
+                {cafe.wifi >= 4 && (
+                  <Badge
+                    rounded="full"
+                    px="2"
+                    py="1"
+                    mr="1"
+                    fontSize="0.75em"
+                    bg="facebook.100"
+                    color="facebook.800"
+                  >
+                    WiFi 穩定
+                  </Badge>
+                )}
+              </Box>
+            </VStack>
+          </Link>
+        </>
+      )}
     </Box>
   )
 }

@@ -332,7 +332,9 @@ function User() {
             <TabPanels>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  {savedCafes.length > 0 ? savedCafes.length : 0} Cafes
+                  {savedCafes.length > 0
+                    ? `${savedCafes.length} Cafes`
+                    : '尚未收藏任何咖啡廳'}
                 </Text>
                 <Flex
                   w="100%"
@@ -359,7 +361,7 @@ function User() {
                       justifyItems="center"
                       mb="4"
                     >
-                      {currentCafes.length > 0 ? (
+                      {currentCafes.length > 0 &&
                         currentCafes.map(cafe => (
                           <CafeCard
                             key={cafe.id}
@@ -367,10 +369,7 @@ function User() {
                             canDeleteCafe={canDeleteCafe}
                             handleDeleteCafe={() => deleteCafe(cafe.id)}
                           />
-                        ))
-                      ) : (
-                        <Text>尚未收藏任何咖啡廳</Text>
-                      )}
+                        ))}
                     </SimpleGrid>
                     {savedCafes.length > cardsPerPage && (
                       <Pagination
@@ -396,7 +395,9 @@ function User() {
               </TabPanel>
               <TabPanel p="0" pt="4">
                 <Text mb="3">
-                  {userBlogs.length > 0 ? userBlogs.length : 0} Blogs
+                  {userBlogs.length > 0
+                    ? `${userBlogs.length} Blogs`
+                    : '尚未發佈任何食記'}
                 </Text>
                 <Flex w="full" direction="column">
                   <SimpleGrid
@@ -406,7 +407,7 @@ function User() {
                     justifyItems="center"
                     mb="4"
                   >
-                    {currentBlogs.length > 0 ? (
+                    {currentBlogs.length > 0 &&
                       currentBlogs.map(blog => (
                         <BlogCard
                           key={blog.blogId}
@@ -421,10 +422,7 @@ function User() {
                             deleteBlog(blog.cafeId, blog.blogId)
                           }
                         />
-                      ))
-                    ) : (
-                      <Text>尚未發佈任何食記</Text>
-                    )}
+                      ))}
                   </SimpleGrid>
                   {userBlogs.length > cardsPerPage && (
                     <Pagination
