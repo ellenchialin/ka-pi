@@ -82,8 +82,8 @@ const PopoverCityFilter = ({
       <Portal>
         <PopoverContent
           w="100%"
-          maxW="310px"
-          px="4"
+          maxW="350px"
+          px="3"
           pt="8"
           pb="6"
           color="white"
@@ -94,7 +94,7 @@ const PopoverCityFilter = ({
           <Wrap spacing="10px" justify="center" mb="2" {...getRootProps()}>
             {showDistricts
               ? cityDistricts.map(d => (
-                  <WrapItem key={d}>
+                  <WrapItem key={d} w="100px">
                     <CustomCheckbox
                       {...getDistrictCheckboxProps({
                         value: d,

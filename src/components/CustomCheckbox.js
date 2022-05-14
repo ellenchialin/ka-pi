@@ -12,7 +12,7 @@ const CustomCheckbox = props => {
       alignItems="center"
       justifyContent="center"
       gridColumnGap={2}
-      maxW="32"
+      w="100%"
       bg="transparent"
       border="1px solid"
       borderColor="thirdDark"
