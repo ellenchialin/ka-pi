@@ -39,8 +39,8 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error('註冊失敗，請重新操作'))
-          console.error(error.message)
+          reject(new Error(`請重新操作 (${error.code})`))
+          console.error('Error code', error.code)
         })
     })
   },
@@ -52,8 +52,8 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error('登入失敗，請確認網路重新操作'))
-          console.error(error.message)
+          reject(new Error(`請重新操作 (${error.code})`))
+          console.error(error.code)
         })
     })
   },
@@ -78,8 +78,8 @@ export const firebase = {
           })
         })
         .catch(error => {
-          reject(new Error('登入失敗，請確認網路重新操作'))
-          console.error(error.message)
+          reject(new Error(`請重新操作 (${error.code})`))
+          console.error(error.code)
         })
     })
   },

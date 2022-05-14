@@ -11,6 +11,7 @@ import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [alertBody, setAlertBody] = useState('')
   const navigate = useNavigate()
   const { signin, googleSignIn } = useAuth()
 
@@ -35,8 +36,9 @@ const SignInForm = () => {
         navigate(-1)
       })
       .catch(error => {
+        setAlertBody(error.message)
         onSignInAlertOpen()
-        console.error(error)
+        console.error(error.message)
       })
   }
 
@@ -44,8 +46,9 @@ const SignInForm = () => {
     googleSignIn()
       .then(user => navigate(-1))
       .catch(error => {
+        setAlertBody(error.message)
         onSignInAlertOpen()
-        console.error(error)
+        console.error(error.message)
       })
   }
 
@@ -113,7 +116,7 @@ const SignInForm = () => {
           isAlertOpen={isSignInAlertOpen}
           onAlertClose={onSignInAlertClose}
           alertHeader="Oops! 登入失敗"
-          alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+          alertBody={alertBody}
         />
       </Flex>
     </Flex>

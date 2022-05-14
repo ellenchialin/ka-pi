@@ -10,6 +10,7 @@ import { useAuth } from '../../contexts/AuthContext'
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [alertBody, setAlertBody] = useState('')
   const { signup } = useAuth()
   const navigate = useNavigate()
 
@@ -35,8 +36,9 @@ const SignUpForm = () => {
         navigate(-1)
       })
       .catch(error => {
+        setAlertBody(error.message)
         onSignUpAlertOpen()
-        console.error(error)
+        console.error(error.message)
       })
   }
 
@@ -94,7 +96,7 @@ const SignUpForm = () => {
                   isAlertOpen={isSignUpAlertOpen}
                   onAlertClose={onSignUpAlertClose}
                   alertHeader="Oops! 註冊失敗"
-                  alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+                  alertBody={alertBody}
                 />
               </Flex>
             </Form>

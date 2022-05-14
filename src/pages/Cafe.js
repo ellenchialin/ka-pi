@@ -241,7 +241,7 @@ function Cafe() {
               borderRadius="md"
             >
               <Icon as={CheckCircleIcon} />
-              <Text>已移除蒐藏</Text>
+              <Text>已移除收藏</Text>
             </HStack>
           ),
           isClosable: true,
@@ -262,7 +262,7 @@ function Cafe() {
               borderRadius="md"
             >
               <Icon as={CheckCircleIcon} />
-              <Text>已成功蒐藏</Text>
+              <Text>已成功收藏</Text>
             </HStack>
           ),
           isClosable: true,
@@ -517,11 +517,11 @@ function Cafe() {
               </Button>
             </Flex>
 
-            <SimpleGrid
+            <Flex
               w="full"
-              spacing="20px"
-              minChildWidth="270px"
-              justifyItems="center"
+              justify={{ base: 'center', md: 'stretch' }}
+              wrap="wrap"
+              gap="8"
             >
               {blogs.length > 0 ? (
                 blogs.map(blog => (
@@ -538,7 +538,7 @@ function Cafe() {
               ) : (
                 <Text color={subtagTextColor}>尚未有任何食記</Text>
               )}
-            </SimpleGrid>
+            </Flex>
           </Flex>
 
           {/* Comments section */}
