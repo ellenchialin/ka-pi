@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
@@ -12,7 +12,7 @@ import usePageTracking from '../../usePageTracking'
 function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
-  const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
+  const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const scrollCardRef = useRef(null)
 
@@ -20,8 +20,8 @@ function SearchByFeature() {
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
-    advacedFilteredCafes.length > 0
-      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
+    districtFilteredCafes.length > 0
+      ? districtFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
 
   const defaultFeatures = ['不限時', '有插座']
@@ -35,10 +35,18 @@ function SearchByFeature() {
   ]
 
   const { value, getCheckboxProps, setValue } = useCheckboxGroup()
+
   const {
     value: filterCityValue,
-    getCheckboxProps: getCityCheckboxProps,
+    getRadioProps: getCityRadioProps,
+    getRootProps,
     setValue: setCityValue,
+  } = useRadioGroup()
+
+  const {
+    value: filterDistrictValue,
+    getCheckboxProps: getDistrictCheckboxProps,
+    setValue: setDistrictValue,
   } = useCheckboxGroup()
 
   const handleFeatureSearch = () => {
@@ -70,8 +78,9 @@ function SearchByFeature() {
   const handleResetFilter = () => {
     setValue([])
     setCityValue([])
+    setDistrictValue([])
     setFilteredCafes([])
-    setAdvacedFilteredCafes([])
+    setDistrictFilteredCafes([])
   }
 
   const handlePageChange = page => {
@@ -106,7 +115,7 @@ function SearchByFeature() {
       <Flex
         direction="column"
         align="center"
-        bg="gray.200"
+        bg="gray.100"
         color="primaryDark"
         px="6"
         py="6"
@@ -165,16 +174,19 @@ function SearchByFeature() {
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
-                {advacedFilteredCafes.length > 0
-                  ? advacedFilteredCafes.length
+                {districtFilteredCafes.length > 0
+                  ? districtFilteredCafes.length
                   : filteredCafes.length}{' '}
                 間符合
               </Text>
               <PopoverCityFilter
                 filteredCafes={filteredCafes}
-                setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+                setDistrictFilteredCafes={setDistrictFilteredCafes}
                 filterCityValue={filterCityValue}
-                getCityCheckboxProps={getCityCheckboxProps}
+                getCityRadioProps={getCityRadioProps}
+                filterDistrictValue={filterDistrictValue}
+                getDistrictCheckboxProps={getDistrictCheckboxProps}
+                getRootProps={getRootProps}
                 setCurrentPage={setCurrentPage}
               />
             </VStack>
@@ -191,12 +203,12 @@ function SearchByFeature() {
             ))}
           </SimpleGrid>
           {filteredCafes.length > cafesPerPage ||
-          advacedFilteredCafes.length > cafesPerPage ? (
+          districtFilteredCafes.length > cafesPerPage ? (
             <Pagination
               defaultCurrent={1}
               total={
-                advacedFilteredCafes.length > 0
-                  ? advacedFilteredCafes.length
+                districtFilteredCafes.length > 0
+                  ? districtFilteredCafes.length
                   : filteredCafes.length
               }
               current={currentPage}

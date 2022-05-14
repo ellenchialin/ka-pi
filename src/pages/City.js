@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
-import FilteredByDist from '../components/FilteredByDist'
+import DistrictFilterBoard from '../components/DistrictFilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
 import AlertModal from '../components/AlertModal'
 import useUpdateEffect from '../hooks/useUpdateEffect'
@@ -89,10 +89,6 @@ function City() {
 
   return (
     <Flex w="full" maxW="1170px" as="section" direction="column" align="center">
-      <Heading as="h1" size="xl">
-        {translatedCityName}
-      </Heading>
-
       {isLoading ? (
         <Spinner
           thickness="5px"
@@ -104,8 +100,11 @@ function City() {
         />
       ) : (
         <>
+          <Heading as="h1" size="xl">
+            {translatedCityName}
+          </Heading>
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
-          <FilteredByDist
+          <DistrictFilterBoard
             cityCafes={cityCafes}
             translatedCityName={translatedCityName}
             setSelectedAreas={setSelectedAreas}
@@ -120,7 +119,6 @@ function City() {
             <SimpleGrid
               w="full"
               minChildWidth="270px"
-              // columns={[1, 2, 3, 4]}
               spacing="20px"
               justifyItems="center"
               mb="6"

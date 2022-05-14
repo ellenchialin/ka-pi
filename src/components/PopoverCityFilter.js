@@ -1,25 +1,55 @@
+import { useState } from 'react'
 // prettier-ignore
 import { Button, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, useDisclosure, Wrap, WrapItem, Portal } from '@chakra-ui/react'
 import CustomCheckbox from './CustomCheckbox'
-import { cityData } from '../cityData'
+import { cityData, areaData } from '../cityData'
 import PropTypes from 'prop-types'
+import CustomRadio from './CustomRadio'
 
 const PopoverCityFilter = ({
   filteredCafes,
-  setAdvacedFilteredCafes,
+  setDistrictFilteredCafes,
   filterCityValue,
-  getCityCheckboxProps,
+  getCityRadioProps,
+  filterDistrictValue,
+  getDistrictCheckboxProps,
+  getRootProps,
   setCurrentPage,
 }) => {
+  const [cityFilteredCafes, setCityFilteredCafes] = useState([])
+  const [showDistricts, setShowDistricts] = useState(false)
+  const [cityDistricts, setCityDistricts] = useState(null)
+
   const cities = cityData.map(city => city.place)
 
-  const advancedSearch = () => {
-    const results = filteredCafes.filter(cafe => {
-      return filterCityValue.some(city => {
-        return cafe.address.includes(city)
+  const selectCity = () => {
+    const results = filteredCafes.filter(cafe =>
+      cafe.address.includes(filterCityValue)
+    )
+    console.log('results: ', results)
+    setCityFilteredCafes(results)
+
+    const allDistricts = areaData[filterCityValue]
+    const filteredDistricts = allDistricts.filter(dist => {
+      return results.some(cafe => {
+        return cafe.address.includes(dist)
       })
     })
-    setAdvacedFilteredCafes(results)
+
+    console.log('Available City Districts', filteredDistricts)
+    setCityDistricts(filteredDistricts)
+    setShowDistricts(true)
+  }
+
+  const filterDistrict = () => {
+    console.log('filter District Value', filterDistrictValue)
+
+    const results = cityFilteredCafes.filter(cafe => {
+      return filterDistrictValue.some(d => {
+        return cafe.address.includes(d)
+      })
+    })
+    setDistrictFilteredCafes(results)
     setCurrentPage(1)
   }
 
@@ -62,17 +92,28 @@ const PopoverCityFilter = ({
           <PopoverArrow />
           <PopoverCloseButton color="primaryDark" bg="secondaryLight" />
 
-          <Wrap spacing="10px" justify="center" mb="2">
-            {cities.map(city => (
-              <WrapItem key={city}>
-                <CustomCheckbox
-                  {...getCityCheckboxProps({
-                    value: city,
-                    text: city,
-                  })}
-                />
-              </WrapItem>
-            ))}
+          <Wrap spacing="10px" justify="center" mb="2" {...getRootProps()}>
+            {cityDistricts
+              ? cityDistricts.map(d => (
+                  <WrapItem key={d}>
+                    <CustomCheckbox
+                      {...getDistrictCheckboxProps({
+                        value: d,
+                        text: d,
+                      })}
+                    />
+                  </WrapItem>
+                ))
+              : cities.map(city => (
+                  <WrapItem key={city}>
+                    <CustomRadio
+                      {...getCityRadioProps({
+                        value: city,
+                        text: city,
+                      })}
+                    />
+                  </WrapItem>
+                ))}
           </Wrap>
           <Button
             w="100%"
@@ -88,9 +129,9 @@ const PopoverCityFilter = ({
             mt="2"
             h="8"
             isDisabled={filterCityValue.length === 0 ? true : false}
-            onClick={advancedSearch}
+            onClick={showDistricts ? filterDistrict : selectCity}
           >
-            搜尋
+            {showDistricts ? '搜尋' : '選擇'}
           </Button>
         </PopoverContent>
       </Portal>
@@ -100,10 +141,14 @@ const PopoverCityFilter = ({
 
 PopoverCityFilter.propTypes = {
   filteredCafes: PropTypes.array,
-  setAdvacedFilteredCafes: PropTypes.func,
-  filterCityValue: PropTypes.array,
+  setDistrictFilteredCafes: PropTypes.func,
+  filterCityValue: PropTypes.string,
+  filterDistrictValue: PropTypes.array,
   getCityCheckboxProps: PropTypes.func,
   setCurrentPage: PropTypes.func,
+  getCityRadioProps: PropTypes.func,
+  getDistrictCheckboxProps: PropTypes.func,
+  getRootProps: PropTypes.func,
 }
 
 export default PopoverCityFilter

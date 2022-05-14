@@ -24,7 +24,7 @@ function Home() {
   const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [cafesPerPage] = useState(24)
+  const [cafesPerPage] = useState(12)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
