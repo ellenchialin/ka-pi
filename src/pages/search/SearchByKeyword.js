@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl, Text } from '@chakra-ui/react'
+import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl, Text, useDisclosure } from '@chakra-ui/react'
 // prettier-ignore
 import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete'
 import { BiSearchAlt } from 'react-icons/bi'
 import { api } from '../../utils/api'
 import CafeCard from '../../components/cafe/CafeCard'
+import AlertModal from '../../components/AlertModal'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {
@@ -16,6 +17,11 @@ function SearchByKeyword() {
   const [searchCafe, setSearchCafe] = useState(null)
 
   // const [searchParams, setSearchParams] = useSearchParams()
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   useEffect(() => {
     api
@@ -24,7 +30,7 @@ function SearchByKeyword() {
         setAllCafes(data)
       })
       .catch(error => {
-        alert('搜尋發生錯誤，請確認網路連線，或聯繫開發人員')
+        onAlertOpen()
         console.error(error)
       })
   }, [])
@@ -87,6 +93,13 @@ function SearchByKeyword() {
       </FormControl>
 
       {matchedCafe && <CafeCard cafe={matchedCafe} />}
+
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 暫無法取得資料"
+        alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com "
+      />
     </Flex>
   )
 }
