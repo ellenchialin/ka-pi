@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import AlertModal from '../components/AlertModal'
@@ -15,7 +15,7 @@ function Collections() {
   const [collectionType, setCollectionType] = useState(type)
   const [cafesForWork, setCafesForWork] = useState([])
   const [cafesForHangout, setCafesForHangout] = useState([])
-  const [advacedFilteredCafes, setAdvacedFilteredCafes] = useState([])
+  const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const scrollToTopRef = useRef(null)
   const scrollCardRef = useRef(null)
@@ -30,8 +30,8 @@ function Collections() {
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
   const currentCafes =
-    advacedFilteredCafes.length > 0
-      ? advacedFilteredCafes.slice(offset, offset + cafesPerPage)
+    districtFilteredCafes.length > 0
+      ? districtFilteredCafes.slice(offset, offset + cafesPerPage)
       : collectionType === 'work'
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
@@ -41,15 +41,23 @@ function Collections() {
 
   const {
     value: filterCityValue,
-    getCheckboxProps: getCityCheckboxProps,
+    getRadioProps: getCityRadioProps,
+    getRootProps,
     setValue: setCityValue,
+  } = useRadioGroup()
+
+  const {
+    value: filterDistrictValue,
+    getCheckboxProps: getDistrictCheckboxProps,
+    setValue: setDistrictValue,
   } = useCheckboxGroup()
 
   useEffect(() => {
     setCollectionType(type)
     setCurrentPage(1)
-    setAdvacedFilteredCafes([])
+    setDistrictFilteredCafes([])
     setCityValue([])
+    setDistrictValue([])
     scrollToTopRef.current.scrollIntoView({ behavior: 'smooth' })
   }, [type])
 
@@ -135,8 +143,8 @@ function Collections() {
         <>
           <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>
             <Text mt="3" alignSelf="flex-end">
-              {advacedFilteredCafes.length > 0
-                ? advacedFilteredCafes.length
+              {districtFilteredCafes.length > 0
+                ? districtFilteredCafes.length
                 : collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length}{' '}
@@ -146,9 +154,12 @@ function Collections() {
               filteredCafes={
                 collectionType === 'work' ? cafesForWork : cafesForHangout
               }
-              setAdvacedFilteredCafes={setAdvacedFilteredCafes}
+              setDistrictFilteredCafes={setDistrictFilteredCafes}
               filterCityValue={filterCityValue}
-              getCityCheckboxProps={getCityCheckboxProps}
+              getCityRadioProps={getCityRadioProps}
+              filterDistrictValue={filterDistrictValue}
+              getDistrictCheckboxProps={getDistrictCheckboxProps}
+              getRootProps={getRootProps}
               setCurrentPage={setCurrentPage}
             />
           </VStack>
@@ -167,8 +178,8 @@ function Collections() {
           <Pagination
             defaultCurrent={1}
             total={
-              advacedFilteredCafes.length > 0
-                ? advacedFilteredCafes.length
+              districtFilteredCafes.length > 0
+                ? districtFilteredCafes.length
                 : collectionType === 'work'
                 ? cafesForWork.length
                 : cafesForHangout.length
