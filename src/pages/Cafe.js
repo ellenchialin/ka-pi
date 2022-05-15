@@ -503,7 +503,7 @@ function Cafe() {
                   fontWeight="bold"
                   mt="0"
                 >
-                  全站用戶食記
+                  網友真實體驗
                 </Text>
               </VStack>
               <Button
