@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup } from '@chakra-ui/react'
+import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import AlertModal from '../components/AlertModal'
@@ -93,6 +93,11 @@ function Collections() {
     scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const filterBoxShadow = useColorModeValue(
+    'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
+    'rgba(204,204,204,0.6) 1.95px 1.95px 2.6px'
+  )
+
   return (
     <Flex
       w="full"
@@ -114,7 +119,12 @@ function Collections() {
         {collectionType === 'work'
           ? workLabels.map((label, i) => (
               <WrapItem key={i}>
-                <Tag size="lg" color="primaryDark" bg="gray.200">
+                <Tag
+                  size="lg"
+                  color="primaryDark"
+                  bg="gray.200"
+                  boxShadow={filterBoxShadow}
+                >
                   <TagLeftIcon boxSize="12px" as={CheckIcon} />
                   <TagLabel>{label}</TagLabel>
                 </Tag>
@@ -122,7 +132,12 @@ function Collections() {
             ))
           : hangoutLabels.map((label, i) => (
               <WrapItem key={i}>
-                <Tag size="lg" color="primaryDark" bg="gray.200">
+                <Tag
+                  size="lg"
+                  color="primaryDark"
+                  bg="gray.200"
+                  boxShadow={filterBoxShadow}
+                >
                   <TagLeftIcon boxSize="12px" as={CheckIcon} />
                   <TagLabel>{label}</TagLabel>
                 </Tag>

@@ -33,13 +33,17 @@ function DistrictFilterBoard({
     setUpdatedCafes([])
   }
 
-  const bgColor = useColorModeValue('gray.200', 'primaryLight')
+  const filterBoxShadow = useColorModeValue(
+    'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
+    'rgba(204,204,204,0.6) 1.95px 1.95px 2.6px'
+  )
 
   return (
     <Flex
       direction="column"
       align="center"
-      bg={bgColor}
+      bg="gray.100"
+      boxShadow={filterBoxShadow}
       px="4"
       py="6"
       mb="10"

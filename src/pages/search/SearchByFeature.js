@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
@@ -100,6 +100,11 @@ function SearchByFeature() {
     scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const filterBoxShadow = useColorModeValue(
+    'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
+    'rgba(204,204,204,0.6) 1.95px 1.95px 2.6px'
+  )
+
   return (
     <Flex
       w="full"
@@ -117,7 +122,12 @@ function SearchByFeature() {
       <Wrap spacing="15px" justify="center" mb="4">
         {defaultFeatures.map((feature, i) => (
           <WrapItem key={i}>
-            <Tag size="lg" color="primaryDark" bg="gray.200">
+            <Tag
+              size="lg"
+              color="primaryDark"
+              bg="gray.200"
+              boxShadow={filterBoxShadow}
+            >
               <TagLeftIcon boxSize="12px" as={CheckIcon} />
               <TagLabel>{feature}</TagLabel>
             </Tag>
@@ -133,6 +143,7 @@ function SearchByFeature() {
         py="6"
         mb="8"
         borderRadius="xl"
+        boxShadow={filterBoxShadow}
       >
         <Wrap spacing="10px" justify="center" mb="4">
           {ratingFeatures.map(feature => (
