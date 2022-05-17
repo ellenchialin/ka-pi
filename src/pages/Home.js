@@ -42,10 +42,7 @@ function Home() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      onLocationAlertOpen()
-      setDefaultLatitude(25.0384851)
-      setDefaultLongitude(121.530177)
-      getDefaultCafes()
+      setFallbackLocation()
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -55,13 +52,17 @@ function Home() {
         getNearbyCafes(position.coords.latitude, position.coords.longitude)
       },
       () => {
-        onLocationAlertOpen()
-        setDefaultLatitude(25.0384851)
-        setDefaultLongitude(121.530177)
-        getDefaultCafes()
+        setFallbackLocation()
       }
     )
   }, [])
+
+  const setFallbackLocation = () => {
+    onLocationAlertOpen()
+    setDefaultLatitude(25.0384851)
+    setDefaultLongitude(121.530177)
+    getDefaultCafes()
+  }
 
   const getDefaultCafes = () => {
     api

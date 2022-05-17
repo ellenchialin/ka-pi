@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure, HStack, Icon, useToast } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
@@ -72,40 +73,36 @@ function User() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      onLocationAlertOpen()
-      setDefaultLatitude(25.0384851)
-      setDefaultLongitude(121.530177)
-      setHasLocation(true)
-      setAlertHeader('Oops! 無法取得當前位置')
-      setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
+      setFallbackLocation()
     }
 
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log('position: ', position)
         setUserLatitude(position.coords.latitude)
         setUserLongitude(position.coords.longitude)
         setHasLocation(true)
       },
       () => {
-        onLocationAlertOpen()
-        setAlertHeader('Oops! 無法取得當前位置')
-        setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
-        setDefaultLatitude(25.0384851)
-        setDefaultLongitude(121.530177)
-        setHasLocation(true)
+        setFallbackLocation()
       }
     )
   }, [])
 
-  useEffect(() => {
-    // console.log('current user from user page: ', currentUser.uid)
+  const setFallbackLocation = () => {
+    onLocationAlertOpen()
+    setAlertHeader('Oops! 無法取得當前位置')
+    setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
+    setDefaultLatitude(25.0384851)
+    setDefaultLongitude(121.530177)
+    setHasLocation(true)
+  }
 
+  useEffect(() => {
     firebase
       .getUser(currentUser.uid)
       .then(data => {
         setUserInfo(data)
-        getFavCafes(data.favCafes)
+        getSavedCafes()
       })
       .catch(error => {
         onGetUserAlertOpen()
@@ -113,24 +110,27 @@ function User() {
         setAlertBody(
           '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
         )
-        console.error(error)
+        console.error(error.message)
       })
   }, [])
 
   useEffect(() => {
-    firebase.getUserBlogs(currentUser.uid).then(blogs => setUserBlogs(blogs))
+    firebase
+      .getUserBlogs(currentUser.uid)
+      .then(blogs => setUserBlogs(blogs))
+      .catch(error => console.error(error.message))
   }, [])
 
-  const getFavCafes = cafesId => {
+  const getSavedCafes = () => {
     api
       .getAllCafes()
-      .then(data => {
-        const cafeList = data.filter(cafe => {
-          return cafesId.some(id => {
-            return id === cafe.id
+      .then(allCafes => {
+        firebase
+          .getUserSavedCafes(currentUser.uid)
+          .then(list => getSavedCafesByOrder(allCafes, list))
+          .catch(error => {
+            console.error(error.message)
           })
-        })
-        setSavedCafes(cafeList)
       })
       .catch(error => {
         onGetCafesAlertOpen()
@@ -138,62 +138,73 @@ function User() {
         setAlertBody(
           '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
         )
-        console.error(error)
+        console.error(error.message)
       })
       .finally(() => setIsLoading(false))
   }
 
-  const deleteCafe = deletedCafeId => {
-    firebase.deleteSavedCafe(currentUser.uid, deletedCafeId).then(() => {
-      const updatedList = savedCafes
-        .filter(cafe => cafe.id !== deletedCafeId)
-        .map(cafe => cafe.id)
-
-      getFavCafes(updatedList)
-
-      successToast({
-        position: 'top-right',
-        duration: 3000,
-        render: () => (
-          <HStack
-            spacing="4"
-            color="primaryDark"
-            p={3}
-            bg="teal.200"
-            borderRadius="md"
-          >
-            <Icon as={CheckCircleIcon} />
-            <Text>成功移除收藏</Text>
-          </HStack>
-        ),
-        isClosable: true,
-      })
+  const getSavedCafesByOrder = (allCafes, cafeIdList) => {
+    let savedListByOrder = []
+    cafeIdList.forEach(item => {
+      const found = allCafes.find(cafe => cafe.id === item.cafeId)
+      savedListByOrder.push(found)
     })
+    setSavedCafes(savedListByOrder)
+  }
+
+  const deleteSavedCafe = deletedCafeId => {
+    firebase
+      .deleteSavedCafe(currentUser.uid, deletedCafeId)
+      .then(() => {
+        getSavedCafes()
+
+        successToast({
+          position: 'top-right',
+          duration: 5000,
+          render: () => (
+            <HStack
+              spacing="4"
+              color="primaryDark"
+              p={3}
+              bg="teal.200"
+              borderRadius="md"
+            >
+              <Icon as={CheckCircleIcon} />
+              <Text>成功移除收藏</Text>
+            </HStack>
+          ),
+          isClosable: true,
+        })
+      })
+      .catch(error => console.error(error.message))
   }
 
   const deleteBlog = (cafeId, blogId) => {
-    firebase.deleteBlog(cafeId, blogId).then(() => {
-      const updatedList = userBlogs.filter(blog => blog.blogId !== blogId)
-      setUserBlogs(updatedList)
+    firebase
+      .deleteUserBlog(cafeId, blogId)
+      .then(() => {
+        const updatedList = userBlogs.filter(blog => blog.blogId !== blogId)
+        setUserBlogs(updatedList)
 
-      successToast({
-        position: 'top-right',
-        duration: 3000,
-        render: () => (
-          <HStack
-            spacing="4"
-            color="primaryDark"
-            p={3}
-            bg="teal.200"
-            borderRadius="md"
-          >
-            <Icon as={CheckCircleIcon} />
-            <Text>成功刪除食記</Text>
-          </HStack>
-        ),
-        isClosable: true,
+        successToast({
+          position: 'top-right',
+          duration: 3000,
+          render: () => (
+            <HStack
+              spacing="4"
+              color="primaryDark"
+              p={3}
+              bg="teal.200"
+              borderRadius="md"
+            >
+              <Icon as={CheckCircleIcon} />
+              <Text>成功刪除食記</Text>
+            </HStack>
+          ),
+          isClosable: true,
+        })
       })
-    })
+      .catch(error => console.error(error.message))
   }
 
   const updateUserName = e => {
@@ -367,7 +378,7 @@ function User() {
                             key={cafe.id}
                             cafe={cafe}
                             canDeleteCafe={canDeleteCafe}
-                            handleDeleteCafe={() => deleteCafe(cafe.id)}
+                            handleDeleteCafe={() => deleteSavedCafe(cafe.id)}
                           />
                         ))}
                     </SimpleGrid>

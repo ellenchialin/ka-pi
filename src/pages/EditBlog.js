@@ -74,7 +74,7 @@ function EditBlog() {
     }
 
     firebase
-      .uploadBlog(cafeId, currentUser.uid, blogData)
+      .publishBlog(cafeId, currentUser.uid, blogData)
       .then(blogId => {
         navigate(`/cafe/${cafeId}/blog/${blogId}`)
       })
