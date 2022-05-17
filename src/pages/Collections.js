@@ -20,12 +20,6 @@ function Collections() {
   const scrollToTopRef = useRef(null)
   const scrollCardRef = useRef(null)
 
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure()
-
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
   const offset = (currentPage - 1) * cafesPerPage
@@ -38,6 +32,12 @@ function Collections() {
 
   const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
   const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
 
   const {
     value: filterCityValue,

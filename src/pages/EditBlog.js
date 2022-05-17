@@ -6,7 +6,7 @@ import { WarningIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
-import TextEditor from '../components/TextEditor'
+import TextEditor from '../components/editor/TextEditor'
 import AlertModal from '../components/AlertModal'
 
 function EditBlog() {

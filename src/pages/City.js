@@ -79,7 +79,6 @@ function City() {
         const filteredCafes = cityCafes.filter(cafe =>
           cafe.address.includes(area)
         )
-        // console.log('filtered Cafes: ', filteredCafes)
         setUpdatedCafes(prev => [...prev, ...filteredCafes])
       })
     }

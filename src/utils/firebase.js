@@ -133,7 +133,7 @@ export const firebase = {
       })
         .then(() => resolve())
         .catch(error => {
-          reject(new Error('蒐藏咖啡廳發生錯誤'))
+          reject(new Error('收藏咖啡廳發生錯誤'))
           console.error(error)
         })
     })
@@ -145,7 +145,7 @@ export const firebase = {
       })
         .then(() => resolve())
         .catch(error => {
-          reject(new Error('移除蒐藏咖啡廳發生錯誤'))
+          reject(new Error('移除收藏咖啡廳發生錯誤'))
           console.error(error)
         })
     })
@@ -174,7 +174,7 @@ export const firebase = {
           resolve(savedUserArray)
         })
         .catch(error => {
-          reject(new Error('取得蒐藏數發生錯誤'))
+          reject(new Error('取得收藏數發生錯誤'))
           console.error(error)
         })
     })

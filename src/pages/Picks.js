@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react'
-import {
-  Flex,
-  Heading,
-  Text,
-  Spinner,
-  SimpleGrid,
-  useDisclosure,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, Spinner, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'

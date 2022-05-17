@@ -61,7 +61,9 @@ function Comment({
       setCommentUserInfo(data)
     })
 
-    firebase.getUser(currentUser.uid).then(data => setCurrentUserInfo(data))
+    if (currentUser) {
+      firebase.getUser(currentUser.uid).then(data => setCurrentUserInfo(data))
+    }
   }, [])
 
   useEffect(() => {
