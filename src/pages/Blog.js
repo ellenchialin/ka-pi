@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Heading, Avatar, Box, Image, AspectRatio, Breadcrumb,
+import { Flex, Text, Spinner, Heading, Avatar, Image, AspectRatio, Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'

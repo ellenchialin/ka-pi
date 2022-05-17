@@ -69,23 +69,37 @@ function Cafe() {
         const cafe = data.find(item => item.id === cafeId)
         setCafe(cafe)
 
-        firebase.getAllBlogs(cafe.id).then(data => setBlogs(data))
+        firebase
+          .getAllBlogs(cafe.id)
+          .then(data => setBlogs(data))
+          .catch(error => console.error(error.message))
+
         firebase
           .getComments(cafe.id)
           .then(commentList => setComments(commentList))
+          .catch(error => console.error(error.message))
 
         firebase.updatePageViews(cafe.id)
-        firebase.getPageViews(cafe.id).then(views => setPageViews(views))
+        firebase
+          .getPageViews(cafe.id)
+          .then(views => setPageViews(views))
+          .catch(error => console.error(error.message))
 
-        // Check how many users save this cafe
-        firebase.checkSavedNumber(cafe.id).then(doc => setSavedNumber(doc))
+        firebase
+          .checkSavedNumber(cafe.id)
+          .then(doc => setSavedNumber(doc))
+          .catch(error => console.error(error.message))
 
         if (currentUser) {
-          // Check this cafe is saved by user or not and render init icon
-          firebase.getUser(currentUser.uid).then(data => {
-            setUserInfo(data)
-            setToggleSaved(data.favCafes.includes(cafe.id))
-          })
+          firebase
+            .getUserSavedCafes(currentUser.uid)
+            .then(list => {
+              const cafeIdList = list.map(item => item.cafeId)
+              const found = id => id === cafe.id
+              console.log(cafeIdList.some(found))
+              setToggleSaved(cafeIdList.some(found))
+            })
+            .catch(error => console.error(error.message))
         }
 
         fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
@@ -107,7 +121,7 @@ function Cafe() {
       })
       .catch(error => {
         onGetCafesAlertOpen()
-        console.error(error)
+        console.error(error.message)
       })
   }, [])
 
@@ -503,7 +517,7 @@ function Cafe() {
                   fontWeight="bold"
                   mt="0"
                 >
-                  全站用戶食記
+                  網友真實體驗
                 </Text>
               </VStack>
               <Button

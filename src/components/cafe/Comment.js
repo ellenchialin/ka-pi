@@ -57,17 +57,28 @@ function Comment({
   } = useDisclosure()
 
   useEffect(() => {
-    firebase.getUser(commentUserId).then(data => {
-      setCommentUserInfo(data)
-    })
+    firebase
+      .getUser(commentUserId)
+      .then(data => {
+        setCommentUserInfo(data)
+      })
+      .catch(error => console.error(error.message))
 
-    firebase.getUser(currentUser.uid).then(data => setCurrentUserInfo(data))
+    if (currentUser) {
+      firebase
+        .getUser(currentUser.uid)
+        .then(data => setCurrentUserInfo(data))
+        .catch(error => console.error(error.message))
+    }
   }, [])
 
   useEffect(() => {
-    firebase.getReplyList(cafeId, commentId).then(list => {
-      setReplyList(list)
-    })
+    firebase
+      .getReplyList(cafeId, commentId)
+      .then(list => {
+        setReplyList(list)
+      })
+      .catch(error => console.error(error.message))
   }, [])
 
   const handleReplyPhotoUpload = e => {
@@ -100,32 +111,38 @@ function Comment({
       text: replyText,
     }
 
-    firebase.addReply(repliedDetails).then(() => {
-      setReplyText('')
-      onReplyClose()
+    firebase
+      .addReply(repliedDetails)
+      .then(() => {
+        setReplyText('')
+        onReplyClose()
 
-      successToast({
-        position: 'top-right',
-        duration: 3000,
-        render: () => (
-          <HStack
-            spacing="4"
-            color="primaryDark"
-            p={3}
-            bg="teal.200"
-            borderRadius="md"
-          >
-            <Icon as={CheckCircleIcon} />
-            <Text>成功回覆留言</Text>
-          </HStack>
-        ),
-        isClosable: true,
-      })
+        successToast({
+          position: 'top-right',
+          duration: 3000,
+          render: () => (
+            <HStack
+              spacing="4"
+              color="primaryDark"
+              p={3}
+              bg="teal.200"
+              borderRadius="md"
+            >
+              <Icon as={CheckCircleIcon} />
+              <Text>成功回覆留言</Text>
+            </HStack>
+          ),
+          isClosable: true,
+        })
 
-      firebase.getReplyList(cafeId, commentId).then(list => {
-        setReplyList(list)
+        firebase
+          .getReplyList(cafeId, commentId)
+          .then(list => {
+            setReplyList(list)
+          })
+          .catch(error => console.error(error.message))
       })
-    })
+      .catch(error => console.error(error.message))
   }
 
   const onEmojiClick = (event, emojiObject) => {

@@ -126,26 +126,45 @@ export const firebase = {
       })
     })
   },
+  getUserSavedCafes(userId) {
+    return new Promise((resolve, reject) => {
+      const q = query(
+        collection(db, `users/${userId}/favCafes`),
+        orderBy('savedAt', 'desc')
+      )
+      getDocs(q)
+        .then(docsSnapshot => {
+          const cafeList = docsSnapshot.docs.map(doc => ({
+            cafeId: doc.id,
+            savedAt: doc.data().savedAt.toDate().toLocaleDateString(),
+          }))
+          resolve(cafeList)
+        })
+        .catch(error => {
+          reject(new Error('取得收藏發生錯誤，請重新嘗試'))
+          console.error(error)
+        })
+    })
+  },
   saveCafe(userId, cafeId) {
     return new Promise((resolve, reject) => {
-      updateDoc(doc(db, 'users', userId), {
-        favCafes: arrayUnion(cafeId),
-      })
+      const cafeRef = doc(db, `users/${userId}/favCafes/${cafeId}`)
+
+      setDoc(cafeRef, { savedAt: serverTimestamp() })
         .then(() => resolve())
         .catch(error => {
-          reject(new Error('蒐藏咖啡廳發生錯誤'))
+          reject(new Error('收藏咖啡廳發生錯誤'))
           console.error(error)
         })
     })
   },
   deleteSavedCafe(userId, cafeId) {
     return new Promise((resolve, reject) => {
-      updateDoc(doc(db, 'users', userId), {
-        favCafes: arrayRemove(cafeId),
-      })
+      const cafeRef = doc(db, `users/${userId}/favCafes/${cafeId}`)
+      deleteDoc(cafeRef)
         .then(() => resolve())
         .catch(error => {
-          reject(new Error('移除蒐藏咖啡廳發生錯誤'))
+          reject(new Error('移除收藏發生錯誤，請重新嘗試'))
           console.error(error)
         })
     })
@@ -174,7 +193,7 @@ export const firebase = {
           resolve(savedUserArray)
         })
         .catch(error => {
-          reject(new Error('取得蒐藏數發生錯誤'))
+          reject(new Error('取得收藏數發生錯誤'))
           console.error(error)
         })
     })
@@ -204,7 +223,7 @@ export const firebase = {
         })
     })
   },
-  uploadBlog(cafeId, userId, data) {
+  publishBlog(cafeId, userId, data) {
     return new Promise((resolve, reject) => {
       const blogRef = doc(collection(db, `cafes/${cafeId}/blogs`))
 
@@ -267,14 +286,11 @@ export const firebase = {
         })
     })
   },
-  deleteBlog(cafeId, blogId) {
+  deleteUserBlog(cafeId, blogId) {
     return new Promise((resolve, reject) => {
       const blogRef = doc(db, `cafes/${cafeId}/blogs/${blogId}`)
       deleteDoc(blogRef)
-        .then(() => {
-          console.log('Blog Deleted')
-          resolve()
-        })
+        .then(() => resolve())
         .catch(error => {
           reject(new Error('刪除食記發生錯誤，請重新嘗試'))
           console.error(error)

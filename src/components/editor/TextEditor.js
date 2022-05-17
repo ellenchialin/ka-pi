@@ -4,8 +4,8 @@ import { Box, Divider } from '@chakra-ui/react'
 // prettier-ignore
 import { Editor, EditorState, convertToRaw, RichUtils, getDefaultKeyBinding } from 'draft-js'
 
-import InlineStyleControls from './editorStyles/InlineStyles'
-import BlockStyleControls from './editorStyles/BlockStyles'
+import InlineStyleControls from './InlineStyles'
+import BlockStyleControls from './BlockStyles'
 
 function TextEditor({ setBlogContent }) {
   const editorRef = useRef(null)
@@ -13,8 +13,6 @@ function TextEditor({ setBlogContent }) {
 
   const onEditorStateChange = editorState => {
     const contentState = editorState.getCurrentContent()
-    // console.log('content state', convertToRaw(contentState))
-
     setEditorState(editorState)
     setBlogContent(convertToRaw(contentState))
   }
