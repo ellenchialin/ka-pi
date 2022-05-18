@@ -3,7 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, deleteDoc, setDoc, doc, serverTimestamp, orderBy, increment, collectionGroup } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,

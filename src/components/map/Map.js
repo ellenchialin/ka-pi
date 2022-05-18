@@ -65,7 +65,7 @@ Map.propTypes = {
   userLongitude: PropTypes.number,
   defaultLatitude: PropTypes.number,
   defaultLongitude: PropTypes.number,
-  cafes: PropTypes.array,
+  cafes: PropTypes.array.isRequired,
 }
 
 export default Map

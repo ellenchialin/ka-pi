@@ -15,11 +15,12 @@ function CityInfoCard({
   const getCafeNumbers = () => {
     if (taipeiCafes.length > 0) {
       return `共收錄 ${taipeiCafes.length} 間咖啡廳`
-    } else if (newTaipeiCafes.length > 0) {
-      return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
-    } else {
-      return `共收錄 ${cityCafes.length} 間咖啡廳`
     }
+    if (newTaipeiCafes.length > 0) {
+      return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
+    }
+
+    return `共收錄 ${cityCafes.length} 間咖啡廳`
   }
 
   return (
@@ -53,12 +54,12 @@ function CityInfoCard({
 }
 
 CityInfoCard.propTypes = {
-  hoveredCity: PropTypes.string,
-  cityLinkEndpoint: PropTypes.string,
-  isLoading: PropTypes.bool,
-  cityCafes: PropTypes.array,
-  taipeiCafes: PropTypes.array,
-  newTaipeiCafes: PropTypes.array,
+  hoveredCity: PropTypes.string.isRequired,
+  cityLinkEndpoint: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  cityCafes: PropTypes.array.isRequired,
+  taipeiCafes: PropTypes.array.isRequired,
+  newTaipeiCafes: PropTypes.array.isRequired,
 }
 
 export default CityInfoCard

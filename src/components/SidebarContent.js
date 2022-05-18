@@ -46,7 +46,7 @@ const NavItem = props => {
 
 NavItem.propTypes = {
   icon: PropTypes.func,
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
 }
 
 function SidebarContent({ onClose, ...rest }) {

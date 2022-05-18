@@ -9,6 +9,7 @@ import { BsBookmark, BsFillBookmarkFill, BsEyeFill } from 'react-icons/bs'
 import { BiAlarmExclamation, BiPlug, BiSmile } from 'react-icons/bi'
 import { RiDirectionFill, RiAddFill } from 'react-icons/ri'
 import Picker from 'emoji-picker-react'
+
 import RatingStat from '../components/cafe/RatingStat'
 import GooglePlaceCard from '../components/cafe/GooglePlaceCard'
 import BlogCard from '../components/cafe/BlogCard'
@@ -103,7 +104,6 @@ function Cafe() {
             .then(list => {
               const cafeIdList = list.map(item => item.cafeId)
               const found = id => id === cafe.id
-              console.log(cafeIdList.some(found))
               setToggleSaved(cafeIdList.some(found))
             })
             .catch(error => console.error(error.message))

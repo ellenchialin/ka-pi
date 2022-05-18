@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack, Avatar } from '@chakra-ui/react'
+
 import { firebase } from '../../utils/firebase'
 import AlertModal from '../AlertModal'
 

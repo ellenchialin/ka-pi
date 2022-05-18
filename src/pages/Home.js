@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
 import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
+
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -9,7 +11,6 @@ import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 import AlertModal from '../components/AlertModal'
-import Pagination from '@choc-ui/paginator'
 
 function Home() {
   usePageTracking()

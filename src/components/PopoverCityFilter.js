@@ -2,6 +2,7 @@ import { useState } from 'react'
 // prettier-ignore
 import { Button, Popover, PopoverTrigger, PopoverContent, PopoverCloseButton, PopoverArrow, useDisclosure, Wrap, WrapItem, Portal } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
+
 import CustomCheckbox from './CustomCheckbox'
 import CustomRadio from './CustomRadio'
 import useUpdateEffect from '../hooks/useUpdateEffect'
@@ -143,14 +144,15 @@ const PopoverCityFilter = ({
 }
 
 PopoverCityFilter.propTypes = {
-  filteredCafes: PropTypes.array,
-  setDistrictFilteredCafes: PropTypes.func,
-  filterCityValue: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  filterDistrictValue: PropTypes.array,
-  setCurrentPage: PropTypes.func,
-  getCityRadioProps: PropTypes.func,
-  getDistrictCheckboxProps: PropTypes.func,
-  getRootProps: PropTypes.func,
+  filteredCafes: PropTypes.array.isRequired,
+  setDistrictFilteredCafes: PropTypes.func.isRequired,
+  filterCityValue: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+    .isRequired,
+  filterDistrictValue: PropTypes.array.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
+  getCityRadioProps: PropTypes.func.isRequired,
+  getDistrictCheckboxProps: PropTypes.func.isRequired,
+  getRootProps: PropTypes.func.isRequired,
 }
 
 export default PopoverCityFilter

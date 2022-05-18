@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, AspectRatio, Image, Heading, Text, IconButton, useColorModeValue, VStack } from '@chakra-ui/react'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { EditorState, convertFromRaw } from 'draft-js'
 
@@ -22,12 +21,6 @@ function BlogCard({
       .getCurrentContent()
       .getPlainText()
   )
-
-  const navigate = useNavigate()
-
-  const handleReadmore = () => {
-    navigate(`/cafe/${cafeId}/blog/${blogId}`)
-  }
 
   return (
     <>
@@ -78,18 +71,6 @@ function BlogCard({
               {date}
             </Text>
           </VStack>
-          {/*<Flex alignItems="center" justify="space-between" p="4">
-            <Button
-              onClick={handleReadmore}
-              size="sm"
-              bg="thirdDark"
-              color="primaryLight"
-              fontSize="0.75rem"
-              _hover={{ bg: 'primaryDark' }}
-            >
-              看更多
-            </Button>
-          </Flex>*/}
         </Link>
       </Box>
     </>

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+
 import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'

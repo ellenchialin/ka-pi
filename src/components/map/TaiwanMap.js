@@ -63,25 +63,23 @@ function TaiwanMap() {
     setHoveredCity(cityChName)
     setIsLoading(true)
 
-    // console.log('cityEngName: ', cityEngName)
-
     if (cityEngName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setNewTaipeiCafes)
       convertFetchCityName(cityEngName)
       setTaipeiCafes([])
-    } else if (cityEngName === 'taipei') {
+    }
+    if (cityEngName === 'taipei') {
       getCafes('taipei', 'taipei', setTaipeiCafes)
       convertFetchCityName(cityEngName)
       setNewTaipeiCafes([])
-    } else {
-      getCafes(
-        convertFetchCityName(cityEngName),
-        convertFetchCityName(cityEngName),
-        setCityCafes
-      )
-      setTaipeiCafes([])
-      setNewTaipeiCafes([])
     }
+    getCafes(
+      convertFetchCityName(cityEngName),
+      convertFetchCityName(cityEngName),
+      setCityCafes
+    )
+    setTaipeiCafes([])
+    setNewTaipeiCafes([])
   }
 
   return (

@@ -6,6 +6,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+
 import AlertModal from '../../components/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 

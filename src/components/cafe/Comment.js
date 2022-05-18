@@ -6,6 +6,7 @@ import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBod
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { BiSmile } from 'react-icons/bi'
+
 import { firebase } from '../../utils/firebase'
 import Picker from 'emoji-picker-react'
 import AlertModal from '../AlertModal'
@@ -343,7 +344,6 @@ function Comment({
           </HStack>
         </Flex>
       </Flex>
-      {/* Replies */}
       {replyList.length > 0 &&
         replyList.map(reply => (
           <Reply
@@ -360,8 +360,8 @@ function Comment({
 }
 
 Comment.propTypes = {
-  currentUser: PropTypes.object,
-  cafeId: PropTypes.string,
+  currentUser: PropTypes.object.isRequired,
+  cafeId: PropTypes.string.isRequired,
   commentId: PropTypes.string,
   commentUserId: PropTypes.string,
   text: PropTypes.string,

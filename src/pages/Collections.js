@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
 import { CheckIcon } from '@chakra-ui/icons'
+
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import AlertModal from '../components/AlertModal'
-import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 import CafeCard from '../components/cafe/CafeCard'
 

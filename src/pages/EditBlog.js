@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Flex, Input, Image, Button, AspectRatio, Text, HStack, useDisclosure } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
 import TextEditor from '../components/editor/TextEditor'
@@ -49,10 +50,10 @@ function EditBlog() {
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
 
-  const handlePhotoUpload = e => {
-    if (e.target.files[0]) {
+  const handlePhotoUpload = file => {
+    if (file) {
       firebase
-        .getBlogPhotoUrl(e.target.files[0])
+        .getBlogPhotoUrl(file)
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
           onUploadAlertOpen()
@@ -118,7 +119,7 @@ function EditBlog() {
           type="file"
           name="coverPhoto"
           accept="image/*"
-          onChange={e => handlePhotoUpload(e)}
+          onChange={e => handlePhotoUpload(e.target.files[0])}
           hidden
         />
       </Flex>

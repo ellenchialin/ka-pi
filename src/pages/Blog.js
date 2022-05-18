@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Heading, Avatar, Image, AspectRatio, Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
+import { Flex, Text, Spinner, Heading, Avatar, Image, AspectRatio, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
+
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import AlertModal from '../components/AlertModal'

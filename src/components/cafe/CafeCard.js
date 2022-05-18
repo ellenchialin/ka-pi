@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
+
 import { firebase } from '../../utils/firebase'
 import { thumbnails } from '../../cafeThumbnails'
 
@@ -23,6 +24,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
           setCoverPhoto(fallback)
         }
       })
+      .catch(error => console.error(error.message))
       .finally(() => setIsLoading(false))
   }, [])
 
@@ -151,7 +153,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
 }
 
 CafeCard.propTypes = {
-  cafe: PropTypes.object,
+  cafe: PropTypes.object.isRequired,
   canDeleteCafe: PropTypes.bool,
   handleDeleteCafe: PropTypes.func,
 }

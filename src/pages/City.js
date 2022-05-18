@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
+
 import DistrictFilterBoard from '../components/DistrictFilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
 import AlertModal from '../components/AlertModal'

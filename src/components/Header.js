@@ -39,7 +39,7 @@ function Header({ onOpen }) {
 }
 
 Header.propTypes = {
-  onOpen: PropTypes.func,
+  onOpen: PropTypes.func.isRequired,
 }
 
 export default Header

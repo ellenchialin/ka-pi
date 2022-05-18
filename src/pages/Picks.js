@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 // prettier-ignore
 import { Flex, Heading, Text, Spinner, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
+
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import CafeCard from '../components/cafe/CafeCard'
