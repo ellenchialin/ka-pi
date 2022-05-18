@@ -25,7 +25,7 @@ function Cafe() {
 
   const [cafe, setCafe] = useState({})
   const [toggleSaved, setToggleSaved] = useState(false)
-  const [savedNumber, setSavedNumber] = useState([])
+  const [savedNumber, setSavedNumber] = useState(0)
   const [blogs, setBlogs] = useState([])
   const [userInfo, setUserInfo] = useState({})
   const [comments, setComments] = useState([])
@@ -418,7 +418,7 @@ function Cafe() {
           <Box alignSelf="flex-end">
             <HStack>
               <HStack align="center">
-                <Text>{savedNumber.length > 0 ? savedNumber.length : 0}</Text>
+                <Text>{savedNumber}</Text>
                 <Icon as={BsFillBookmarkFill} />
               </HStack>
               <HStack align="center">

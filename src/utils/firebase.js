@@ -146,7 +146,7 @@ export const firebase = {
     return new Promise((resolve, reject) => {
       const cafeRef = doc(db, `users/${userId}/favCafes/${cafeId}`)
 
-      setDoc(cafeRef, { savedAt: serverTimestamp() })
+      setDoc(cafeRef, { id: cafeRef.id, savedAt: serverTimestamp() })
         .then(() => resolve())
         .catch(error => {
           reject(new Error('收藏咖啡廳發生錯誤'))
@@ -176,18 +176,10 @@ export const firebase = {
     })
   },
   checkSavedNumber(cafeId) {
-    const q = query(
-      collection(db, 'users'),
-      where('favCafes', 'array-contains', cafeId)
-    )
-
+    const q = query(collectionGroup(db, 'favCafes'), where('id', '==', cafeId))
     return new Promise((resolve, reject) => {
       getDocs(q)
-        .then(querySnapshot => {
-          const savedUserArray = []
-          querySnapshot.forEach(doc => savedUserArray.push(doc.id))
-          resolve(savedUserArray)
-        })
+        .then(querySnapshot => resolve(querySnapshot.size))
         .catch(error => {
           reject(new Error('取得收藏數發生錯誤'))
           console.error(error)
