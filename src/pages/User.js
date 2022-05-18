@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure, HStack, Icon, useToast } from '@chakra-ui/react'
+import { Flex, Text, IconButton, Button, Input, Avatar, VStack, Tabs, TabList, Tab, TabPanel, TabPanels, SimpleGrid, useDisclosure, HStack, Icon, useToast } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 
@@ -12,8 +13,8 @@ import Map from '../components/map/Map'
 import EditableText from '../components/EditableText'
 import CafeCard from '../components/cafe/CafeCard'
 import BlogCard from '../components/cafe/BlogCard'
+import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
-import Pagination from '@choc-ui/paginator'
 import usePageTracking from '../usePageTracking'
 
 function User() {
@@ -243,43 +244,8 @@ function User() {
       spacing="20px"
       position="relative"
     >
-      <AlertModal
-        isAlertOpen={isLocationAlertOpen}
-        onAlertClose={onLocationAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
-      <AlertModal
-        isAlertOpen={isGetCafesAlertOpen}
-        onAlertClose={onGetCafesAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
-      <AlertModal
-        isAlertOpen={isGetUserAlertOpen}
-        onAlertClose={onGetUserAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
-      <AlertModal
-        isAlertOpen={isUploadAlertOpen}
-        onAlertClose={onUploadAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
           <VStack w="full" align="center" spacing="20px" mb="6">
@@ -462,6 +428,33 @@ function User() {
           </Tabs>
         </>
       )}
+      <AlertModal
+        isAlertOpen={isLocationAlertOpen}
+        onAlertClose={onLocationAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isGetCafesAlertOpen}
+        onAlertClose={onGetCafesAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isGetUserAlertOpen}
+        onAlertClose={onGetUserAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
+
+      <AlertModal
+        isAlertOpen={isUploadAlertOpen}
+        onAlertClose={onUploadAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
     </VStack>
   )
 }

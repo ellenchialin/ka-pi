@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, SimpleGrid, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import CafeCard from '../components/cafe/CafeCard'
-import AlertModal from '../components/AlertModal'
 import Map from '../components/map/Map'
+import CustomSpinner from '../components/CustomSpinner'
+import AlertModal from '../components/AlertModal'
 import usePageTracking from '../usePageTracking'
 
 function Picks() {
@@ -139,14 +140,7 @@ function Picks() {
       </Text>
 
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
           <Map

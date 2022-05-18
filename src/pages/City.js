@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 
 import DistrictFilterBoard from '../components/DistrictFilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
+import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
@@ -90,14 +91,7 @@ function City() {
   return (
     <Flex w="full" maxW="1170px" as="section" direction="column" align="center">
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal.600"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
           <Heading as="h1" size="xl">

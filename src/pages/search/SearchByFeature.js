@@ -1,13 +1,14 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
+import Pagination from '@choc-ui/paginator'
 import { CheckIcon } from '@chakra-ui/icons'
 
 import { api } from '../../utils/api'
 import PopoverCityFilter from '../../components/PopoverCityFilter'
 import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
-import Pagination from '@choc-ui/paginator'
+import CustomSpinner from '../../components/CustomSpinner'
 import AlertModal from '../../components/AlertModal'
 import usePageTracking from '../../usePageTracking'
 
@@ -185,14 +186,7 @@ function SearchByFeature() {
       </Flex>
 
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <Flex w="full" direction="column" align="center" ref={scrollCardRef}>
           {filteredCafes.length > 0 && (

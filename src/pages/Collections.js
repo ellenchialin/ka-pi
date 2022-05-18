@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Heading, Text, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
 import Pagination from '@choc-ui/paginator'
 import { CheckIcon } from '@chakra-ui/icons'
 
 import PopoverCityFilter from '../components/PopoverCityFilter'
+import CafeCard from '../components/cafe/CafeCard'
+import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
 import usePageTracking from '../usePageTracking'
-import CafeCard from '../components/cafe/CafeCard'
 
 function Collections() {
   usePageTracking()
@@ -147,14 +148,7 @@ function Collections() {
       </Wrap>
 
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
           <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Icon, useDisclosure, HStack, useToast } from '@chakra-ui/react'
+import { Flex, Text, Icon, useDisclosure, HStack, useToast } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
 
 import CafeHeader from '../components/cafe/CafeHeader'
@@ -10,6 +10,7 @@ import RatingStatsGroup from '../components/cafe/RatingStatsGroup'
 import GooglePhotoGroup from '../components/cafe/GooglePhotoGroup'
 import BlogGroup from '../components/cafe/BlogGroup'
 import CommentGroup from '../components/cafe/CommentGroup'
+import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
@@ -188,14 +189,7 @@ function Cafe() {
       maxW="1170px"
     >
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
           <CafeHeader

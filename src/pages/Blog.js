@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Heading, Avatar, Image, AspectRatio, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
+import { Flex, Text, Heading, Avatar, Image, AspectRatio, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
 
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
+import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
 
 function Blog() {
@@ -61,7 +62,6 @@ function Blog() {
       as="section"
       direction="column"
       align="center"
-      position="relative"
       w="100%"
       maxW="800px"
       h="100%"
@@ -73,18 +73,7 @@ function Blog() {
         alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com "
       />
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-        />
+        <CustomSpinner />
       ) : (
         <Flex direction="column" h="100%" w="100%">
           <Breadcrumb
