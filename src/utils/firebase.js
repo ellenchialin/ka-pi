@@ -33,7 +33,6 @@ export const firebase = {
           setDoc(doc(db, 'users', user.uid), {
             email: user.email,
             name,
-            favCafes: [],
             photo: '',
           })
           resolve(user)
@@ -61,8 +60,6 @@ export const firebase = {
     return new Promise((resolve, reject) => {
       signInWithPopup(auth, provider)
         .then(result => {
-          // const credential = GoogleAuthProvider.credentialFromResult(result)
-          // const token = credential.accessToken
           const user = result.user
           getDoc(doc(db, `users/${user.uid}`)).then(docsnap => {
             if (docsnap.exists()) {
@@ -71,7 +68,6 @@ export const firebase = {
               setDoc(doc(db, 'users', user.uid), {
                 email: user.email,
                 name: user.displayName,
-                favCafes: [],
                 photo: user.photoURL,
               }).then(() => resolve(user))
             }

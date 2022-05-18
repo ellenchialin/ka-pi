@@ -64,7 +64,7 @@ function Picks() {
       .getCityCafes('taipei')
       .then(cafes =>
         setPickedCafes(
-          cafes.filter(cafe => cafe.address.includes('台北')).slice(0, 50)
+          cafes.filter(cafe => cafe.address.includes('台北')).slice(0, 100)
         )
       )
       .catch(error => {
@@ -85,6 +85,7 @@ function Picks() {
           .slice(1)[0]
           .slice(2, 4)
 
+        if (currentCity === '台北') getDefaultCafes()
         if (currentCity === '新北') {
           api
             .getCityCafes('taipei')
@@ -102,40 +103,20 @@ function Picks() {
               console.error(error)
             })
             .finally(() => setIsLoading(false))
-        } else if (currentCity === '台北') {
-          api
-            .getCityCafes('taipei')
-            .then(cafes =>
-              setPickedCafes(
-                cafes
-                  .filter(
-                    cafe => cafe.address.includes('台北') && cafe.tasty >= 4
-                  )
-                  .slice(0, 100)
-              )
-            )
-            .catch(error => {
-              onGetCafesAlertOpen()
-              console.error(error)
-            })
-            .finally(() => setIsLoading(false))
-        } else {
-          const city = cityData.filter(city => city.place === currentCity)[0]
-            .tag
-
-          api
-            .getCityCafes(city)
-            .then(cafes =>
-              setPickedCafes(
-                cafes.filter(cafe => cafe.tasty >= 4).slice(0, 100)
-              )
-            )
-            .catch(error => {
-              onGetCafesAlertOpen()
-              console.error(error)
-            })
-            .finally(() => setIsLoading(false))
         }
+
+        const city = cityData.filter(city => city.place === currentCity)[0].tag
+
+        api
+          .getCityCafes(city)
+          .then(cafes =>
+            setPickedCafes(cafes.filter(cafe => cafe.tasty >= 4).slice(0, 100))
+          )
+          .catch(error => {
+            onGetCafesAlertOpen()
+            console.error(error)
+          })
+          .finally(() => setIsLoading(false))
       })
       .catch(error => onLocationAlertOpen())
   }
