@@ -89,9 +89,11 @@ function User() {
   }, [])
 
   const setFallbackLocation = () => {
-    onLocationAlertOpen()
     setAlertHeader('Oops! 無法取得當前位置')
-    setAlertBody('目前瀏覽器不支援定位，或您尚未開啟定位。')
+    setAlertBody(
+      '可能的原因為：當前瀏覽器不支援定位、您尚未開啟定位，或網路連線中斷，請確認後重新操作。'
+    )
+    onLocationAlertOpen()
     setDefaultLatitude(25.0384851)
     setDefaultLongitude(121.530177)
     setHasLocation(true)
@@ -105,11 +107,11 @@ function User() {
         getSavedCafes()
       })
       .catch(error => {
-        onGetUserAlertOpen()
         setAlertHeader('Oops! 暫無法取得個人資訊')
         setAlertBody(
           '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
         )
+        onGetUserAlertOpen()
         console.error(error.message)
       })
   }, [])
@@ -133,11 +135,11 @@ function User() {
           })
       })
       .catch(error => {
-        onGetCafesAlertOpen()
         setAlertHeader('Oops! 暫無法取得咖啡廳資料')
         setAlertBody(
           '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
         )
+        onGetCafesAlertOpen()
         console.error(error.message)
       })
       .finally(() => setIsLoading(false))

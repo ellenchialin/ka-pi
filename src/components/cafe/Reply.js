@@ -6,9 +6,10 @@ import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, Moda
 import { firebase } from '../../utils/firebase'
 import AlertModal from '../AlertModal'
 
-function Reply({ replyUserId, replyText, replyImage, replyDate }) {
+function Reply({ reply }) {
+  const { userId: replyUserId, repliedAt, text, image } = reply
   const [userInfo, setUserInfo] = useState({})
-  const convertedReplyDate = replyDate.toDate().toLocaleDateString()
+  const convertedReplyDate = repliedAt.toDate().toLocaleDateString()
 
   const {
     isOpen: isReplyPhotoOpen,
@@ -55,12 +56,12 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           <Text color="primaryDark" fontWeight="bold">
             {userInfo.name}
           </Text>
-          <Text color="primaryDark">{replyText}</Text>
-          {replyImage && (
+          <Text color="primaryDark">{text}</Text>
+          {image && (
             <>
               <AspectRatio w="100%" maxWidth="100px" mt="2" ratio={1}>
                 <Image
-                  src={replyImage}
+                  src={image}
                   alt="留言照片"
                   fit="cover"
                   onClick={onReplyPhotoOpen}
@@ -79,7 +80,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
                   <ModalBody p="10">
                     <AspectRatio h="85vh" _before={{ pb: '0' }}>
                       <Image
-                        src={replyImage}
+                        src={image}
                         alt="留言照片"
                         fit="cover"
                         align="center"
@@ -107,10 +108,12 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
 }
 
 Reply.propTypes = {
-  replyUserId: PropTypes.string,
-  replyText: PropTypes.string,
-  replyImage: PropTypes.string,
-  replyDate: PropTypes.object,
+  reply: PropTypes.shape({
+    userId: PropTypes.string.isRequired,
+    repliedAt: PropTypes.object.isRequired,
+    text: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }),
 }
 
 export default Reply

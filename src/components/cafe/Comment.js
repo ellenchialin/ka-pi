@@ -12,22 +12,15 @@ import Picker from 'emoji-picker-react'
 import AlertModal from '../AlertModal'
 import Reply from './Reply'
 
-function Comment({
-  currentUser,
-  cafeId,
-  commentId,
-  commentUserId,
-  text,
-  date,
-  image,
-}) {
+function Comment({ cafeId, currentUser, comment }) {
+  const { commentId, userId: commentUserId, createdAt, text, image } = comment
   const [currentUserInfo, setCurrentUserInfo] = useState({})
   const [commentUserInfo, setCommentUserInfo] = useState({})
   const [replyText, setReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
   const [replyList, setReplyList] = useState([])
-  const convertedCommentDate = date.toDate().toLocaleDateString()
+  const convertedCommentDate = createdAt.toDate().toLocaleDateString()
 
   const replyPhotoRef = useRef()
   const navigate = useNavigate()
@@ -82,10 +75,10 @@ function Comment({
       .catch(error => console.error(error.message))
   }, [])
 
-  const handleReplyPhotoUpload = e => {
-    if (e.target.files[0]) {
+  const handleReplyPhotoUpload = file => {
+    if (file) {
       firebase
-        .getReplyPhotoUrl(e.target.files[0])
+        .getReplyPhotoUrl(file)
         .then(url => setReplyPhotoUrl(url))
         .catch(error => {
           onUploadAlertOpen()
@@ -314,7 +307,7 @@ function Comment({
                       type="file"
                       name="coverPhoto"
                       accept="image/*"
-                      onChange={e => handleReplyPhotoUpload(e)}
+                      onChange={e => handleReplyPhotoUpload(e.target.files[0])}
                       hidden
                     />
                   </Flex>
@@ -345,28 +338,24 @@ function Comment({
         </Flex>
       </Flex>
       {replyList.length > 0 &&
-        replyList.map(reply => (
-          <Reply
-            key={reply.text}
-            replyUserId={reply.userId}
-            replyText={reply.text}
-            replyImage={reply.image}
-            replyDate={reply.repliedAt}
-          />
-        ))}
+        replyList.map(reply => <Reply key={reply.text} reply={reply} />)}
       <Divider mt="2" />
     </Flex>
   )
 }
 
 Comment.propTypes = {
-  currentUser: PropTypes.object.isRequired,
+  currentUser: PropTypes.shape({
+    uid: PropTypes.string.isRequired,
+  }),
   cafeId: PropTypes.string.isRequired,
-  commentId: PropTypes.string,
-  commentUserId: PropTypes.string,
-  text: PropTypes.string,
-  date: PropTypes.object,
-  image: PropTypes.string,
+  comment: PropTypes.shape({
+    commentId: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    createdAt: PropTypes.object.isRequired,
+    text: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }),
 }
 
 export default Comment

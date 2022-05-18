@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { Flex, VStack, Text, Divider } from '@chakra-ui/react'
 
-function RatingStat({ feature1, feature2 }) {
+function RatingStats({ feature1, feature2 }) {
   return (
     <Flex
       w="250px"
@@ -43,9 +43,15 @@ function RatingStat({ feature1, feature2 }) {
   )
 }
 
-RatingStat.propTypes = {
-  feature1: PropTypes.object,
-  feature2: PropTypes.object,
+RatingStats.propTypes = {
+  feature1: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+  }),
+  feature2: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+  }),
 }
 
-export default RatingStat
+export default RatingStats
