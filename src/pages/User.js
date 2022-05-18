@@ -212,10 +212,10 @@ function User() {
     firebase.updateUserName(currentUser.uid, e.target.value)
   }
 
-  const handlePhotoChange = e => {
-    if (e.target.files[0]) {
+  const handlePhotoChange = file => {
+    if (file) {
       firebase
-        .getUserPhotoUrl(currentUser.uid, e.target.files[0])
+        .getUserPhotoUrl(currentUser.uid, file)
         .then(url => setUserPhotoUrl(url))
         .catch(error => {
           onUploadAlertOpen()
@@ -223,7 +223,7 @@ function User() {
           setAlertBody(
             '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
           )
-          console.error(error)
+          console.error(error.message)
         })
     }
   }
@@ -306,7 +306,7 @@ function User() {
                 type="file"
                 name="userPhoto"
                 accept="image/*"
-                onChange={e => handlePhotoChange(e)}
+                onChange={e => handlePhotoChange(e.target.files[0])}
                 hidden
               />
             </Flex>

@@ -92,6 +92,13 @@ function Cafe() {
 
         if (currentUser) {
           firebase
+            .getUser(currentUser.uid)
+            .then(data => {
+              setUserInfo(data)
+            })
+            .catch(error => console.error(error.message))
+
+          firebase
             .getUserSavedCafes(currentUser.uid)
             .then(list => {
               const cafeIdList = list.map(item => item.cafeId)
