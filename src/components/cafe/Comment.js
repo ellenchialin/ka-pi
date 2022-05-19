@@ -209,14 +209,7 @@ function Comment({ cafeId, currentUser, comment }) {
             >
               Reply
             </Text>
-            <AlertModal
-              isAlertOpen={isAlertOpen}
-              onAlertClose={onAlertClose}
-              alertHeader="Oops! 尚未登入"
-              alertBody="請先登入或註冊：）"
-              actionText="前往登入"
-              alertAction={() => handleAlertAction()}
-            />
+
             <Modal
               isOpen={isReplyOpen}
               onClose={onReplyClose}
@@ -328,6 +321,15 @@ function Comment({ cafeId, currentUser, comment }) {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+
+            <AlertModal
+              isAlertOpen={isAlertOpen}
+              onAlertClose={onAlertClose}
+              alertHeader="Oops! 尚未登入"
+              alertBody="請先登入或註冊：）"
+              actionText="前往登入"
+              alertAction={() => handleAlertAction()}
+            />
             <AlertModal
               isAlertOpen={isUploadAlertOpen}
               onAlertClose={onUploadAlertClose}

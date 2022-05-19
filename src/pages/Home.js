@@ -20,6 +20,8 @@ function Home() {
   const [defaultLatitude, setDefaultLatitude] = useState(null)
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
+  const [alertHeader, setAlertHeader] = useState('')
+  const [alertBody, setAlertBody] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const scrollIntroRef = useRef(null)
   const scrollToTopRef = useRef(null)
@@ -30,15 +32,9 @@ function Home() {
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
   const {
-    isOpen: isLocationAlertOpen,
-    onOpen: onLocationAlertOpen,
-    onClose: onLocationAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isGetCafesAlertOpen,
-    onOpen: onGetCafesAlertOpen,
-    onClose: onGetCafesAlertClose,
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -59,7 +55,11 @@ function Home() {
   }, [])
 
   const setFallbackLocation = () => {
-    onLocationAlertOpen()
+    setAlertHeader('Oops! 無法取得當前位置')
+    setAlertBody(
+      '目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）'
+    )
+    onAlertOpen()
     setDefaultLatitude(25.0384851)
     setDefaultLongitude(121.530177)
     getDefaultCafes()
@@ -74,7 +74,7 @@ function Home() {
         )
       )
       .catch(error => {
-        onGetCafesAlertOpen()
+        showGetCafesAlert()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -101,7 +101,7 @@ function Home() {
               )
             )
             .catch(error => {
-              onGetCafesAlertOpen()
+              showGetCafesAlert()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -112,15 +112,21 @@ function Home() {
           .getCityCafes(city)
           .then(cafes => setUserNearbyCafes(cafes.slice(0, 50)))
           .catch(error => {
-            onGetCafesAlertOpen()
+            showGetCafesAlert()
             console.error(error)
           })
           .finally(() => setIsLoading(false))
       })
       .catch(error => {
-        onLocationAlertOpen()
+        showGetCafesAlert()
         console.error(error)
       })
+  }
+
+  const showGetCafesAlert = () => {
+    setAlertHeader('Oops! 暫無法取得咖啡廳資料')
+    setAlertBody('請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com')
+    onAlertOpen()
   }
 
   const handleScroll = () =>
@@ -215,17 +221,10 @@ function Home() {
       </Flex>
 
       <AlertModal
-        isAlertOpen={isLocationAlertOpen}
-        onAlertClose={onLocationAlertClose}
-        alertHeader="Oops! 無法取得當前位置"
-        alertBody="目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）"
-      />
-
-      <AlertModal
-        isAlertOpen={isGetCafesAlertOpen}
-        onAlertClose={onGetCafesAlertClose}
-        alertHeader="Oops! 暫無法取得咖啡廳資料"
-        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
       />
     </Flex>
   )

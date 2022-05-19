@@ -33,21 +33,9 @@ function User() {
   const { currentUser } = useAuth()
 
   const {
-    isOpen: isLocationAlertOpen,
-    onOpen: onLocationAlertOpen,
-    onClose: onLocationAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isGetCafesAlertOpen,
-    onOpen: onGetCafesAlertOpen,
-    onClose: onGetCafesAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isGetUserAlertOpen,
-    onOpen: onGetUserAlertOpen,
-    onClose: onGetUserAlertClose,
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -74,7 +62,7 @@ function User() {
     setAlertBody(
       '可能的原因為：當前瀏覽器不支援定位、您尚未開啟定位，或網路連線中斷，請確認後重新操作。'
     )
-    onLocationAlertOpen()
+    onAlertOpen()
     setDefaultLocation({
       defaultLatitude: 25.0384851,
       defaultLongitude: 121.530177,
@@ -92,9 +80,10 @@ function User() {
       .catch(error => {
         setAlertHeader('Oops! 暫無法取得個人資訊')
         setAlertBody(
-          '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
+          '請確認網路連線並重新操作，如多次失敗請聯繫開發人員 chialin76@gmail.com'
         )
-        onGetUserAlertOpen()
+        onAlertOpen()
+        setIsLoading(false)
         console.error(error.message)
       })
   }, [])
@@ -107,18 +96,23 @@ function User() {
           .getUserSavedCafes(currentUser.uid)
           .then(list => getSavedCafesByOrder(allCafes, list))
           .catch(error => {
+            showGetCafesAlert()
             console.error(error.message)
           })
       })
       .catch(error => {
-        setAlertHeader('Oops! 暫無法取得咖啡廳資料')
-        setAlertBody(
-          '請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com'
-        )
-        onGetCafesAlertOpen()
+        showGetCafesAlert()
         console.error(error.message)
       })
       .finally(() => setIsLoading(false))
+  }
+
+  const showGetCafesAlert = () => {
+    setAlertHeader('Oops! 暫無法取得咖啡廳資料')
+    setAlertBody(
+      '請確認網路連線並重新操作，多次操作失敗請聯繫開發人員 chialin76@gmail.com'
+    )
+    onAlertOpen()
   }
 
   const getSavedCafesByOrder = (allCafes, cafeIdList) => {
@@ -167,22 +161,8 @@ function User() {
         </>
       )}
       <AlertModal
-        isAlertOpen={isLocationAlertOpen}
-        onAlertClose={onLocationAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
-      <AlertModal
-        isAlertOpen={isGetCafesAlertOpen}
-        onAlertClose={onGetCafesAlertClose}
-        alertHeader={alertHeader}
-        alertBody={alertBody}
-      />
-
-      <AlertModal
-        isAlertOpen={isGetUserAlertOpen}
-        onAlertClose={onGetUserAlertClose}
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
         alertHeader={alertHeader}
         alertBody={alertBody}
       />

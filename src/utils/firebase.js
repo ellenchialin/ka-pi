@@ -86,7 +86,7 @@ export const firebase = {
           if (docsnap.exists()) {
             resolve(docsnap.data())
           }
-          return
+          reject(new Error('取得用戶資訊發生錯誤，請確認網路重新操作'))
         })
         .catch(error => {
           reject(new Error('取得用戶資訊發生錯誤，請確認網路重新操作'))

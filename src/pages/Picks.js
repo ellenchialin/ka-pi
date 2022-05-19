@@ -19,6 +19,8 @@ function Picks() {
   const [defaultLatitude, setDefaultLatitude] = useState(null)
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
+  const [alertHeader, setAlertHeader] = useState('')
+  const [alertBody, setAlertBody] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const scrollToTopRef = useRef(null)
 
@@ -28,15 +30,9 @@ function Picks() {
   const currentCafes = pickedCafes.slice(offset, offset + cafesPerPage)
 
   const {
-    isOpen: isLocationAlertOpen,
-    onOpen: onLocationAlertOpen,
-    onClose: onLocationAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isGetCafesAlertOpen,
-    onOpen: onGetCafesAlertOpen,
-    onClose: onGetCafesAlertClose,
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -55,7 +51,7 @@ function Picks() {
   }, [])
 
   const setFallbackLocation = () => {
-    onLocationAlertOpen()
+    showLocationAlert()
     setDefaultLatitude(25.0384851)
     setDefaultLongitude(121.530177)
     getDefaultCafes()
@@ -70,7 +66,7 @@ function Picks() {
         )
       )
       .catch(error => {
-        onGetCafesAlertOpen()
+        showGetCafesAlert()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
@@ -101,7 +97,7 @@ function Picks() {
               )
             )
             .catch(error => {
-              onGetCafesAlertOpen()
+              showGetCafesAlert()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
@@ -115,12 +111,31 @@ function Picks() {
             setPickedCafes(cafes.filter(cafe => cafe.tasty >= 4).slice(0, 100))
           )
           .catch(error => {
-            onGetCafesAlertOpen()
+            showGetCafesAlert()
             console.error(error)
           })
           .finally(() => setIsLoading(false))
       })
-      .catch(error => onLocationAlertOpen())
+      .catch(error => {
+        showLocationAlert()
+        console.error(error)
+      })
+  }
+
+  const showLocationAlert = () => {
+    setAlertHeader('Oops! 無法取得當前位置')
+    setAlertBody(
+      '目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）'
+    )
+    onAlertOpen()
+  }
+
+  const showGetCafesAlert = () => {
+    setAlertHeader('Oops! 暫無法取得咖啡廳資料')
+    setAlertBody(
+      '請確認網路連線並重新操作，多次操作失敗請聯繫開發人員 chialin76@gmail.com'
+    )
+    onAlertOpen()
   }
 
   return (
@@ -172,17 +187,10 @@ function Picks() {
         </>
       )}
       <AlertModal
-        isAlertOpen={isLocationAlertOpen}
-        onAlertClose={onLocationAlertClose}
-        alertHeader="Oops! 無法取得當前位置"
-        alertBody="目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）"
-      />
-
-      <AlertModal
-        isAlertOpen={isGetCafesAlertOpen}
-        onAlertClose={onGetCafesAlertClose}
-        alertHeader="Oops! 暫無法取得咖啡廳資料"
-        alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
       />
     </Flex>
   )
