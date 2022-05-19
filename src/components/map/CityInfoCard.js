@@ -19,7 +19,6 @@ function CityInfoCard({
     if (newTaipeiCafes.length > 0) {
       return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
     }
-
     return `共收錄 ${cityCafes.length} 間咖啡廳`
   }
 

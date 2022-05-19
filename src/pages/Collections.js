@@ -4,12 +4,16 @@ import { useParams } from 'react-router-dom'
 import { Flex, Heading, Text, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
 
+import { api } from '../utils/api'
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import CafeCard from '../components/cafe/CafeCard'
 import CustomSpinner from '../components/CustomSpinner'
 import CustomPagination from '../components/CustomPagination'
 import AlertModal from '../components/AlertModal'
 import usePageTracking from '../usePageTracking'
+
+const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
+const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
 
 function Collections() {
   usePageTracking()
@@ -30,9 +34,6 @@ function Collections() {
       : collectionType === 'work'
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
-
-  const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
-  const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
 
   const {
     isOpen: isAlertOpen,
@@ -63,8 +64,8 @@ function Collections() {
   }, [type])
 
   useEffect(() => {
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
         const forHangout = data.filter(
           cafe =>

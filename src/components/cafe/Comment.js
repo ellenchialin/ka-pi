@@ -53,9 +53,7 @@ function Comment({ cafeId, currentUser, comment }) {
   useEffect(() => {
     firebase
       .getUser(commentUserId)
-      .then(data => {
-        setCommentUserInfo(data)
-      })
+      .then(data => setCommentUserInfo(data))
       .catch(error => console.error(error.message))
 
     if (currentUser) {
@@ -69,9 +67,7 @@ function Comment({ cafeId, currentUser, comment }) {
   useEffect(() => {
     firebase
       .getReplyList(cafeId, commentId)
-      .then(list => {
-        setReplyList(list)
-      })
+      .then(list => setReplyList(list))
       .catch(error => console.error(error.message))
   }, [])
 
@@ -131,9 +127,7 @@ function Comment({ cafeId, currentUser, comment }) {
 
         firebase
           .getReplyList(cafeId, commentId)
-          .then(list => {
-            setReplyList(list)
-          })
+          .then(list => setReplyList(list))
           .catch(error => console.error(error.message))
       })
       .catch(error => console.error(error.message))

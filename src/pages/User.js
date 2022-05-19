@@ -41,6 +41,7 @@ function User() {
   useEffect(() => {
     if (!navigator.geolocation) {
       setFallbackLocation()
+      return
     }
 
     navigator.geolocation.getCurrentPosition(

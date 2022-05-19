@@ -38,6 +38,7 @@ function Picks() {
   useEffect(() => {
     if (!navigator.geolocation) {
       setFallbackLocation()
+      return
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -83,7 +84,10 @@ function Picks() {
           .slice(1)[0]
           .slice(2, 4)
 
-        if (currentCity === '台北') getDefaultCafes()
+        if (currentCity === '台北') {
+          getDefaultCafes()
+          return
+        }
         if (currentCity === '新北') {
           api
             .getCityCafes('taipei')
@@ -101,10 +105,10 @@ function Picks() {
               console.error(error)
             })
             .finally(() => setIsLoading(false))
+          return
         }
 
         const city = cityData.filter(city => city.place === currentCity)[0].tag
-
         api
           .getCityCafes(city)
           .then(cafes =>

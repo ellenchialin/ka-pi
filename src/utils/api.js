@@ -8,4 +8,9 @@ export const api = {
       response.json()
     )
   },
+  getGooglePhotoRefs(cafeName) {
+    return fetch(`${this.hostname}/photorefs/${cafeName}`).then(response =>
+      response.json()
+    )
+  },
 }

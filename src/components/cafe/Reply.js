@@ -26,9 +26,7 @@ function Reply({ reply }) {
   useEffect(() => {
     firebase
       .getUser(replyUserId)
-      .then(data => {
-        setUserInfo(data)
-      })
+      .then(data => setUserInfo(data))
       .catch(error => {
         onGetUserAlertOpen()
         console.error(error)

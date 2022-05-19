@@ -25,9 +25,7 @@ function SearchByKeyword() {
   useEffect(() => {
     api
       .getAllCafes()
-      .then(data => {
-        setAllCafes(data)
-      })
+      .then(data => setAllCafes(data))
       .catch(error => {
         onAlertOpen()
         console.error(error)
@@ -36,7 +34,6 @@ function SearchByKeyword() {
 
   const submitSearch = () => {
     const matched = allCafes.find(cafe => cafe.name === searchCafe)
-
     setMatchedCafe(matched)
   }
 

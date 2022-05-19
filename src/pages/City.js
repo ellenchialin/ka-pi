@@ -63,11 +63,13 @@ function City() {
       .then(data => {
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
-        } else if (cityName === 'taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('台北')))
-        } else {
-          setCityState(data)
+          return
         }
+        if (cityName === 'taipei') {
+          setCityState(data.filter(cafe => cafe.address.includes('台北')))
+          return
+        }
+        setCityState(data)
       })
       .catch(error => {
         onAlertOpen()

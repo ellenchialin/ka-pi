@@ -85,8 +85,8 @@ function Cafe() {
             .catch(error => console.error(error.message))
         }
 
-        fetch(`https://ka-pi-server.herokuapp.com/photorefs/${cafe.name}`)
-          .then(res => res.json())
+        api
+          .getGooglePhotoRefs(cafe.name)
           .then(data => {
             if (data.length === 0) {
               setGooglePhotoRefs([])

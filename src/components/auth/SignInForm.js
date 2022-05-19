@@ -33,9 +33,7 @@ const SignInForm = () => {
 
   const handleSignIn = (email, password) => {
     signin(email, password)
-      .then(user => {
-        navigate(-1)
-      })
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignInAlertOpen()
@@ -45,7 +43,7 @@ const SignInForm = () => {
 
   const handleGoogleSignIn = () => {
     googleSignIn()
-      .then(user => navigate(-1))
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignInAlertOpen()

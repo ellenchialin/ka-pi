@@ -11,35 +11,37 @@ function RatingStatsGroup({ cafe }) {
   const checkLimitedTime = limited => {
     if (limited === 'no') {
       return '不限時'
-    } else if (limited === 'maybe') {
-      return '視平假日'
-    } else if (limited === 'yes') {
-      return '有限時'
-    } else {
-      return '未提供資訊'
     }
+    if (limited === 'maybe') {
+      return '視平假日'
+    }
+    if (limited === 'yes') {
+      return '有限時'
+    }
+    return '未提供資訊'
   }
 
   const checkSocket = socket => {
     if (socket === 'yes') {
       return '很多'
-    } else if (socket === 'maybe') {
-      return '部分'
-    } else if (socket === 'no') {
-      return '很少'
-    } else {
-      return '未提供資訊'
     }
+    if (socket === 'maybe') {
+      return '部分'
+    }
+    if (socket === 'no') {
+      return '很少'
+    }
+    return '未提供資訊'
   }
 
   const checkStandSeat = standing => {
     if (standing === 'no') {
       return '沒有'
-    } else if (standing === 'yes') {
-      return '部分'
-    } else {
-      return '未提供資訊'
     }
+    if (standing === 'yes') {
+      return '部分'
+    }
+    return '未提供資訊'
   }
 
   const primaryFeatures = [

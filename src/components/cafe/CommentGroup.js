@@ -103,7 +103,10 @@ function CommentGroup({ cafeId, userInfo }) {
         isClosable: true,
       })
 
-      firebase.getComments(cafeId).then(commentList => setComments(commentList))
+      firebase
+        .getComments(cafeId)
+        .then(commentList => setComments(commentList))
+        .catch(error => console.error(error.message))
     })
   }
 

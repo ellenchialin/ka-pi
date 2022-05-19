@@ -33,9 +33,7 @@ const SignUpForm = () => {
 
   const handleSignUp = (name, email, password) => {
     signup(name, email, password)
-      .then(user => {
-        navigate(-1)
-      })
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignUpAlertOpen()
