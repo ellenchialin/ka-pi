@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Heading, Avatar, Image, AspectRatio, Breadcrumb, BreadcrumbItem, BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Flex, Text, Heading, Avatar, Image, AspectRatio, useDisclosure } from '@chakra-ui/react'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
 
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import CustomSpinner from '../components/CustomSpinner'
+import CustomBreadcrumb from '../components/CustomBreadcrumb'
 import AlertModal from '../components/AlertModal'
 
 function Blog() {
@@ -76,32 +76,13 @@ function Blog() {
         <CustomSpinner />
       ) : (
         <Flex direction="column" h="100%" w="100%">
-          <Breadcrumb
-            spacing="2px"
-            separator={<ChevronRightIcon color="secondaryLight" />}
-            mb="4"
-            fontSize="14px"
-          >
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/">
-                首頁
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to={`/cafe/${cafeId}`}>
-                {cafeName}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink
-                cursor="not-allowed"
-                color="secondaryLight"
-                textDecoration="underline"
-              >
-                {blog.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <CustomBreadcrumb
+            secondDestination={{
+              secondUrl: `/cafe/${cafeId}`,
+              secondText: cafeName,
+            }}
+            currentDestinationText={blog.title}
+          />
           <AspectRatio w="100%" ratio={21 / 9}>
             <Image
               src={blog.image}

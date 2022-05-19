@@ -139,7 +139,7 @@ function Comment({ cafeId, currentUser, comment }) {
       .catch(error => console.error(error.message))
   }
 
-  const onEmojiClick = (event, emojiObject) => {
+  const onEmojiClick = (_, emojiObject) => {
     setReplyText(prevReplyText => prevReplyText + emojiObject.emoji)
   }
 
