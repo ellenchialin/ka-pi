@@ -37,17 +37,7 @@ function BlogGroup({ blogs, handleClickAddBlog }) {
         gap="8"
       >
         {blogs.length > 0 ? (
-          blogs.map(blog => (
-            <BlogCard
-              key={blog.blogId}
-              cafeId={blog.cafeId}
-              blogId={blog.blogId}
-              content={blog.content}
-              title={blog.title}
-              date={blog.createdAt}
-              image={blog.image}
-            />
-          ))
+          blogs.map(blog => <BlogCard key={blog.blogId} blog={blog} />)
         ) : (
           <Text w="full" color={subtagTextColor} textAlign="center">
             尚未有任何食記

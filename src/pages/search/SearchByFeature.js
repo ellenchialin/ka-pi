@@ -12,6 +12,16 @@ import AlertModal from '../../components/AlertModal'
 import CustomPagination from '../../components/CustomPagination'
 import usePageTracking from '../../usePageTracking'
 
+const defaultFeatures = ['不限時', '有插座']
+const ratingFeatures = [
+  { text: 'WiFi穩定', tag: 'wifi' },
+  { text: '通常有位', tag: 'seat' },
+  { text: '店內安靜', tag: 'quiet' },
+  { text: '咖啡好喝', tag: 'tasty' },
+  { text: '價格親民', tag: 'cheap' },
+  { text: '裝潢音樂', tag: 'music' },
+]
+
 function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
@@ -26,16 +36,6 @@ function SearchByFeature() {
     districtFilteredCafes.length > 0
       ? districtFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
-
-  const defaultFeatures = ['不限時', '有插座']
-  const ratingFeatures = [
-    { text: 'WiFi穩定', tag: 'wifi' },
-    { text: '通常有位', tag: 'seat' },
-    { text: '店內安靜', tag: 'quiet' },
-    { text: '咖啡好喝', tag: 'tasty' },
-    { text: '價格親民', tag: 'cheap' },
-    { text: '裝潢音樂', tag: 'music' },
-  ]
 
   const {
     value: featureValue,

@@ -6,16 +6,8 @@ import { Box, AspectRatio, Image, Heading, Text, IconButton, useColorModeValue, 
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { EditorState, convertFromRaw } from 'draft-js'
 
-function BlogCard({
-  cafeId,
-  blogId,
-  content,
-  title,
-  image,
-  date,
-  canDeleteBlog,
-  handleBlogDelete,
-}) {
+function BlogCard({ blog, canDeleteBlog, handleBlogDelete }) {
+  const { cafeId, blogId, content, title, createdAt, image } = blog
   const [editorState] = useState(
     EditorState.createWithContent(convertFromRaw(content))
       .getCurrentContent()
@@ -68,7 +60,7 @@ function BlogCard({
               {editorState}
             </Text>
             <Text fontSize="0.75em" alignSelf="flex-end">
-              {date}
+              {createdAt}
             </Text>
           </VStack>
         </Link>
@@ -78,12 +70,14 @@ function BlogCard({
 }
 
 BlogCard.propTypes = {
-  cafeId: PropTypes.string,
-  blogId: PropTypes.string,
-  content: PropTypes.object,
-  title: PropTypes.string,
-  image: PropTypes.string,
-  date: PropTypes.string,
+  cafe: PropTypes.shape({
+    cafeId: PropTypes.string.isRequired,
+    blogId: PropTypes.string.isRequired,
+    content: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }),
   canDeleteBlog: PropTypes.bool,
   handleBlogDelete: PropTypes.func,
 }

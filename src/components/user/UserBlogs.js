@@ -74,12 +74,7 @@ function UserBlogs({ currentUserId }) {
             currentBlogs.map(blog => (
               <BlogCard
                 key={blog.blogId}
-                cafeId={blog.cafeId}
-                blogId={blog.blogId}
-                content={blog.content}
-                title={blog.title}
-                date={blog.createdAt}
-                image={blog.image}
+                blog={blog}
                 canDeleteBlog={canDeleteBlog}
                 handleBlogDelete={() => deleteBlog(blog.cafeId, blog.blogId)}
               />
