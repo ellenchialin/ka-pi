@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
-import Pagination from '@choc-ui/paginator'
 import { CheckIcon } from '@chakra-ui/icons'
 
 import PopoverCityFilter from '../components/PopoverCityFilter'
 import CafeCard from '../components/cafe/CafeCard'
 import CustomSpinner from '../components/CustomSpinner'
+import CustomPagination from '../components/CustomPagination'
 import AlertModal from '../components/AlertModal'
 import usePageTracking from '../usePageTracking'
 
@@ -20,7 +20,6 @@ function Collections() {
   const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const scrollToTopRef = useRef(null)
-  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -90,11 +89,6 @@ function Collections() {
       .finally(() => setIsLoading(false))
   }, [type])
 
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
-
   const filterBoxShadow = useColorModeValue(
     'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
     'rgba(204,204,204,0.6) 1.95px 1.95px 2.6px'
@@ -151,7 +145,7 @@ function Collections() {
         <CustomSpinner />
       ) : (
         <>
-          <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>
+          <VStack alignSelf="flex-end" mb="4">
             <Text mt="3" alignSelf="flex-end">
               {districtFilteredCafes.length > 0
                 ? districtFilteredCafes.length
@@ -185,8 +179,7 @@ function Collections() {
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
-          <Pagination
-            defaultCurrent={1}
+          <CustomPagination
             total={
               districtFilteredCafes.length > 0
                 ? districtFilteredCafes.length
@@ -194,19 +187,10 @@ function Collections() {
                 ? cafesForWork.length
                 : cafesForHangout.length
             }
-            current={currentPage}
-            onChange={page => handlePageChange(page)}
-            pageSize={cafesPerPage}
-            paginationProps={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            cardsPerPage={cafesPerPage}
+            scrollToTopRef={scrollToTopRef}
           />
         </>
       )}

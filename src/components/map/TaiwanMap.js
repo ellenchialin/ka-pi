@@ -1,11 +1,6 @@
 import { useState } from 'react'
-import {
-  Flex,
-  Text,
-  Box,
-  useColorModeValue,
-  useDisclosure,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Text, Box, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import CityInfoCard from './CityInfoCard'
 import AlertModal from '../../components/AlertModal'
 import { api } from '../../utils/api'
@@ -42,11 +37,14 @@ function TaiwanMap() {
       .then(data => {
         if (cityName === 'new_taipei') {
           setCityState(data.filter(cafe => cafe.address.includes('新北')))
-        } else if (cityName === 'taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('台北')))
-        } else {
-          setCityState(data)
+          return
         }
+        if (cityName === 'taipei') {
+          setCityState(data.filter(cafe => cafe.address.includes('台北')))
+          return
+        }
+
+        setCityState(data)
       })
       .catch(error => {
         onGetCafesAlertOpen()
@@ -67,11 +65,13 @@ function TaiwanMap() {
       getCafes('new_taipei', 'taipei', setNewTaipeiCafes)
       convertFetchCityName(cityEngName)
       setTaipeiCafes([])
+      return
     }
     if (cityEngName === 'taipei') {
       getCafes('taipei', 'taipei', setTaipeiCafes)
       convertFetchCityName(cityEngName)
       setNewTaipeiCafes([])
+      return
     }
     getCafes(
       convertFetchCityName(cityEngName),

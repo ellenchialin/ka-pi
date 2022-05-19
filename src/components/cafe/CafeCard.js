@@ -153,7 +153,15 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
 }
 
 CafeCard.propTypes = {
-  cafe: PropTypes.object.isRequired,
+  cafe: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    tasty: PropTypes.number.isRequired,
+    socket: PropTypes.string.isRequired,
+    limited_time: PropTypes.string.isRequired,
+    wifi: PropTypes.number.isRequired,
+  }),
   canDeleteCafe: PropTypes.bool,
   handleDeleteCafe: PropTypes.func,
 }

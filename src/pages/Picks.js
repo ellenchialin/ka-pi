@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
 import { Flex, Heading, Text, SimpleGrid, useDisclosure } from '@chakra-ui/react'
-import Pagination from '@choc-ui/paginator'
 
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
@@ -9,6 +8,7 @@ import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
 import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
+import CustomPagination from '../components/CustomPagination'
 import usePageTracking from '../usePageTracking'
 
 function Picks() {
@@ -20,6 +20,7 @@ function Picks() {
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [pickedCafes, setPickedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const scrollToTopRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(18)
@@ -40,10 +41,7 @@ function Picks() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      onLocationAlertOpen()
-      setDefaultLatitude(25.0384851)
-      setDefaultLongitude(121.530177)
-      getDefaultCafes()
+      setFallbackLocation()
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -52,14 +50,16 @@ function Picks() {
         setUserLongitude(position.coords.longitude)
         getNearbyCafes(position.coords.latitude, position.coords.longitude)
       },
-      () => {
-        onLocationAlertOpen()
-        setDefaultLatitude(25.0384851)
-        setDefaultLongitude(121.530177)
-        getDefaultCafes()
-      }
+      () => setFallbackLocation()
     )
   }, [])
+
+  const setFallbackLocation = () => {
+    onLocationAlertOpen()
+    setDefaultLatitude(25.0384851)
+    setDefaultLongitude(121.530177)
+    getDefaultCafes()
+  }
 
   const getDefaultCafes = () => {
     api
@@ -156,24 +156,18 @@ function Picks() {
             spacing="20px"
             justifyItems="center"
             mb="4"
+            ref={scrollToTopRef}
           >
             {currentCafes.map(cafe => (
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
-          <Pagination
-            defaultCurrent={1}
+          <CustomPagination
             total={pickedCafes.length}
-            current={currentPage}
-            onChange={page => setCurrentPage(page)}
-            pageSize={cafesPerPage}
-            paginationProps={{ display: 'flex', justifyContent: 'center' }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            cardsPerPage={cafesPerPage}
+            scrollToTopRef={scrollToTopRef}
           />
         </>
       )}

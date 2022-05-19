@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
 import { Text, useCheckboxGroup, Heading, Flex, Button, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
-import Pagination from '@choc-ui/paginator'
 import { CheckIcon } from '@chakra-ui/icons'
 
 import { api } from '../../utils/api'
@@ -10,6 +9,7 @@ import CustomCheckbox from '../../components/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
 import CustomSpinner from '../../components/CustomSpinner'
 import AlertModal from '../../components/AlertModal'
+import CustomPagination from '../../components/CustomPagination'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByFeature() {
@@ -17,7 +17,7 @@ function SearchByFeature() {
   const [filteredCafes, setFilteredCafes] = useState([])
   const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const scrollCardRef = useRef(null)
+  const scrollToTopRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -95,11 +95,6 @@ function SearchByFeature() {
     setDistrictValue([])
     setFilteredCafes([])
     setDistrictFilteredCafes([])
-  }
-
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   const filterBoxShadow = useColorModeValue(
@@ -188,7 +183,7 @@ function SearchByFeature() {
       {isLoading ? (
         <CustomSpinner />
       ) : (
-        <Flex w="full" direction="column" align="center" ref={scrollCardRef}>
+        <Flex w="full" direction="column" align="center" ref={scrollToTopRef}>
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
@@ -222,26 +217,16 @@ function SearchByFeature() {
           </SimpleGrid>
           {filteredCafes.length > cafesPerPage ||
           districtFilteredCafes.length > cafesPerPage ? (
-            <Pagination
-              defaultCurrent={1}
+            <CustomPagination
               total={
                 districtFilteredCafes.length > 0
                   ? districtFilteredCafes.length
                   : filteredCafes.length
               }
-              current={currentPage}
-              onChange={page => handlePageChange(page)}
-              pageSize={cafesPerPage}
-              paginationProps={{
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-              pageNeighbours={2}
-              rounded="full"
-              baseStyles={{ bg: 'transparent' }}
-              activeStyles={{ bg: 'gray.400' }}
-              hoverStyles={{ bg: 'gray.400' }}
-              responsive={{ activePage: true }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cafesPerPage}
+              scrollToTopRef={scrollToTopRef}
             />
           ) : (
             ''

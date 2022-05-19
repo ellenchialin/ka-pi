@@ -49,7 +49,9 @@ EditableText.propTypes = {
   text: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  childRef: PropTypes.shape({ current: PropTypes.object }).isRequired,
+  childRef: PropTypes.shape({
+    current: PropTypes.instanceOf(Element),
+  }),
   ariaLabel: PropTypes.string.isRequired,
 }
 

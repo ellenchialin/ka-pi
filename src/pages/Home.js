@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
 import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
-import Pagination from '@choc-ui/paginator'
 
-import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import Intro from '../components/Intro.js'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
+import CustomPagination from '../components/CustomPagination'
 import AlertModal from '../components/AlertModal'
+import usePageTracking from '../usePageTracking'
 
 function Home() {
   usePageTracking()
@@ -22,7 +22,7 @@ function Home() {
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const scrollIntroRef = useRef(null)
-  const scrollCardRef = useRef(null)
+  const scrollToTopRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(12)
@@ -123,11 +123,6 @@ function Home() {
   const handleScroll = () =>
     scrollIntroRef.current.scrollIntoView({ behavior: 'smooth' })
 
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
       <Intro handleScroll={handleScroll} />
@@ -171,7 +166,7 @@ function Home() {
               mb="6"
               justifyItems="center"
             >
-              {[...Array(8)].map((item, i) => (
+              {[...Array(8)].map((_, i) => (
                 <Skeleton key={i} size="sm" />
               ))}
             </SimpleGrid>
@@ -191,26 +186,18 @@ function Home() {
               spacing="20px"
               mb="6"
               justifyItems="center"
-              ref={scrollCardRef}
+              ref={scrollToTopRef}
             >
               {currentCafes.map(cafe => (
                 <CafeCard key={cafe.id} cafe={cafe} />
               ))}
             </SimpleGrid>
-
-            <Pagination
-              defaultCurrent={1}
+            <CustomPagination
               total={userNearbyCafes.length}
-              current={currentPage}
-              onChange={page => handlePageChange(page)}
-              pageSize={cafesPerPage}
-              paginationProps={{ display: 'flex', justifyContent: 'center' }}
-              pageNeighbours={2}
-              rounded="full"
-              baseStyles={{ bg: 'transparent' }}
-              activeStyles={{ bg: 'gray.400' }}
-              hoverStyles={{ bg: 'gray.400' }}
-              responsive={{ activePage: true }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cafesPerPage}
+              scrollToTopRef={scrollToTopRef}
             />
           </>
         )}

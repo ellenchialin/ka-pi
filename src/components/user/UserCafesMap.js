@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Text, SimpleGrid, Icon, HStack, useToast } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import Pagination from '@choc-ui/paginator'
 
 import Map from '../map/Map'
 import CafeCard from '../cafe/CafeCard'
+import CustomPagination from '../CustomPagination'
 import { useAuth } from '../../contexts/AuthContext'
 import { firebase } from '../../utils/firebase'
 
@@ -21,6 +21,7 @@ function UserCafesMap({
   const { userLatitude, userLongitude } = userLocation
   const { defaultLatitude, defaultLongitude } = defaultLocation
 
+  const scrollToTopRef = useRef(null)
   const { currentUser } = useAuth()
   const successToast = useToast()
 
@@ -80,7 +81,7 @@ function UserCafesMap({
             cafes={savedCafes}
           />
         )}
-        <Flex w="full" direction="column">
+        <Flex w="full" direction="column" ref={scrollToTopRef}>
           <SimpleGrid
             w="full"
             minChildWidth="270px"
@@ -99,22 +100,12 @@ function UserCafesMap({
               ))}
           </SimpleGrid>
           {savedCafes.length > cardsPerPage && (
-            <Pagination
-              defaultCurrent={1}
+            <CustomPagination
               total={savedCafes.length}
-              current={currentPage}
-              onChange={page => setCurrentPage(page)}
-              pageSize={cardsPerPage}
-              paginationProps={{
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-              pageNeighbours={2}
-              rounded="full"
-              baseStyles={{ bg: 'transparent' }}
-              activeStyles={{ bg: 'gray.400' }}
-              hoverStyles={{ bg: 'gray.400' }}
-              responsive={{ activePage: true }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cardsPerPage}
+              scrollToTopRef={scrollToTopRef}
             />
           )}
         </Flex>

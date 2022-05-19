@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Box, SimpleGrid,useDisclosure } from '@chakra-ui/react'
-import Pagination from '@choc-ui/paginator'
+import { Flex, Heading, Text, SimpleGrid,useDisclosure } from '@chakra-ui/react'
 
 import DistrictFilterBoard from '../components/DistrictFilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
 import CustomSpinner from '../components/CustomSpinner'
 import AlertModal from '../components/AlertModal'
+import CustomPagination from '../components/CustomPagination'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
 import { api } from '../utils/api'
@@ -21,6 +21,7 @@ function City() {
   const [updatedCafes, setUpdatedCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
+  const scrollToTopRef = useRef(null)
   const { cityName } = useParams()
 
   const {
@@ -38,16 +39,18 @@ function City() {
       : cityCafes.slice(offset, offset + cafesPerPage)
 
   useEffect(() => {
-    // 城市頁標題，把城市英文轉中文
     convertCityName(cityName)
 
     if (cityName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setCityCafes)
-    } else if (cityName === 'taipei') {
-      getCafes('taipei', 'taipei', setCityCafes)
-    } else {
-      getCafes(cityName, cityName, setCityCafes)
+      return
     }
+    if (cityName === 'taipei') {
+      getCafes('taipei', 'taipei', setCityCafes)
+      return
+    }
+
+    getCafes(cityName, cityName, setCityCafes)
   }, [])
 
   const convertCityName = city => {
@@ -76,6 +79,7 @@ function City() {
   const getSelectedCafes = () => {
     if (selectedAreas.length > 0) {
       setUpdatedCafes([])
+      setCurrentPage(1)
 
       selectedAreas.forEach(area => {
         const filteredCafes = cityCafes.filter(cafe =>
@@ -104,7 +108,7 @@ function City() {
             setSelectedAreas={setSelectedAreas}
             setUpdatedCafes={setUpdatedCafes}
           />
-          <Flex w="100%" direction="column" as="section">
+          <Flex w="100%" direction="column" as="section" ref={scrollToTopRef}>
             <Text alignSelf="center" mb="6">
               {updatedCafes.length > 0
                 ? `${updatedCafes.length} 間符合`
@@ -121,26 +125,15 @@ function City() {
                 <CafeCard key={cafe.id} cafe={cafe} />
               ))}
             </SimpleGrid>
-            <Box alignSelf="center">
-              <Pagination
-                defaultCurrent={1}
-                total={
-                  updatedCafes.length > 0
-                    ? updatedCafes.length
-                    : cityCafes.length
-                }
-                current={currentPage}
-                onChange={page => setCurrentPage(page)}
-                pageSize={cafesPerPage}
-                paginationProps={{ display: 'flex', justifyContent: 'center' }}
-                pageNeighbours={2}
-                rounded="full"
-                baseStyles={{ bg: 'transparent' }}
-                activeStyles={{ bg: 'gray.400' }}
-                hoverStyles={{ bg: 'gray.400' }}
-                responsive={{ activePage: true }}
-              />
-            </Box>
+            <CustomPagination
+              total={
+                updatedCafes.length > 0 ? updatedCafes.length : cityCafes.length
+              }
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cafesPerPage}
+              scrollToTopRef={scrollToTopRef}
+            />
           </Flex>
         </>
       )}

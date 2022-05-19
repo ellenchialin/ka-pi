@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Text, SimpleGrid, Icon, HStack, useToast } from '@chakra-ui/react'
 import { CheckCircleIcon } from '@chakra-ui/icons'
-import Pagination from '@choc-ui/paginator'
 
-import BlogCard from '../cafe/BlogCard'
 import { firebase } from '../../utils/firebase'
+import BlogCard from '../cafe/BlogCard'
+import CustomPagination from '../../components/CustomPagination'
 
 function UserBlogs({ currentUserId }) {
   const [canDeleteBlog] = useState(true)
   const [userBlogs, setUserBlogs] = useState([])
 
+  const scrollToTopRef = useRef(null)
   const successToast = useToast()
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -56,7 +57,7 @@ function UserBlogs({ currentUserId }) {
 
   return (
     <>
-      <Text mb="3">
+      <Text mb="3" ref={scrollToTopRef}>
         {userBlogs.length > 0
           ? `${userBlogs.length} Blogs`
           : '尚未發佈任何食記'}
@@ -85,22 +86,12 @@ function UserBlogs({ currentUserId }) {
             ))}
         </SimpleGrid>
         {userBlogs.length > cardsPerPage && (
-          <Pagination
-            defaultCurrent={1}
+          <CustomPagination
             total={userBlogs.length}
-            current={currentPage}
-            onChange={page => setCurrentPage(page)}
-            pageSize={cardsPerPage}
-            paginationProps={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            cardsPerPage={cardsPerPage}
+            scrollToTopRef={scrollToTopRef}
           />
         )}
       </Flex>
