@@ -90,6 +90,7 @@ function Cafe() {
           .then(data => {
             if (data.length === 0) {
               setGooglePhotoRefs([])
+              return
             }
 
             const references = data
@@ -117,44 +118,33 @@ function Cafe() {
     if (toggleSaved) {
       firebase.deleteSavedCafe(currentUser.uid, cafe.id).then(() => {
         setToggleSaved(prev => !prev)
-        successToast({
-          position: 'top-right',
-          duration: 3000,
-          render: () => (
-            <HStack
-              spacing="4"
-              color="primaryDark"
-              p={3}
-              bg="teal.200"
-              borderRadius="md"
-            >
-              <Icon as={CheckCircleIcon} />
-              <Text>已移除收藏</Text>
-            </HStack>
-          ),
-          isClosable: true,
-        })
+        showToast()
       })
+      return
     }
     firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
       setToggleSaved(prev => !prev)
-      successToast({
-        position: 'top-right',
-        duration: 3000,
-        render: () => (
-          <HStack
-            spacing="4"
-            color="primaryDark"
-            p={3}
-            bg="teal.200"
-            borderRadius="md"
-          >
-            <Icon as={CheckCircleIcon} />
-            <Text>已成功收藏</Text>
-          </HStack>
-        ),
-        isClosable: true,
-      })
+      showToast()
+    })
+  }
+
+  const showToast = () => {
+    successToast({
+      position: 'top-right',
+      duration: 3000,
+      render: () => (
+        <HStack
+          spacing="4"
+          color="primaryDark"
+          p={3}
+          bg="teal.200"
+          borderRadius="md"
+        >
+          <Icon as={CheckCircleIcon} />
+          <Text>已{toggleSaved ? '移除' : '成功'}收藏</Text>
+        </HStack>
+      ),
+      isClosable: true,
     })
   }
 
