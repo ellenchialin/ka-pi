@@ -21,6 +21,21 @@ const provider = new GoogleAuthProvider()
 const db = getFirestore(app)
 const storage = getStorage(app)
 
+const REGISTER_ERROR_MESSAGE = type => {
+  const message = {
+    'auth/weak-password': '密碼需大於六位數',
+    'auth/email-already-in-use': '此信箱已是會員，請點上方切換為登入頁面',
+    'auth/invalid-email': '信箱格式錯誤，請填寫正確的信箱格式',
+    'auth/wrong-password': '密碼錯誤，請重新輸入',
+    'auth/user-not-found': '查無此信箱帳號非會員，請先註冊',
+    'auth/internal-error': '登入/註冊失敗，請稍後再試',
+    'auth/popup-closed-by-user': '未完成登入 / 註冊流程，請再試一次',
+    default: '登入/註冊失敗，請稍後再試',
+  }
+
+  return message[type] || message['default']
+}
+
 export const firebase = {
   checkAuthState(func) {
     onAuthStateChanged(auth, user => func(user))
@@ -38,7 +53,7 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error(`請重新操作 (${error.code})`))
+          reject(new Error(REGISTER_ERROR_MESSAGE(error.code)))
           console.error('Error code', error.code)
         })
     })
@@ -51,7 +66,7 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error(`請重新操作 (${error.code})`))
+          reject(new Error(REGISTER_ERROR_MESSAGE(error.code)))
           console.error(error.code)
         })
     })
