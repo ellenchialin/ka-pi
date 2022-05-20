@@ -8,7 +8,7 @@ import { RiAddFill } from 'react-icons/ri'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
 import TextEditor from '../components/editor/TextEditor'
-import AlertModal from '../components/AlertModal'
+import AlertModal from '../components/shared/AlertModal'
 
 function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')

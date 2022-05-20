@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack, Avatar } from '@chakra-ui/react'
 
 import { firebase } from '../../utils/firebase'
-import AlertModal from '../AlertModal'
+import AlertModal from '../shared/AlertModal'
 
 function Reply({ reply }) {
   const { userId: replyUserId, repliedAt, text, image } = reply

@@ -8,7 +8,7 @@ import { BsSearch } from 'react-icons/bs'
 import { CgCoffee } from 'react-icons/cg'
 import { VscLibrary } from 'react-icons/vsc'
 import { RiStarSmileLine } from 'react-icons/ri'
-import { ColorModeSwitcher } from '../ColorModeSwitcher'
+import { ColorModeSwitcher } from '../../ColorModeSwitcher'
 
 const NavItem = props => {
   const { icon, children, ...rest } = props

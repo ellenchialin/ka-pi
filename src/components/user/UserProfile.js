@@ -6,7 +6,7 @@ import { Flex, Text, IconButton, Button, Input, Avatar, VStack, useDisclosure } 
 import { RiAddFill } from 'react-icons/ri'
 
 import EditableText from './EditableText'
-import AlertModal from '../AlertModal'
+import AlertModal from '../shared/AlertModal'
 import { firebase } from '../../utils/firebase'
 import { useAuth } from '../../contexts/AuthContext'
 

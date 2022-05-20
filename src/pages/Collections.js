@@ -5,11 +5,11 @@ import { Flex, Heading, Text, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, Wrap
 import { CheckIcon } from '@chakra-ui/icons'
 
 import { api } from '../utils/api'
-import PopoverCityFilter from '../components/PopoverCityFilter'
+import PopoverCityFilter from '../components/shared/PopoverCityFilter'
 import CafeCard from '../components/cafe/CafeCard'
-import CustomSpinner from '../components/CustomSpinner'
-import CustomPagination from '../components/CustomPagination'
-import AlertModal from '../components/AlertModal'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import CustomPagination from '../components/shared/CustomPagination'
+import AlertModal from '../components/shared/AlertModal'
 import usePageTracking from '../usePageTracking'
 
 const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']

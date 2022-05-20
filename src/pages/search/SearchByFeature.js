@@ -4,12 +4,12 @@ import { Text, useCheckboxGroup, Heading, Flex, Button, Tag, TagLeftIcon, TagLab
 import { CheckIcon } from '@chakra-ui/icons'
 
 import { api } from '../../utils/api'
-import PopoverCityFilter from '../../components/PopoverCityFilter'
-import CustomCheckbox from '../../components/CustomCheckbox'
+import PopoverCityFilter from '../../components/shared/PopoverCityFilter'
+import CustomCheckbox from '../../components/shared/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
-import CustomSpinner from '../../components/CustomSpinner'
-import AlertModal from '../../components/AlertModal'
-import CustomPagination from '../../components/CustomPagination'
+import CustomSpinner from '../../components/shared/CustomSpinner'
+import AlertModal from '../../components/shared/AlertModal'
+import CustomPagination from '../../components/shared/CustomPagination'
 import usePageTracking from '../../usePageTracking'
 
 const defaultFeatures = ['不限時', '有插座']

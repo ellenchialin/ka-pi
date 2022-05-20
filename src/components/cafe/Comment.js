@@ -9,7 +9,7 @@ import { BiSmile } from 'react-icons/bi'
 
 import { firebase } from '../../utils/firebase'
 import Picker from 'emoji-picker-react'
-import AlertModal from '../AlertModal'
+import AlertModal from '../shared/AlertModal'
 import Reply from './Reply'
 
 function Comment({ cafeId, currentUser, comment }) {

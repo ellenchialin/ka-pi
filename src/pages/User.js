@@ -8,8 +8,8 @@ import { useAuth } from '../contexts/AuthContext'
 import UserProfile from '../components/user/UserProfile'
 import UserCafesMap from '../components/user/UserCafesMap'
 import UserBlogs from '../components/user/UserBlogs'
-import CustomSpinner from '../components/CustomSpinner'
-import AlertModal from '../components/AlertModal'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import AlertModal from '../components/shared/AlertModal'
 import usePageTracking from '../usePageTracking'
 
 function User() {

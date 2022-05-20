@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 
 import CustomCheckbox from './CustomCheckbox'
 import CustomRadio from './CustomRadio'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-import { cityData, areaData } from '../cityData'
+import useUpdateEffect from '../../hooks/useUpdateEffect'
+import { cityData, areaData } from '../../cityData'
 
 const PopoverCityFilter = ({
   filteredCafes,

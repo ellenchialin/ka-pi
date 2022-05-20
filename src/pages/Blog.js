@@ -6,9 +6,9 @@ import { Editor, EditorState, convertFromRaw } from 'draft-js'
 
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
-import CustomSpinner from '../components/CustomSpinner'
-import CustomBreadcrumb from '../components/CustomBreadcrumb'
-import AlertModal from '../components/AlertModal'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import CustomBreadcrumb from '../components/shared/CustomBreadcrumb'
+import AlertModal from '../components/shared/AlertModal'
 
 function Blog() {
   const [cafeName, setCafeName] = useState(null)

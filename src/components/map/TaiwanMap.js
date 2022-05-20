@@ -2,7 +2,7 @@ import { useState } from 'react'
 // prettier-ignore
 import { Flex, Text, Box, useColorModeValue, useDisclosure } from '@chakra-ui/react'
 import CityInfoCard from './CityInfoCard'
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../shared/AlertModal'
 import { api } from '../../utils/api'
 import { cityData } from '../../cityData'
 import './TaiwanMap.css'

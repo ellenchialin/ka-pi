@@ -6,7 +6,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 
 import Map from '../map/Map'
 import CafeCard from '../cafe/CafeCard'
-import CustomPagination from '../CustomPagination'
+import CustomPagination from '../shared/CustomPagination'
 import { useAuth } from '../../contexts/AuthContext'
 import { firebase } from '../../utils/firebase'
 

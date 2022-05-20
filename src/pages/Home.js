@@ -4,12 +4,12 @@ import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakr
 
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
-import Intro from '../components/Intro.js'
+import Intro from '../components/home/Intro.js'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
-import CustomPagination from '../components/CustomPagination'
-import AlertModal from '../components/AlertModal'
+import CustomPagination from '../components/shared/CustomPagination'
+import AlertModal from '../components/shared/AlertModal'
 import usePageTracking from '../usePageTracking'
 
 function Home() {

@@ -7,7 +7,7 @@ import { BiSearchAlt } from 'react-icons/bi'
 
 import { api } from '../../utils/api'
 import CafeCard from '../../components/cafe/CafeCard'
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../../components/shared/AlertModal'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {

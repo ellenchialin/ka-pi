@@ -11,7 +11,7 @@ import Picker from 'emoji-picker-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { firebase } from '../../utils/firebase'
 import Comment from './Comment'
-import AlertModal from '../AlertModal'
+import AlertModal from '../shared/AlertModal'
 
 function CommentGroup({ cafeId, userInfo }) {
   const [comments, setComments] = useState([])

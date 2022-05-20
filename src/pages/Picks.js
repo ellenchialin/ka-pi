@@ -6,9 +6,9 @@ import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
-import CustomSpinner from '../components/CustomSpinner'
-import AlertModal from '../components/AlertModal'
-import CustomPagination from '../components/CustomPagination'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import AlertModal from '../components/shared/AlertModal'
+import CustomPagination from '../components/shared/CustomPagination'
 import usePageTracking from '../usePageTracking'
 
 function Picks() {

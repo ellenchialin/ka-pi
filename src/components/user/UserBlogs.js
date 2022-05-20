@@ -6,7 +6,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons'
 
 import { firebase } from '../../utils/firebase'
 import BlogCard from '../cafe/BlogCard'
-import CustomPagination from '../../components/CustomPagination'
+import CustomPagination from '../../components/shared/CustomPagination'
 
 function UserBlogs({ currentUserId }) {
   const [canDeleteBlog] = useState(true)

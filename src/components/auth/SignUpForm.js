@@ -6,7 +6,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../shared/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignUpForm = () => {

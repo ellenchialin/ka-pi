@@ -7,7 +7,7 @@ import { FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../shared/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
