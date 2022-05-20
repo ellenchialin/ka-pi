@@ -5,7 +5,7 @@ import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 import PropTypes from 'prop-types'
 
 function CityInfoCard({
-  hoveredCity,
+  clickedCityName,
   cityLinkEndpoint,
   isLoading,
   cityCafes,
@@ -29,7 +29,7 @@ function CityInfoCard({
         size="md"
         color={useColorModeValue('primaryLight', 'primaryDark')}
       >
-        {hoveredCity}
+        {clickedCityName}
       </Heading>
       <Text color={useColorModeValue('primaryLight', 'primaryDark')}>
         {isLoading ? '整理咖啡廳中...' : getCafeNumbers()}
@@ -53,7 +53,7 @@ function CityInfoCard({
 }
 
 CityInfoCard.propTypes = {
-  hoveredCity: PropTypes.string.isRequired,
+  clickedCityName: PropTypes.string.isRequired,
   cityLinkEndpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   cityCafes: PropTypes.array.isRequired,

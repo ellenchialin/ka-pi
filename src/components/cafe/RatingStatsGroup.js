@@ -7,58 +7,39 @@ import { BiAlarmExclamation, BiPlug } from 'react-icons/bi'
 
 import RatingStats from './RatingStats'
 
+const mapLimitedToString = {
+  no: '不限時',
+  maybe: '視平假日',
+  yes: '有限時',
+}
+
+const mapSocketToString = {
+  no: '很少',
+  maybe: '部分',
+  yes: '很多',
+}
+
+const mapStandingToString = {
+  no: '沒有',
+  yes: '部分',
+}
+
 function RatingStatsGroup({ cafe }) {
-  const checkLimitedTime = limited => {
-    if (limited === 'no') {
-      return '不限時'
-    }
-    if (limited === 'maybe') {
-      return '視平假日'
-    }
-    if (limited === 'yes') {
-      return '有限時'
-    }
-    return '未提供資訊'
-  }
-
-  const checkSocket = socket => {
-    if (socket === 'yes') {
-      return '很多'
-    }
-    if (socket === 'maybe') {
-      return '部分'
-    }
-    if (socket === 'no') {
-      return '很少'
-    }
-    return '未提供資訊'
-  }
-
-  const checkStandSeat = standing => {
-    if (standing === 'no') {
-      return '沒有'
-    }
-    if (standing === 'yes') {
-      return '部分'
-    }
-    return '未提供資訊'
-  }
-
   const primaryFeatures = [
     {
       name: '有無限時',
       icon: BiAlarmExclamation,
-      func: checkLimitedTime(cafe.limited_time),
+      displayInfo: mapLimitedToString[cafe.limited_time] || '未提供資訊',
     },
     {
       name: '有無插座',
       icon: BiPlug,
-      func: checkSocket(cafe.socket),
+      displayInfo: mapSocketToString[cafe.socket] || '未提供資訊',
     },
     {
       name: '站立座位',
       icon: VscPerson,
-      func: checkStandSeat(cafe.standing_desk),
+      displayInfo: mapStandingToString[cafe.standing_desk] || '未提供資訊',
     },
   ]
 
@@ -111,7 +92,7 @@ function RatingStatsGroup({ cafe }) {
             <VStack spacing="2" align="flex-start">
               <Text>{feature.name}</Text>
               <Heading as="h4" fontSize="1.5rem">
-                {feature.func}
+                {feature.displayInfo}
               </Heading>
             </VStack>
             <Icon

@@ -54,7 +54,7 @@ function City() {
   }, [])
 
   const convertCityName = city => {
-    setTranslatedCityName(cityData.filter(c => c.tag === city)[0].place)
+    setTranslatedCityName(cityData.find(c => c.tag === city).place)
   }
 
   const getCafes = (cityName, fetchCity, setCityState) => {
