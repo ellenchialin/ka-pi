@@ -1,13 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
+import { Flex, Heading, Text, Tag, TagLeftIcon, TagLabel, SimpleGrid, Wrap, WrapItem, VStack, useCheckboxGroup, useDisclosure, useRadioGroup, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
-import PopoverCityFilter from '../components/PopoverCityFilter'
-import AlertModal from '../components/AlertModal'
-import Pagination from '@choc-ui/paginator'
-import usePageTracking from '../usePageTracking'
+
+import { api } from '../utils/api'
+import PopoverCityFilter from '../components/shared/PopoverCityFilter'
 import CafeCard from '../components/cafe/CafeCard'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import CustomPagination from '../components/shared/CustomPagination'
+import AlertModal from '../components/shared/AlertModal'
+import usePageTracking from '../usePageTracking'
+
+const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
+const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
 
 function Collections() {
   usePageTracking()
@@ -18,7 +24,6 @@ function Collections() {
   const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const scrollToTopRef = useRef(null)
-  const scrollCardRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -29,9 +34,6 @@ function Collections() {
       : collectionType === 'work'
       ? cafesForWork.slice(offset, offset + cafesPerPage)
       : cafesForHangout.slice(offset, offset + cafesPerPage)
-
-  const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
-  const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']
 
   const {
     isOpen: isAlertOpen,
@@ -62,8 +64,8 @@ function Collections() {
   }, [type])
 
   useEffect(() => {
-    fetch('https://ka-pi-server.herokuapp.com/allcafes')
-      .then(res => res.json())
+    api
+      .getAllCafes()
       .then(data => {
         const forHangout = data.filter(
           cafe =>
@@ -87,11 +89,6 @@ function Collections() {
       })
       .finally(() => setIsLoading(false))
   }, [type])
-
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
 
   const filterBoxShadow = useColorModeValue(
     'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
@@ -146,17 +143,10 @@ function Collections() {
       </Wrap>
 
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
         <>
-          <VStack alignSelf="flex-end" mb="4" ref={scrollCardRef}>
+          <VStack alignSelf="flex-end" mb="4">
             <Text mt="3" alignSelf="flex-end">
               {districtFilteredCafes.length > 0
                 ? districtFilteredCafes.length
@@ -190,8 +180,7 @@ function Collections() {
               <CafeCard key={cafe.id} cafe={cafe} />
             ))}
           </SimpleGrid>
-          <Pagination
-            defaultCurrent={1}
+          <CustomPagination
             total={
               districtFilteredCafes.length > 0
                 ? districtFilteredCafes.length
@@ -199,19 +188,10 @@ function Collections() {
                 ? cafesForWork.length
                 : cafesForHangout.length
             }
-            current={currentPage}
-            onChange={page => handlePageChange(page)}
-            pageSize={cafesPerPage}
-            paginationProps={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-            pageNeighbours={2}
-            rounded="full"
-            baseStyles={{ bg: 'transparent' }}
-            activeStyles={{ bg: 'gray.400' }}
-            hoverStyles={{ bg: 'gray.400' }}
-            responsive={{ activePage: true }}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            cardsPerPage={cafesPerPage}
+            scrollToTopRef={scrollToTopRef}
           />
         </>
       )}

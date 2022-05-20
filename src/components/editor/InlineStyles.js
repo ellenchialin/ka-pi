@@ -27,8 +27,8 @@ const InlineStyleControls = ({ editorState, onToggle }) => {
 }
 
 InlineStyleControls.propTypes = {
-  editorState: PropTypes.object,
-  onToggle: PropTypes.func,
+  editorState: PropTypes.object.isRequired,
+  onToggle: PropTypes.func.isRequired,
 }
 
 export default InlineStyleControls

@@ -1,5 +1,5 @@
+import PropTypes from 'prop-types'
 import { useRadio, chakra, Box, Text, Flex } from '@chakra-ui/react'
-import React from 'react'
 
 function CustomRadio(props) {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } =
@@ -39,6 +39,10 @@ function CustomRadio(props) {
       </Text>
     </chakra.label>
   )
+}
+
+CustomRadio.propTypes = {
+  text: PropTypes.string.isRequired,
 }
 
 export default CustomRadio

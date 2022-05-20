@@ -5,7 +5,7 @@ import { HiOutlineArrowCircleRight } from 'react-icons/hi'
 import PropTypes from 'prop-types'
 
 function CityInfoCard({
-  hoveredCity,
+  clickedCityName,
   cityLinkEndpoint,
   isLoading,
   cityCafes,
@@ -15,11 +15,11 @@ function CityInfoCard({
   const getCafeNumbers = () => {
     if (taipeiCafes.length > 0) {
       return `共收錄 ${taipeiCafes.length} 間咖啡廳`
-    } else if (newTaipeiCafes.length > 0) {
-      return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
-    } else {
-      return `共收錄 ${cityCafes.length} 間咖啡廳`
     }
+    if (newTaipeiCafes.length > 0) {
+      return `共收錄 ${newTaipeiCafes.length} 間咖啡廳`
+    }
+    return `共收錄 ${cityCafes.length} 間咖啡廳`
   }
 
   return (
@@ -29,7 +29,7 @@ function CityInfoCard({
         size="md"
         color={useColorModeValue('primaryLight', 'primaryDark')}
       >
-        {hoveredCity}
+        {clickedCityName}
       </Heading>
       <Text color={useColorModeValue('primaryLight', 'primaryDark')}>
         {isLoading ? '整理咖啡廳中...' : getCafeNumbers()}
@@ -53,12 +53,12 @@ function CityInfoCard({
 }
 
 CityInfoCard.propTypes = {
-  hoveredCity: PropTypes.string,
-  cityLinkEndpoint: PropTypes.string,
-  isLoading: PropTypes.bool,
-  cityCafes: PropTypes.array,
-  taipeiCafes: PropTypes.array,
-  newTaipeiCafes: PropTypes.array,
+  clickedCityName: PropTypes.string.isRequired,
+  cityLinkEndpoint: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  cityCafes: PropTypes.array.isRequired,
+  taipeiCafes: PropTypes.array.isRequired,
+  newTaipeiCafes: PropTypes.array.isRequired,
 }
 
 export default CityInfoCard

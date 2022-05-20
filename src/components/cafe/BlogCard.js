@@ -1,33 +1,18 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Box, AspectRatio, Image, Heading, Text, IconButton, Button, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, AspectRatio, Image, Heading, Text, IconButton, useColorModeValue, VStack } from '@chakra-ui/react'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { EditorState, convertFromRaw } from 'draft-js'
 
-function BlogCard({
-  cafeId,
-  blogId,
-  content,
-  title,
-  image,
-  date,
-  canDeleteBlog,
-  handleBlogDelete,
-}) {
+function BlogCard({ blog, canDeleteBlog, handleBlogDelete }) {
+  const { cafeId, blogId, content, title, createdAt, image } = blog
   const [editorState] = useState(
     EditorState.createWithContent(convertFromRaw(content))
       .getCurrentContent()
       .getPlainText()
   )
-
-  const navigate = useNavigate()
-
-  const handleReadmore = () => {
-    navigate(`/cafe/${cafeId}/blog/${blogId}`)
-  }
 
   return (
     <>
@@ -75,21 +60,9 @@ function BlogCard({
               {editorState}
             </Text>
             <Text fontSize="0.75em" alignSelf="flex-end">
-              {date}
+              {createdAt}
             </Text>
           </VStack>
-          {/*<Flex alignItems="center" justify="space-between" p="4">
-            <Button
-              onClick={handleReadmore}
-              size="sm"
-              bg="thirdDark"
-              color="primaryLight"
-              fontSize="0.75rem"
-              _hover={{ bg: 'primaryDark' }}
-            >
-              看更多
-            </Button>
-          </Flex>*/}
         </Link>
       </Box>
     </>
@@ -97,12 +70,14 @@ function BlogCard({
 }
 
 BlogCard.propTypes = {
-  cafeId: PropTypes.string,
-  blogId: PropTypes.string,
-  content: PropTypes.object,
-  title: PropTypes.string,
-  image: PropTypes.string,
-  date: PropTypes.string,
+  cafe: PropTypes.shape({
+    cafeId: PropTypes.string.isRequired,
+    blogId: PropTypes.string.isRequired,
+    content: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }),
   canDeleteBlog: PropTypes.bool,
   handleBlogDelete: PropTypes.func,
 }

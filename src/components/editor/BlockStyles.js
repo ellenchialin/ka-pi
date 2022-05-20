@@ -34,8 +34,8 @@ const BlockStyleControls = ({ editorState, onToggle }) => {
 }
 
 BlockStyleControls.propTypes = {
-  editorState: PropTypes.object,
-  onToggle: PropTypes.func,
+  editorState: PropTypes.object.isRequired,
+  onToggle: PropTypes.func.isRequired,
 }
 
 export default BlockStyleControls

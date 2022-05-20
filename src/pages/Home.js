@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 // prettier-ignore
 import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
-import usePageTracking from '../usePageTracking'
+
 import { api } from '../utils/api'
 import { cityData } from '../cityData'
-import Intro from '../components/Intro.js'
+import Intro from '../components/home/Intro.js'
 import Map from '../components/map/Map'
 import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
-import AlertModal from '../components/AlertModal'
-import Pagination from '@choc-ui/paginator'
+import CustomPagination from '../components/shared/CustomPagination'
+import AlertModal from '../components/shared/AlertModal'
+import usePageTracking from '../usePageTracking'
 
 function Home() {
   usePageTracking()
@@ -19,9 +20,11 @@ function Home() {
   const [defaultLatitude, setDefaultLatitude] = useState(null)
   const [defaultLongitude, setDefaultLongitude] = useState(null)
   const [userNearbyCafes, setUserNearbyCafes] = useState([])
+  const [alertHeader, setAlertHeader] = useState('')
+  const [alertBody, setAlertBody] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const scrollIntroRef = useRef(null)
-  const scrollCardRef = useRef(null)
+  const scrollToTopRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(12)
@@ -29,20 +32,15 @@ function Home() {
   const currentCafes = userNearbyCafes.slice(offset, offset + cafesPerPage)
 
   const {
-    isOpen: isLocationAlertOpen,
-    onOpen: onLocationAlertOpen,
-    onClose: onLocationAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isGetCafesAlertOpen,
-    onOpen: onGetCafesAlertOpen,
-    onClose: onGetCafesAlertClose,
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
     if (!navigator.geolocation) {
       setFallbackLocation()
+      return
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -58,7 +56,11 @@ function Home() {
   }, [])
 
   const setFallbackLocation = () => {
-    onLocationAlertOpen()
+    setAlertHeader('Oops! 無法取得當前位置')
+    setAlertBody(
+      '目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）'
+    )
+    onAlertOpen()
     setDefaultLatitude(25.0384851)
     setDefaultLongitude(121.530177)
     getDefaultCafes()
@@ -73,24 +75,25 @@ function Home() {
         )
       )
       .catch(error => {
-        onGetCafesAlertOpen()
+        showGetCafesAlert()
         console.error(error)
       })
       .finally(() => setIsLoading(false))
   }
 
   const getNearbyCafes = (lat, lng) => {
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}&language=zh-TW`
-    )
-      .then(res => res.json())
+    api
+      .getGoogleGeocode(lat, lng)
       .then(data => {
         const currentCity = data.plus_code.compound_code
           .split(' ')
           .slice(1)[0]
           .slice(2, 4)
 
-        if (currentCity === '台北') getDefaultCafes()
+        if (currentCity === '台北') {
+          getDefaultCafes()
+          return
+        }
         if (currentCity === '新北') {
           api
             .getCityCafes('taipei')
@@ -100,32 +103,37 @@ function Home() {
               )
             )
             .catch(error => {
-              onGetCafesAlertOpen()
+              showGetCafesAlert()
               console.error(error)
             })
             .finally(() => setIsLoading(false))
+          return
         }
 
-        const city = cityData.filter(city => city.place === currentCity)[0].tag
+        const city = cityData.find(city => city.place === currentCity).tag
         api
           .getCityCafes(city)
           .then(cafes => setUserNearbyCafes(cafes.slice(0, 50)))
           .catch(error => {
-            onGetCafesAlertOpen()
+            showGetCafesAlert()
             console.error(error)
           })
           .finally(() => setIsLoading(false))
       })
-      .catch(error => onLocationAlertOpen())
+      .catch(error => {
+        showGetCafesAlert()
+        console.error(error)
+      })
+  }
+
+  const showGetCafesAlert = () => {
+    setAlertHeader('Oops! 暫無法取得咖啡廳資料')
+    setAlertBody('請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com')
+    onAlertOpen()
   }
 
   const handleScroll = () =>
     scrollIntroRef.current.scrollIntoView({ behavior: 'smooth' })
-
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <Flex w="full" h="100%" maxW="1170px" direction="column" align="center">
@@ -146,20 +154,6 @@ function Home() {
           探索鄰近咖啡廳，點擊圖示看更多資訊
         </Text>
 
-        <AlertModal
-          isAlertOpen={isLocationAlertOpen}
-          onAlertClose={onLocationAlertClose}
-          alertHeader="Oops! 無法取得當前位置"
-          alertBody="目前瀏覽器不支援定位，或您尚未開啟定位，將預先顯示台北市部分咖啡廳。建議開啟定位，取得鄰近咖啡廳推薦：）"
-        />
-
-        <AlertModal
-          isAlertOpen={isGetCafesAlertOpen}
-          onAlertClose={onGetCafesAlertClose}
-          alertHeader="Oops! 暫無法取得咖啡廳資料"
-          alertBody="請確認網路連線並重新操作，或聯繫開發人員 chialin76@gmail.com "
-        />
-
         {isLoading ? (
           <Flex w="full" direction="column">
             <Skeleton size="lg" isLoaded={isLoading ? false : true} mb="6" />
@@ -170,7 +164,7 @@ function Home() {
               mb="6"
               justifyItems="center"
             >
-              {[...Array(8)].map((item, i) => (
+              {[...Array(8)].map((_, i) => (
                 <Skeleton key={i} size="sm" />
               ))}
             </SimpleGrid>
@@ -190,26 +184,18 @@ function Home() {
               spacing="20px"
               mb="6"
               justifyItems="center"
-              ref={scrollCardRef}
+              ref={scrollToTopRef}
             >
               {currentCafes.map(cafe => (
                 <CafeCard key={cafe.id} cafe={cafe} />
               ))}
             </SimpleGrid>
-
-            <Pagination
-              defaultCurrent={1}
+            <CustomPagination
               total={userNearbyCafes.length}
-              current={currentPage}
-              onChange={page => handlePageChange(page)}
-              pageSize={cafesPerPage}
-              paginationProps={{ display: 'flex', justifyContent: 'center' }}
-              pageNeighbours={2}
-              rounded="full"
-              baseStyles={{ bg: 'transparent' }}
-              activeStyles={{ bg: 'gray.400' }}
-              hoverStyles={{ bg: 'gray.400' }}
-              responsive={{ activePage: true }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cafesPerPage}
+              scrollToTopRef={scrollToTopRef}
             />
           </>
         )}
@@ -236,6 +222,13 @@ function Home() {
           <TaiwanMap />
         </Flex>
       </Flex>
+
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
+      />
     </Flex>
   )
 }

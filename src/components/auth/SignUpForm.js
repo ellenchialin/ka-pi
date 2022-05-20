@@ -5,7 +5,8 @@ import { Flex, FormControl, FormLabel, FormErrorMessage, Input, Button, InputGro
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import AlertModal from '../../components/AlertModal'
+
+import AlertModal from '../shared/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignUpForm = () => {
@@ -21,20 +22,16 @@ const SignUpForm = () => {
   } = useDisclosure()
 
   const SignupSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    name: Yup.string().required('請填入顯示名稱'),
     email: Yup.string()
-      .email('Invalid email address format')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(6, 'Password must be 6 characters at minimum')
-      .required('Password is required'),
+      .email('格式錯誤，請填寫正確的信箱格式')
+      .required('請填入信箱'),
+    password: Yup.string().min(6, '密碼需大於六位數').required('請填入密碼'),
   })
 
   const handleSignUp = (name, email, password) => {
     signup(name, email, password)
-      .then(user => {
-        navigate(-1)
-      })
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignUpAlertOpen()
@@ -56,13 +53,21 @@ const SignUpForm = () => {
           {({ handleSubmit, errors, touched }) => (
             <Form onSubmit={handleSubmit}>
               <Flex direction="column" align="center">
-                <FormControl isInvalid={errors.name && touched.name} mb="2">
+                <FormControl
+                  isInvalid={errors.name && touched.name}
+                  mb="2"
+                  h="100px"
+                >
                   <FormLabel htmlFor="name">Name</FormLabel>
                   <Field as={Input} name="name" type="text" />
                   <FormErrorMessage>{errors.name}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors.email && touched.email} mb="2">
+                <FormControl
+                  isInvalid={errors.email && touched.email}
+                  mb="2"
+                  h="100px"
+                >
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <Field as={Input} name="email" type="email" />
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -71,6 +76,7 @@ const SignUpForm = () => {
                 <FormControl
                   isInvalid={errors.password && touched.password}
                   mb="2"
+                  h="100px"
                 >
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <InputGroup>

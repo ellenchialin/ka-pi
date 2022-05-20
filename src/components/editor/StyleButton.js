@@ -38,10 +38,10 @@ const StyleButton = ({ style, onToggle, active, label }) => {
 }
 
 StyleButton.propTypes = {
-  style: PropTypes.string,
-  onToggle: PropTypes.func,
-  active: PropTypes.bool,
-  label: PropTypes.string,
+  style: PropTypes.string.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  active: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired,
 }
 
 export default StyleButton

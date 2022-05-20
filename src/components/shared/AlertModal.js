@@ -29,10 +29,10 @@ function AlertModal({
 }
 
 AlertModal.propTypes = {
-  isAlertOpen: PropTypes.bool,
-  onAlertClose: PropTypes.func,
-  alertHeader: PropTypes.string,
-  alertBody: PropTypes.string,
+  isAlertOpen: PropTypes.bool.isRequired,
+  onAlertClose: PropTypes.func.isRequired,
+  alertHeader: PropTypes.string.isRequired,
+  alertBody: PropTypes.string.isRequired,
   actionText: PropTypes.string,
   alertAction: PropTypes.func,
 }

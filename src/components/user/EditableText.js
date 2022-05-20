@@ -46,14 +46,13 @@ function EditableText({
 }
 
 EditableText.propTypes = {
-  text: PropTypes.string,
-  placeholder: PropTypes.string,
-  children: PropTypes.node,
-  childRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.elementType }),
-  ]),
-  ariaLabel: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  childRef: PropTypes.shape({
+    current: PropTypes.instanceOf(Element),
+  }),
+  ariaLabel: PropTypes.string.isRequired,
 }
 
 export default EditableText

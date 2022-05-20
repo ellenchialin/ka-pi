@@ -5,16 +5,18 @@ import { Link } from 'react-router-dom'
 import { Flex, Box, AspectRatio, Image, Badge, Heading, Text, IconButton, VStack } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
+
 import { firebase } from '../../utils/firebase'
 import { thumbnails } from '../../cafeThumbnails'
 
 function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
+  const { id, name, address, tasty, socket, limited_time, wifi } = cafe
   const [coverPhoto, setCoverPhoto] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     firebase
-      .getAllBlogs(cafe.id)
+      .getAllBlogs(id)
       .then(blogs => {
         if (blogs.length > 0) {
           setCoverPhoto(blogs[0].image)
@@ -23,6 +25,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
           setCoverPhoto(fallback)
         }
       })
+      .catch(error => console.error(error.message))
       .finally(() => setIsLoading(false))
   }, [])
 
@@ -51,7 +54,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
           <AspectRatio maxW="100%" ratio={{ base: 16 / 9, sm: 4 / 3 }}>
             <Image
               src={coverPhoto}
-              alt={`${cafe.name} 店內照片`}
+              alt={`${name} 店內照片`}
               roundedTop="lg"
               objectFit="cover"
               align="center"
@@ -73,7 +76,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
             />
           )}
 
-          <Link to={`/cafe/${cafe.id}`} target="_blank">
+          <Link to={`/cafe/${id}`} target="_blank">
             <VStack spacing="2" p="4" align="flex-start">
               <Flex w="full" align="center" justify="space-between">
                 <Heading
@@ -84,7 +87,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
                   fontSize={{ base: '18px', md: '20px' }}
                   isTruncated
                 >
-                  {cafe.name}
+                  {name}
                 </Heading>
               </Flex>
               <Text
@@ -92,17 +95,17 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
                 fontSize={{ base: '14px', md: '16px' }}
                 isTruncated
               >
-                {cafe.address}
+                {address}
               </Text>
               <Flex align="center">
                 <Text fontSize={{ base: '14px', md: '16px' }} mr="1">
-                  {cafe.tasty}
+                  {tasty}
                 </Text>
                 <StarIcon w="3" h="3" />
               </Flex>
 
               <Box d="flex" alignItems="center" mt="3">
-                {cafe.socket === 'yes' && (
+                {socket === 'yes' && (
                   <Badge
                     rounded="full"
                     px="2"
@@ -115,7 +118,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
                     有插座
                   </Badge>
                 )}
-                {cafe.limited_time === 'no' && (
+                {limited_time === 'no' && (
                   <Badge
                     rounded="full"
                     px="2"
@@ -128,7 +131,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
                     不限時
                   </Badge>
                 )}
-                {cafe.wifi >= 4 && (
+                {wifi >= 4 && (
                   <Badge
                     rounded="full"
                     px="2"
@@ -151,7 +154,15 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
 }
 
 CafeCard.propTypes = {
-  cafe: PropTypes.object,
+  cafe: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    tasty: PropTypes.number.isRequired,
+    socket: PropTypes.string.isRequired,
+    limited_time: PropTypes.string.isRequired,
+    wifi: PropTypes.number.isRequired,
+  }),
   canDeleteCafe: PropTypes.bool,
   handleDeleteCafe: PropTypes.func,
 }

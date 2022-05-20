@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { useCheckboxGroup, Flex, Button, useColorModeValue, Wrap, WrapItem } from '@chakra-ui/react'
-import { areaData } from '../cityData'
-import CustomCheckbox from './CustomCheckbox'
+
+import { areaData } from '../../cityData'
+import CustomCheckbox from '../shared/CustomCheckbox'
 
 function DistrictFilterBoard({
   cityCafes,
@@ -88,10 +89,10 @@ function DistrictFilterBoard({
 }
 
 DistrictFilterBoard.propTypes = {
-  cityCafes: PropTypes.array,
-  translatedCityName: PropTypes.string,
-  setSelectedAreas: PropTypes.func,
-  setUpdatedCafes: PropTypes.func,
+  cityCafes: PropTypes.array.isRequired,
+  translatedCityName: PropTypes.string.isRequired,
+  setSelectedAreas: PropTypes.func.isRequired,
+  setUpdatedCafes: PropTypes.func.isRequired,
 }
 
 export default DistrictFilterBoard

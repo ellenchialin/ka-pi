@@ -3,7 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 // prettier-ignore
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 // prettier-ignore
-import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, deleteDoc, setDoc, doc, serverTimestamp, orderBy, arrayUnion, arrayRemove, increment, collectionGroup } from 'firebase/firestore'
+import { getFirestore, collection, getDoc, getDocs, updateDoc, query, where, deleteDoc, setDoc, doc, serverTimestamp, orderBy, increment, collectionGroup } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -20,6 +20,21 @@ const auth = getAuth(app)
 const provider = new GoogleAuthProvider()
 const db = getFirestore(app)
 const storage = getStorage(app)
+
+const REGISTER_ERROR_MESSAGE = type => {
+  const message = {
+    'auth/weak-password': '密碼需大於六位數',
+    'auth/email-already-in-use': '此信箱已是會員，請點上方切換為登入頁面',
+    'auth/invalid-email': '信箱格式錯誤，請填寫正確的信箱格式',
+    'auth/wrong-password': '密碼錯誤，請重新輸入',
+    'auth/user-not-found': '查無此信箱帳號非會員，請先註冊',
+    'auth/internal-error': '登入/註冊失敗，請稍後再試',
+    'auth/popup-closed-by-user': '未完成登入 / 註冊流程，請再試一次',
+    default: '登入/註冊失敗，請稍後再試',
+  }
+
+  return message[type] || message['default']
+}
 
 export const firebase = {
   checkAuthState(func) {
@@ -38,7 +53,7 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error(`請重新操作 (${error.code})`))
+          reject(new Error(REGISTER_ERROR_MESSAGE(error.code)))
           console.error('Error code', error.code)
         })
     })
@@ -51,7 +66,7 @@ export const firebase = {
           resolve(user)
         })
         .catch(error => {
-          reject(new Error(`請重新操作 (${error.code})`))
+          reject(new Error(REGISTER_ERROR_MESSAGE(error.code)))
           console.error(error.code)
         })
     })
@@ -86,7 +101,7 @@ export const firebase = {
           if (docsnap.exists()) {
             resolve(docsnap.data())
           }
-          return
+          reject(new Error('取得用戶資訊發生錯誤，請確認網路重新操作'))
         })
         .catch(error => {
           reject(new Error('取得用戶資訊發生錯誤，請確認網路重新操作'))
@@ -146,7 +161,7 @@ export const firebase = {
     return new Promise((resolve, reject) => {
       const cafeRef = doc(db, `users/${userId}/favCafes/${cafeId}`)
 
-      setDoc(cafeRef, { savedAt: serverTimestamp() })
+      setDoc(cafeRef, { id: cafeRef.id, savedAt: serverTimestamp() })
         .then(() => resolve())
         .catch(error => {
           reject(new Error('收藏咖啡廳發生錯誤'))
@@ -176,18 +191,10 @@ export const firebase = {
     })
   },
   checkSavedNumber(cafeId) {
-    const q = query(
-      collection(db, 'users'),
-      where('favCafes', 'array-contains', cafeId)
-    )
-
+    const q = query(collectionGroup(db, 'favCafes'), where('id', '==', cafeId))
     return new Promise((resolve, reject) => {
       getDocs(q)
-        .then(querySnapshot => {
-          const savedUserArray = []
-          querySnapshot.forEach(doc => savedUserArray.push(doc.id))
-          resolve(savedUserArray)
-        })
+        .then(querySnapshot => resolve(querySnapshot.size))
         .catch(error => {
           reject(new Error('取得收藏數發生錯誤'))
           console.error(error)

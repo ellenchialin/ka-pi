@@ -1,21 +1,33 @@
 import { useState, useRef } from 'react'
 // prettier-ignore
-import { Text, useCheckboxGroup, Heading, Flex, Button, Spinner, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
+import { Text, useCheckboxGroup, Heading, Flex, Button, Tag, TagLeftIcon, TagLabel, SimpleGrid, HStack, Wrap, WrapItem, VStack, useRadioGroup, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { CheckIcon } from '@chakra-ui/icons'
+
 import { api } from '../../utils/api'
-import PopoverCityFilter from '../../components/PopoverCityFilter'
-import CustomCheckbox from '../../components/CustomCheckbox'
+import PopoverCityFilter from '../../components/shared/PopoverCityFilter'
+import CustomCheckbox from '../../components/shared/CustomCheckbox'
 import CafeCard from '../../components/cafe/CafeCard'
-import Pagination from '@choc-ui/paginator'
-import AlertModal from '../../components/AlertModal'
+import CustomSpinner from '../../components/shared/CustomSpinner'
+import AlertModal from '../../components/shared/AlertModal'
+import CustomPagination from '../../components/shared/CustomPagination'
 import usePageTracking from '../../usePageTracking'
+
+const defaultFeatures = ['不限時', '有插座']
+const ratingFeatures = [
+  { text: 'WiFi穩定', tag: 'wifi' },
+  { text: '通常有位', tag: 'seat' },
+  { text: '店內安靜', tag: 'quiet' },
+  { text: '咖啡好喝', tag: 'tasty' },
+  { text: '價格親民', tag: 'cheap' },
+  { text: '裝潢音樂', tag: 'music' },
+]
 
 function SearchByFeature() {
   usePageTracking()
   const [filteredCafes, setFilteredCafes] = useState([])
   const [districtFilteredCafes, setDistrictFilteredCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const scrollCardRef = useRef(null)
+  const scrollToTopRef = useRef(null)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [cafesPerPage] = useState(20)
@@ -24,16 +36,6 @@ function SearchByFeature() {
     districtFilteredCafes.length > 0
       ? districtFilteredCafes.slice(offset, offset + cafesPerPage)
       : filteredCafes.slice(offset, offset + cafesPerPage)
-
-  const defaultFeatures = ['不限時', '有插座']
-  const ratingFeatures = [
-    { text: 'WiFi穩定', tag: 'wifi' },
-    { text: '通常有位', tag: 'seat' },
-    { text: '店內安靜', tag: 'quiet' },
-    { text: '咖啡好喝', tag: 'tasty' },
-    { text: '價格親民', tag: 'cheap' },
-    { text: '裝潢音樂', tag: 'music' },
-  ]
 
   const {
     value: featureValue,
@@ -93,11 +95,6 @@ function SearchByFeature() {
     setDistrictValue([])
     setFilteredCafes([])
     setDistrictFilteredCafes([])
-  }
-
-  const handlePageChange = page => {
-    setCurrentPage(page)
-    scrollCardRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   const filterBoxShadow = useColorModeValue(
@@ -184,16 +181,9 @@ function SearchByFeature() {
       </Flex>
 
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-        />
+        <CustomSpinner />
       ) : (
-        <Flex w="full" direction="column" align="center" ref={scrollCardRef}>
+        <Flex w="full" direction="column" align="center" ref={scrollToTopRef}>
           {filteredCafes.length > 0 && (
             <VStack alignSelf="flex-end" mb="4">
               <Text mb="2" alignSelf="flex-end">
@@ -227,26 +217,16 @@ function SearchByFeature() {
           </SimpleGrid>
           {filteredCafes.length > cafesPerPage ||
           districtFilteredCafes.length > cafesPerPage ? (
-            <Pagination
-              defaultCurrent={1}
+            <CustomPagination
               total={
                 districtFilteredCafes.length > 0
                   ? districtFilteredCafes.length
                   : filteredCafes.length
               }
-              current={currentPage}
-              onChange={page => handlePageChange(page)}
-              pageSize={cafesPerPage}
-              paginationProps={{
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-              pageNeighbours={2}
-              rounded="full"
-              baseStyles={{ bg: 'transparent' }}
-              activeStyles={{ bg: 'gray.400' }}
-              hoverStyles={{ bg: 'gray.400' }}
-              responsive={{ activePage: true }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              cardsPerPage={cafesPerPage}
+              scrollToTopRef={scrollToTopRef}
             />
           ) : (
             ''

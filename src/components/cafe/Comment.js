@@ -6,27 +6,21 @@ import { Flex, Image, Text, Divider, Modal, ModalOverlay, ModalContent, ModalBod
 import { CheckCircleIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
 import { BiSmile } from 'react-icons/bi'
+
 import { firebase } from '../../utils/firebase'
 import Picker from 'emoji-picker-react'
-import AlertModal from '../AlertModal'
+import AlertModal from '../shared/AlertModal'
 import Reply from './Reply'
 
-function Comment({
-  currentUser,
-  cafeId,
-  commentId,
-  commentUserId,
-  text,
-  date,
-  image,
-}) {
+function Comment({ cafeId, currentUser, comment }) {
+  const { commentId, userId: commentUserId, createdAt, text, image } = comment
   const [currentUserInfo, setCurrentUserInfo] = useState({})
   const [commentUserInfo, setCommentUserInfo] = useState({})
   const [replyText, setReplyText] = useState('')
   const [replyPhotoUrl, setReplyPhotoUrl] = useState('')
   const [showEmoji, setShowEmoji] = useState(false)
   const [replyList, setReplyList] = useState([])
-  const convertedCommentDate = date.toDate().toLocaleDateString()
+  const convertedCommentDate = createdAt.toDate().toLocaleDateString()
 
   const replyPhotoRef = useRef()
   const navigate = useNavigate()
@@ -59,9 +53,7 @@ function Comment({
   useEffect(() => {
     firebase
       .getUser(commentUserId)
-      .then(data => {
-        setCommentUserInfo(data)
-      })
+      .then(data => setCommentUserInfo(data))
       .catch(error => console.error(error.message))
 
     if (currentUser) {
@@ -75,16 +67,14 @@ function Comment({
   useEffect(() => {
     firebase
       .getReplyList(cafeId, commentId)
-      .then(list => {
-        setReplyList(list)
-      })
+      .then(list => setReplyList(list))
       .catch(error => console.error(error.message))
   }, [])
 
-  const handleReplyPhotoUpload = e => {
-    if (e.target.files[0]) {
+  const handleReplyPhotoUpload = file => {
+    if (file) {
       firebase
-        .getReplyPhotoUrl(e.target.files[0])
+        .getReplyPhotoUrl(file)
         .then(url => setReplyPhotoUrl(url))
         .catch(error => {
           onUploadAlertOpen()
@@ -137,15 +127,13 @@ function Comment({
 
         firebase
           .getReplyList(cafeId, commentId)
-          .then(list => {
-            setReplyList(list)
-          })
+          .then(list => setReplyList(list))
           .catch(error => console.error(error.message))
       })
       .catch(error => console.error(error.message))
   }
 
-  const onEmojiClick = (event, emojiObject) => {
+  const onEmojiClick = (_, emojiObject) => {
     setReplyText(prevReplyText => prevReplyText + emojiObject.emoji)
   }
 
@@ -215,14 +203,7 @@ function Comment({
             >
               Reply
             </Text>
-            <AlertModal
-              isAlertOpen={isAlertOpen}
-              onAlertClose={onAlertClose}
-              alertHeader="Oops! 尚未登入"
-              alertBody="請先登入或註冊：）"
-              actionText="前往登入"
-              alertAction={() => handleAlertAction()}
-            />
+
             <Modal
               isOpen={isReplyOpen}
               onClose={onReplyClose}
@@ -313,7 +294,7 @@ function Comment({
                       type="file"
                       name="coverPhoto"
                       accept="image/*"
-                      onChange={e => handleReplyPhotoUpload(e)}
+                      onChange={e => handleReplyPhotoUpload(e.target.files[0])}
                       hidden
                     />
                   </Flex>
@@ -334,6 +315,15 @@ function Comment({
                 </ModalFooter>
               </ModalContent>
             </Modal>
+
+            <AlertModal
+              isAlertOpen={isAlertOpen}
+              onAlertClose={onAlertClose}
+              alertHeader="Oops! 尚未登入"
+              alertBody="請先登入或註冊：）"
+              actionText="前往登入"
+              alertAction={() => handleAlertAction()}
+            />
             <AlertModal
               isAlertOpen={isUploadAlertOpen}
               onAlertClose={onUploadAlertClose}
@@ -343,30 +333,25 @@ function Comment({
           </HStack>
         </Flex>
       </Flex>
-      {/* Replies */}
       {replyList.length > 0 &&
-        replyList.map(reply => (
-          <Reply
-            key={reply.text}
-            replyUserId={reply.userId}
-            replyText={reply.text}
-            replyImage={reply.image}
-            replyDate={reply.repliedAt}
-          />
-        ))}
+        replyList.map(reply => <Reply key={reply.text} reply={reply} />)}
       <Divider mt="2" />
     </Flex>
   )
 }
 
 Comment.propTypes = {
-  currentUser: PropTypes.object,
-  cafeId: PropTypes.string,
-  commentId: PropTypes.string,
-  commentUserId: PropTypes.string,
-  text: PropTypes.string,
-  date: PropTypes.object,
-  image: PropTypes.string,
+  currentUser: PropTypes.shape({
+    uid: PropTypes.string.isRequired,
+  }),
+  cafeId: PropTypes.string.isRequired,
+  comment: PropTypes.shape({
+    commentId: PropTypes.string.isRequired,
+    userId: PropTypes.string.isRequired,
+    createdAt: PropTypes.object.isRequired,
+    text: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }),
 }
 
 export default Comment

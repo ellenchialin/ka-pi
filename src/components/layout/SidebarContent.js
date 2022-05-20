@@ -8,7 +8,7 @@ import { BsSearch } from 'react-icons/bs'
 import { CgCoffee } from 'react-icons/cg'
 import { VscLibrary } from 'react-icons/vsc'
 import { RiStarSmileLine } from 'react-icons/ri'
-import { ColorModeSwitcher } from '../ColorModeSwitcher'
+import { ColorModeSwitcher } from '../../ColorModeSwitcher'
 
 const NavItem = props => {
   const { icon, children, ...rest } = props
@@ -46,7 +46,7 @@ const NavItem = props => {
 
 NavItem.propTypes = {
   icon: PropTypes.func,
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
 }
 
 function SidebarContent({ onClose, ...rest }) {

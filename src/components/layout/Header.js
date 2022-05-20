@@ -1,5 +1,5 @@
 import { IconButton, Flex, Text, useColorModeValue } from '@chakra-ui/react'
-import { ColorModeSwitcher } from '../ColorModeSwitcher'
+import { ColorModeSwitcher } from '../../ColorModeSwitcher'
 import { CgMenuLeft } from 'react-icons/cg'
 import PropTypes from 'prop-types'
 
@@ -39,7 +39,7 @@ function Header({ onOpen }) {
 }
 
 Header.propTypes = {
-  onOpen: PropTypes.func,
+  onOpen: PropTypes.func.isRequired,
 }
 
 export default Header

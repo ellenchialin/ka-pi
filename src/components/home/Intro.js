@@ -59,7 +59,7 @@ function Intro({ handleScroll }) {
 }
 
 Intro.propTypes = {
-  handleScroll: PropTypes.func,
+  handleScroll: PropTypes.func.isRequired,
 }
 
 export default Intro

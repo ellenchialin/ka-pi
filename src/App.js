@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // prettier-ignore
 import { Box, useDisclosure, Drawer, DrawerOverlay, DrawerContent, Flex } from '@chakra-ui/react'
+
 import { useAuth } from './contexts/AuthContext'
-import Header from './components/Header'
-import SidebarContent from './components/SidebarContent'
+import Header from './components/layout/Header'
+import SidebarContent from './components/layout/SidebarContent'
 import Home from './pages/Home'
 import Collections from './pages/Collections'
 import Picks from './pages/Picks'

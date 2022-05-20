@@ -4,16 +4,19 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Flex, Input, Image, Button, AspectRatio, Text, HStack, useDisclosure } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
 import { RiAddFill } from 'react-icons/ri'
+
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
 import TextEditor from '../components/editor/TextEditor'
-import AlertModal from '../components/AlertModal'
+import AlertModal from '../components/shared/AlertModal'
 
 function EditBlog() {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogContent, setBlogContent] = useState('')
   const [coverPhotoUrl, setCoverPhotoUrl] = useState('')
   const [disablePublish, setDisablePublish] = useState(true)
+  const [alertHeader, setAlertHeader] = useState('')
+  const [alertBody, setAlertBody] = useState('')
 
   const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
@@ -22,21 +25,9 @@ function EditBlog() {
   const navigate = useNavigate()
 
   const {
-    isOpen: isPublishAlertOpen,
-    onOpen: onPublishAlertOpen,
-    onClose: onPublishAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isInvalidContentAlertOpen,
-    onOpen: onInvalidContentAlertOpen,
-    onClose: onInvalidContentAlertClose,
-  } = useDisclosure()
-
-  const {
-    isOpen: isUploadAlertOpen,
-    onOpen: onUploadAlertOpen,
-    onClose: onUploadAlertClose,
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
   } = useDisclosure()
 
   useEffect(() => {
@@ -49,13 +40,17 @@ function EditBlog() {
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
 
-  const handlePhotoUpload = e => {
-    if (e.target.files[0]) {
+  const handlePhotoUpload = file => {
+    if (file) {
       firebase
-        .getBlogPhotoUrl(e.target.files[0])
+        .getBlogPhotoUrl(file)
         .then(url => setCoverPhotoUrl(url))
         .catch(error => {
-          onUploadAlertOpen()
+          setAlertHeader('Oops! 圖片上傳失敗')
+          setAlertBody(
+            '請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com'
+          )
+          onAlertOpen()
           console.error(error)
         })
     }
@@ -63,7 +58,9 @@ function EditBlog() {
 
   const handlePublishBlog = () => {
     if (blogContent.blocks[0].text === '') {
-      onInvalidContentAlertOpen()
+      setAlertHeader('Oops! 發佈失敗')
+      setAlertBody('請確認圖片、標題與內容皆不可為空。')
+      onAlertOpen()
       return
     }
 
@@ -79,7 +76,11 @@ function EditBlog() {
         navigate(`/cafe/${cafeId}/blog/${blogId}`)
       })
       .catch(error => {
-        onPublishAlertOpen()
+        setAlertHeader('Oops! 發佈失敗')
+        setAlertBody(
+          '請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com'
+        )
+        onAlertOpen()
         console.error(error)
       })
   }
@@ -118,7 +119,7 @@ function EditBlog() {
           type="file"
           name="coverPhoto"
           accept="image/*"
-          onChange={e => handlePhotoUpload(e)}
+          onChange={e => handlePhotoUpload(e.target.files[0])}
           hidden
         />
       </Flex>
@@ -153,23 +154,12 @@ function EditBlog() {
           發佈
         </Button>
       </HStack>
+
       <AlertModal
-        isAlertOpen={isUploadAlertOpen}
-        onAlertClose={onUploadAlertClose}
-        alertHeader="圖片上傳失敗"
-        alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
-      />
-      <AlertModal
-        isAlertOpen={isInvalidContentAlertOpen}
-        onAlertClose={onInvalidContentAlertClose}
-        alertHeader="發佈失敗"
-        alertBody="請確認圖片、標題與內容皆不可為空。"
-      />
-      <AlertModal
-        isAlertOpen={isPublishAlertOpen}
-        onAlertClose={onPublishAlertClose}
-        alertHeader="發佈失敗"
-        alertBody="請確認網路連線並重新操作；如連續失敗請通知網站開發人員 chialin76@gmail.com "
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader={alertHeader}
+        alertBody={alertBody}
       />
     </Flex>
   )

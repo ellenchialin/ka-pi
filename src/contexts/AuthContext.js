@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     firebase.checkAuthState(user => {
-      console.log('current user from checkAuthState: ', user)
       setCurrentUser(user)
       setIsUserLoading(false)
     })

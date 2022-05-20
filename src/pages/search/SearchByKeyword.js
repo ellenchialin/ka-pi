@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, InputGroup, InputRightElement, IconButton, FormControl, Text, useDisclosure } from '@chakra-ui/react'
 // prettier-ignore
 import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from '@choc-ui/chakra-autocomplete'
 import { BiSearchAlt } from 'react-icons/bi'
+
 import { api } from '../../utils/api'
 import CafeCard from '../../components/cafe/CafeCard'
-import AlertModal from '../../components/AlertModal'
+import AlertModal from '../../components/shared/AlertModal'
 import usePageTracking from '../../usePageTracking'
 
 function SearchByKeyword() {
@@ -16,7 +16,6 @@ function SearchByKeyword() {
   const [matchedCafe, setMatchedCafe] = useState(null)
   const [searchCafe, setSearchCafe] = useState(null)
 
-  // const [searchParams, setSearchParams] = useSearchParams()
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
@@ -26,9 +25,7 @@ function SearchByKeyword() {
   useEffect(() => {
     api
       .getAllCafes()
-      .then(data => {
-        setAllCafes(data)
-      })
+      .then(data => setAllCafes(data))
       .catch(error => {
         onAlertOpen()
         console.error(error)
@@ -37,9 +34,7 @@ function SearchByKeyword() {
 
   const submitSearch = () => {
     const matched = allCafes.find(cafe => cafe.name === searchCafe)
-
     setMatchedCafe(matched)
-    // setSearchParams(searchCafe)
   }
 
   return (

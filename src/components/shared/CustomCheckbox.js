@@ -42,7 +42,7 @@ const CustomCheckbox = props => {
 }
 
 CustomCheckbox.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.string.isRequired,
 }
 
 export default CustomCheckbox

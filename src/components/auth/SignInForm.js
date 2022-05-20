@@ -6,7 +6,8 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { FaGoogle } from 'react-icons/fa'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import AlertModal from '../../components/AlertModal'
+
+import AlertModal from '../shared/AlertModal'
 import { useAuth } from '../../contexts/AuthContext'
 
 const SignInForm = () => {
@@ -23,18 +24,14 @@ const SignInForm = () => {
 
   const SigninSchema = Yup.object().shape({
     email: Yup.string()
-      .email('Invalid email address format')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(6, 'Password must be 6 characters at minimum')
-      .required('Password is required'),
+      .email('格式錯誤，請填寫正確的信箱格式')
+      .required('請填入信箱'),
+    password: Yup.string().min(6, '密碼需大於六位數').required('請填入密碼'),
   })
 
   const handleSignIn = (email, password) => {
     signin(email, password)
-      .then(user => {
-        navigate(-1)
-      })
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignInAlertOpen()
@@ -44,7 +41,7 @@ const SignInForm = () => {
 
   const handleGoogleSignIn = () => {
     googleSignIn()
-      .then(user => navigate(-1))
+      .then(() => navigate(-1))
       .catch(error => {
         setAlertBody(error.message)
         onSignInAlertOpen()
@@ -67,7 +64,11 @@ const SignInForm = () => {
           {({ handleSubmit, errors, touched }) => (
             <Form onSubmit={handleSubmit}>
               <Flex direction="column" align="center">
-                <FormControl isInvalid={errors.email && touched.email} mb="2">
+                <FormControl
+                  isInvalid={errors.email && touched.email}
+                  mb="2"
+                  h="100px"
+                >
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <Field as={Input} type="email" name="email" />
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -76,6 +77,7 @@ const SignInForm = () => {
                 <FormControl
                   isInvalid={errors.password && touched.password}
                   mb="2"
+                  h="100px"
                 >
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <InputGroup>

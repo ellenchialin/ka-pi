@@ -1,6 +1,7 @@
 import { ColorModeScript, ChakraProvider } from '@chakra-ui/react'
 import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
+
 import { AuthProvider } from './contexts/AuthContext'
 import App from './App'
 import custumTheme from './theme'

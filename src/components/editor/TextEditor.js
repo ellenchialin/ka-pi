@@ -79,7 +79,7 @@ function TextEditor({ setBlogContent }) {
 }
 
 TextEditor.propTypes = {
-  setBlogContent: PropTypes.func,
+  setBlogContent: PropTypes.func.isRequired,
 }
 
 export default TextEditor

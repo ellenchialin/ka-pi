@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Spinner, Heading, Avatar, Image, AspectRatio, Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink, useDisclosure } from '@chakra-ui/react'
-import { ChevronRightIcon } from '@chakra-ui/icons'
+import { Flex, Text, Heading, Avatar, Image, AspectRatio, useDisclosure } from '@chakra-ui/react'
 import { Editor, EditorState, convertFromRaw } from 'draft-js'
+
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
-import AlertModal from '../components/AlertModal'
+import CustomSpinner from '../components/shared/CustomSpinner'
+import CustomBreadcrumb from '../components/shared/CustomBreadcrumb'
+import AlertModal from '../components/shared/AlertModal'
 
 function Blog() {
   const [cafeName, setCafeName] = useState(null)
@@ -62,7 +62,6 @@ function Blog() {
       as="section"
       direction="column"
       align="center"
-      position="relative"
       w="100%"
       maxW="800px"
       h="100%"
@@ -74,46 +73,16 @@ function Blog() {
         alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com "
       />
       {isLoading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="teal"
-          size="lg"
-          mt="6"
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-        />
+        <CustomSpinner />
       ) : (
         <Flex direction="column" h="100%" w="100%">
-          <Breadcrumb
-            spacing="2px"
-            separator={<ChevronRightIcon color="secondaryLight" />}
-            mb="4"
-            fontSize="14px"
-          >
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/">
-                首頁
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to={`/cafe/${cafeId}`}>
-                {cafeName}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink
-                cursor="not-allowed"
-                color="secondaryLight"
-                textDecoration="underline"
-              >
-                {blog.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <CustomBreadcrumb
+            secondDestination={{
+              secondUrl: `/cafe/${cafeId}`,
+              secondText: cafeName,
+            }}
+            currentDestinationText={blog.title}
+          />
           <AspectRatio w="100%" ratio={21 / 9}>
             <Image
               src={blog.image}

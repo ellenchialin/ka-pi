@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { Flex, Image, Text, AspectRatio, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, useDisclosure, Box, useColorModeValue, HStack, Avatar } from '@chakra-ui/react'
-import { firebase } from '../../utils/firebase'
-import AlertModal from '../AlertModal'
 
-function Reply({ replyUserId, replyText, replyImage, replyDate }) {
+import { firebase } from '../../utils/firebase'
+import AlertModal from '../shared/AlertModal'
+
+function Reply({ reply }) {
+  const { userId: replyUserId, repliedAt, text, image } = reply
   const [userInfo, setUserInfo] = useState({})
-  const convertedReplyDate = replyDate.toDate().toLocaleDateString()
+  const convertedReplyDate = repliedAt.toDate().toLocaleDateString()
 
   const {
     isOpen: isReplyPhotoOpen,
@@ -24,9 +26,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
   useEffect(() => {
     firebase
       .getUser(replyUserId)
-      .then(data => {
-        setUserInfo(data)
-      })
+      .then(data => setUserInfo(data))
       .catch(error => {
         onGetUserAlertOpen()
         console.error(error)
@@ -54,12 +54,12 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
           <Text color="primaryDark" fontWeight="bold">
             {userInfo.name}
           </Text>
-          <Text color="primaryDark">{replyText}</Text>
-          {replyImage && (
+          <Text color="primaryDark">{text}</Text>
+          {image && (
             <>
               <AspectRatio w="100%" maxWidth="100px" mt="2" ratio={1}>
                 <Image
-                  src={replyImage}
+                  src={image}
                   alt="留言照片"
                   fit="cover"
                   onClick={onReplyPhotoOpen}
@@ -78,7 +78,7 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
                   <ModalBody p="10">
                     <AspectRatio h="85vh" _before={{ pb: '0' }}>
                       <Image
-                        src={replyImage}
+                        src={image}
                         alt="留言照片"
                         fit="cover"
                         align="center"
@@ -106,10 +106,12 @@ function Reply({ replyUserId, replyText, replyImage, replyDate }) {
 }
 
 Reply.propTypes = {
-  replyUserId: PropTypes.string,
-  replyText: PropTypes.string,
-  replyImage: PropTypes.string,
-  replyDate: PropTypes.object,
+  reply: PropTypes.shape({
+    userId: PropTypes.string.isRequired,
+    repliedAt: PropTypes.object.isRequired,
+    text: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+  }),
 }
 
 export default Reply
