@@ -74,10 +74,8 @@ function Picks() {
   }
 
   const getNearbyCafes = (lat, lng) => {
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}&language=zh-TW`
-    )
-      .then(res => res.json())
+    api
+      .getGoogleGeocode(lat, lng)
       .then(data => {
         let currentCity = data.plus_code.compound_code
           .split(' ')
@@ -108,7 +106,7 @@ function Picks() {
           return
         }
 
-        const city = cityData.filter(city => city.place === currentCity)[0].tag
+        const city = cityData.find(city => city.place === currentCity).tag
         api
           .getCityCafes(city)
           .then(cafes =>

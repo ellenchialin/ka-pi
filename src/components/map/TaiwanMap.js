@@ -48,13 +48,11 @@ function TaiwanMap() {
 
   const convertCityNameToChinese = (name, callback) => {
     const cityChName = cityData.find(city => city.tag === name).place
-    console.log('cityChName: ', cityChName)
     callback(cityChName)
   }
 
   const showCityInfo = clickedCity => {
     convertCityNameToChinese(clickedCity, setClickedCityName)
-    console.log('cityEngName: ', clickedCity)
     setCityLinkEndpoint(clickedCity)
 
     if (clickedCity === 'new_taipei') {

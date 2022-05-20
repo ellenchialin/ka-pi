@@ -39,7 +39,7 @@ function City() {
       : cityCafes.slice(offset, offset + cafesPerPage)
 
   useEffect(() => {
-    convertCityName(cityName)
+    convertCityName(cityName, setTranslatedCityName)
 
     if (cityName === 'new_taipei') {
       getCafes('new_taipei', 'taipei', setCityCafes)
@@ -53,23 +53,23 @@ function City() {
     getCafes(cityName, cityName, setCityCafes)
   }, [])
 
-  const convertCityName = city => {
-    setTranslatedCityName(cityData.find(c => c.tag === city).place)
+  const convertCityName = (city, callback) => {
+    callback(cityData.find(c => c.tag === city).place)
   }
 
-  const getCafes = (cityName, fetchCity, setCityState) => {
+  const getCafes = (cityName, fetchCity, callback) => {
     api
       .getCityCafes(fetchCity)
       .then(data => {
         if (cityName === 'new_taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('新北')))
+          callback(data.filter(cafe => cafe.address.includes('新北')))
           return
         }
         if (cityName === 'taipei') {
-          setCityState(data.filter(cafe => cafe.address.includes('台北')))
+          callback(data.filter(cafe => cafe.address.includes('台北')))
           return
         }
-        setCityState(data)
+        callback(data)
       })
       .catch(error => {
         onAlertOpen()
