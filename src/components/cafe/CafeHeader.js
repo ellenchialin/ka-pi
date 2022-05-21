@@ -185,7 +185,7 @@ CafeHeader.propTypes = {
     longitude: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
   }),
-  cafeCoverUrl: PropTypes.func.isRequired,
+  cafeCoverUrl: PropTypes.func,
 }
 
 export default CafeHeader

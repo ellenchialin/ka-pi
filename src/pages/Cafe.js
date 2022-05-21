@@ -112,7 +112,7 @@ function Cafe() {
       if (blogs.length > 0) {
         return blogs[0].image
       }
-      return
+      return null
     }
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${googlePhotoRefs[0]}&key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`
   }
