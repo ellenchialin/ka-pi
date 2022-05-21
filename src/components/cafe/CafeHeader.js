@@ -10,6 +10,7 @@ import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 
 import { useAuth } from '../../contexts/AuthContext'
 import { firebase } from '../../utils/firebase'
+import SaveCafeButton from './SaveCafeButton'
 import AlertModal from '../shared/AlertModal'
 
 function CafeHeader({ cafe, cafeCoverUrl }) {
@@ -154,22 +155,10 @@ function CafeHeader({ cafe, cafeCoverUrl }) {
           </Link>
         </HStack>
       </HStack>
-      <IconButton
-        position="absolute"
-        top="-20px"
-        right="20px"
-        colorScheme="teal"
-        isRound={true}
-        aria-label="收藏到我的咖啡廳地圖"
-        icon={
-          toggleSaved ? (
-            <BsFillBookmarkFill size="22px" />
-          ) : (
-            <BsBookmark size="22px" />
-          )
-        }
-        onClick={handleToggleSaved}
-      ></IconButton>
+      <SaveCafeButton
+        toggleSaved={toggleSaved}
+        handleToggleSaved={() => handleToggleSaved()}
+      />
 
       <AlertModal
         isAlertOpen={isAlertOpen}
