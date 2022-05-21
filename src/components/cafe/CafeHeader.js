@@ -1,12 +1,101 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 // prettier-ignore
-import { Flex, Heading, Text, Icon, IconButton, Link, HStack } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
+import { Flex, Heading, Text, Icon, IconButton, Link, HStack, useToast, useDisclosure } from '@chakra-ui/react'
+import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { RiDirectionFill } from 'react-icons/ri'
 import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 
-function CafeHeader({ cafe, cafeCoverUrl, toggleSaved, handleToggleSaved }) {
+import { useAuth } from '../../contexts/AuthContext'
+import { firebase } from '../../utils/firebase'
+import AlertModal from '../shared/AlertModal'
+
+function CafeHeader({ cafe, cafeCoverUrl }) {
+  const [toggleSaved, setToggleSaved] = useState(false)
+
+  const navigate = useNavigate()
+  const { currentUser } = useAuth()
+  const successToast = useToast()
+
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure()
+  const {
+    isOpen: isSaveCafeAlertOpen,
+    onOpen: onSaveCafeAlertOpen,
+    onClose: onSaveCafeAlertClose,
+  } = useDisclosure()
+
+  useEffect(() => {
+    if (currentUser) {
+      firebase
+        .getUserSavedCafes(currentUser.uid)
+        .then(list => {
+          const cafeIdList = list.map(item => item.cafeId)
+          const found = id => id === cafe.id
+          setToggleSaved(cafeIdList.some(found))
+        })
+        .catch(error => console.error(error.message))
+    }
+  }, [])
+
+  const handleToggleSaved = () => {
+    if (!currentUser) {
+      onAlertOpen()
+      return
+    }
+
+    if (toggleSaved) {
+      firebase
+        .deleteSavedCafe(currentUser.uid, cafe.id)
+        .then(() => {
+          setToggleSaved(prev => !prev)
+          showToast()
+        })
+        .catch(error => {
+          onSaveCafeAlertOpen()
+          console.error(error.message)
+        })
+      return
+    }
+    firebase
+      .saveCafe(currentUser.uid, cafe.id)
+      .then(() => {
+        setToggleSaved(prev => !prev)
+        showToast()
+      })
+      .catch(error => {
+        onSaveCafeAlertOpen()
+        console.error(error.message)
+      })
+  }
+
+  const showToast = () => {
+    successToast({
+      position: 'top-right',
+      duration: 3000,
+      render: () => (
+        <HStack
+          spacing="4"
+          color="primaryDark"
+          p={3}
+          bg="teal.200"
+          borderRadius="md"
+        >
+          <Icon as={CheckCircleIcon} />
+          <Text>已{toggleSaved ? '移除' : '成功'}收藏</Text>
+        </HStack>
+      ),
+      isClosable: true,
+    })
+  }
+
+  const handleAlertAction = () => navigate('/auth')
+
   return (
     <Flex
       w="100%"
@@ -81,6 +170,21 @@ function CafeHeader({ cafe, cafeCoverUrl, toggleSaved, handleToggleSaved }) {
         }
         onClick={handleToggleSaved}
       ></IconButton>
+
+      <AlertModal
+        isAlertOpen={isAlertOpen}
+        onAlertClose={onAlertClose}
+        alertHeader="Oops! 尚未登入"
+        alertBody="請先登入或註冊：）"
+        actionText="前往登入"
+        alertAction={() => handleAlertAction()}
+      />
+      <AlertModal
+        isAlertOpen={isSaveCafeAlertOpen}
+        onAlertClose={onSaveCafeAlertClose}
+        alertHeader="Oops! 發生錯誤"
+        alertBody="請確認網路連線並重新操作，多次失敗請聯繫開發人員 chialin76@gmail.com"
+      />
     </Flex>
   )
 }
@@ -94,8 +198,6 @@ CafeHeader.propTypes = {
     url: PropTypes.string.isRequired,
   }),
   cafeCoverUrl: PropTypes.func.isRequired,
-  toggleSaved: PropTypes.bool.isRequired,
-  handleToggleSaved: PropTypes.func.isRequired,
 }
 
 export default CafeHeader
