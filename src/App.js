@@ -16,6 +16,7 @@ import Blog from './pages/Blog'
 import EditBlog from './pages/EditBlog'
 import SearchByKeyword from './pages/search/SearchByKeyword'
 import SearchByFeature from './pages/search/SearchByFeature'
+import SearchByCity from './pages/search/SearchByCity'
 import NoMatch from './pages/NoMatch'
 
 function App() {
@@ -50,12 +51,10 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="city">
-                <Route path=":cityName" element={<City />} />
-              </Route>
               <Route path="search">
                 <Route index element={<SearchByKeyword />} />
                 <Route path="features" element={<SearchByFeature />} />
+                <Route path="taiwan" element={<SearchByCity />} />
               </Route>
               <Route path="collections/:type" element={<Collections />} />
               <Route path="cafe">

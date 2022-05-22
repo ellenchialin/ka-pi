@@ -30,7 +30,7 @@ function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   }, [])
 
   const getRandomCafeThumbnail = () => {
-    const randomNum = Math.floor(Math.random() * 16) + 1
+    const randomNum = Math.floor(Math.random() * thumbnails.length)
     return thumbnails[randomNum]
   }
 

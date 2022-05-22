@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, SimpleGrid,useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
 
 import DistrictFilterBoard from '../components/city/DistrictFilterBoard'
 import CafeCard from '../components/cafe/CafeCard'
-import CustomSpinner from '../components/shared/CustomSpinner'
 import AlertModal from '../components/shared/AlertModal'
+import CustomBreadcrumb from '../components/shared/CustomBreadcrumb'
+import CustomSpinner from '../components/shared/CustomSpinner'
 import CustomPagination from '../components/shared/CustomPagination'
 import useUpdateEffect from '../hooks/useUpdateEffect'
 import usePageTracking from '../usePageTracking'
@@ -22,7 +23,8 @@ function City() {
   const [isLoading, setIsLoading] = useState(true)
 
   const scrollToTopRef = useRef(null)
-  const { cityName } = useParams()
+  const [searchParams] = useSearchParams()
+  const cityName = searchParams.get('city')
 
   const {
     isOpen: isAlertOpen,
@@ -100,6 +102,15 @@ function City() {
         <CustomSpinner />
       ) : (
         <>
+          <Box alignSelf="flex-start">
+            <CustomBreadcrumb
+              secondDestination={{
+                secondUrl: `/search/taiwan`,
+                secondText: '全部城市',
+              }}
+              currentDestinationText={translatedCityName}
+            />
+          </Box>
           <Heading as="h1" size="xl">
             {translatedCityName}
           </Heading>

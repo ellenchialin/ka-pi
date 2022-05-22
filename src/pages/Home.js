@@ -6,7 +6,6 @@ import { api } from '../utils/api'
 import { cityData } from '../cityData'
 import Intro from '../components/home/Intro.js'
 import Map from '../components/map/Map'
-import TaiwanMap from '../components/map/TaiwanMap'
 import CafeCard from '../components/cafe/CafeCard'
 import CustomPagination from '../components/shared/CustomPagination'
 import AlertModal from '../components/shared/AlertModal'
@@ -199,28 +198,6 @@ function Home() {
             />
           </>
         )}
-      </Flex>
-
-      <Flex
-        as="section"
-        mt="12"
-        mb="4"
-        w="100%"
-        direction="column"
-        alignItems="center"
-      >
-        <Heading as="h2" mb="3" fontSize={{ base: '28px', md: '40px' }}>
-          遊走城市之間
-        </Heading>
-
-        <Flex
-          w="100%"
-          direction="column"
-          alignItems="center"
-          position="relative"
-        >
-          <TaiwanMap />
-        </Flex>
       </Flex>
 
       <AlertModal

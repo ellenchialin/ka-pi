@@ -109,6 +109,9 @@ function SidebarContent({ onClose, ...rest }) {
           <NavItem as={NavLink} to="search/features" pl="12" py="2">
             條件搜尋
           </NavItem>
+          <NavItem as={NavLink} to="search/taiwan" pl="12" py="2">
+            城市搜尋
+          </NavItem>
         </Collapse>
         <NavItem icon={VscLibrary} onClick={collectionsOnToggle}>
           系列
