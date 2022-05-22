@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
+import { Flex, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
 
+import CityHeader from './CityHeader'
 import DistrictFilterBoard from './DistrictFilterBoard'
 import CafeCard from '../cafe/CafeCard'
 import AlertModal from '../shared/AlertModal'
@@ -111,9 +112,7 @@ function City() {
               currentDestinationText={translatedCityName}
             />
           </Box>
-          <Heading as="h1" size="xl">
-            {translatedCityName}
-          </Heading>
+          <CityHeader city={translatedCityName} />
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
           <DistrictFilterBoard
             cityCafes={cityCafes}
