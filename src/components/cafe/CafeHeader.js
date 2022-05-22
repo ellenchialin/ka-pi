@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 // prettier-ignore
-import { Flex, Heading, Text, Icon, IconButton, Link, HStack, useToast, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, Text, Icon, Link, HStack, useToast, useDisclosure } from '@chakra-ui/react'
 import { StarIcon, CheckCircleIcon } from '@chakra-ui/icons'
 import { AiOutlineGlobal } from 'react-icons/ai'
 import { RiDirectionFill } from 'react-icons/ri'
-import { BsBookmark, BsFillBookmarkFill } from 'react-icons/bs'
 
 import { useAuth } from '../../contexts/AuthContext'
 import { firebase } from '../../utils/firebase'

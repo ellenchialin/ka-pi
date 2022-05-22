@@ -29,17 +29,17 @@ function RatingStatsGroup({ cafe }) {
     {
       name: '有無限時',
       icon: BiAlarmExclamation,
-      displayInfo: mapLimitedToString[cafe.limited_time] || '未提供資訊',
+      displayInfo: mapLimitedToString[cafe.limited_time] || '無資訊',
     },
     {
       name: '有無插座',
       icon: BiPlug,
-      displayInfo: mapSocketToString[cafe.socket] || '未提供資訊',
+      displayInfo: mapSocketToString[cafe.socket] || '無資訊',
     },
     {
       name: '站立座位',
       icon: VscPerson,
-      displayInfo: mapStandingToString[cafe.standing_desk] || '未提供資訊',
+      displayInfo: mapStandingToString[cafe.standing_desk] || '無資訊',
     },
   ]
 
@@ -70,6 +70,7 @@ function RatingStatsGroup({ cafe }) {
       <SimpleGrid
         w="full"
         columns={[1, 1, 3]}
+        gridAutoRows="114px"
         spacing="20px"
         justifyItems="center"
         mb="16"
@@ -79,7 +80,6 @@ function RatingStatsGroup({ cafe }) {
             key={feature.name}
             w="100%"
             maxW={{ base: '100%', md: '200px', lg: '250px', xl: '280px' }}
-            h="-webkit-fit-content"
             spacing={{ base: '40px', md: '20px', lg: '40px' }}
             justify="center"
             bg="primaryDark"
@@ -89,7 +89,11 @@ function RatingStatsGroup({ cafe }) {
             px="2"
             py="3"
           >
-            <VStack spacing="2" align="flex-start">
+            <VStack
+              spacing="2"
+              align="flex-start"
+              w={{ sm: '65px', md: '100px' }}
+            >
               <Text>{feature.name}</Text>
               <Heading as="h4" fontSize="1.5rem">
                 {feature.displayInfo}

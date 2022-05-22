@@ -61,11 +61,11 @@ function CommentGroup({ cafeId, userInfo }) {
     onCommentOpen()
   }
 
-  const handleCommentPhotoUpload = file => {
+  const handleCommentPhotoUpload = (file, callback) => {
     if (file) {
       firebase
         .getCommentPhotoUrl(file)
-        .then(url => setCommentPhotoUrl(url))
+        .then(url => callback(url))
         .catch(error => {
           onUploadAlertOpen()
           console.error(error)
@@ -225,7 +225,12 @@ function CommentGroup({ cafeId, userInfo }) {
                   type="file"
                   name="coverPhoto"
                   accept="image/*"
-                  onChange={e => handleCommentPhotoUpload(e.target.files[0])}
+                  onChange={e =>
+                    handleCommentPhotoUpload(
+                      e.target.files[0],
+                      setCommentPhotoUrl
+                    )
+                  }
                   hidden
                 />
               </Flex>

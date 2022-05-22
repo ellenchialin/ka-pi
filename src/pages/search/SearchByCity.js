@@ -116,7 +116,6 @@ function SearchByCity() {
       ) : (
         <City />
       )}
-      {/* showCityCafeList && <City />*/}
     </Flex>
   )
 }

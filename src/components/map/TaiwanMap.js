@@ -36,12 +36,10 @@ function TaiwanMap({
     <Box w="100%" maxW="450px">
       <svg
         id="cf503461-00bd-459a-aeb5-062ebc913211"
-        data-name="圖層 1"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 595.28 841.89"
         className="taiwanMap"
       >
-        <defs></defs>
         <title>台灣地圖</title>
         <path
           onClick={e => showCityInfo(e.target.getAttribute('data-name'))}
