@@ -25,11 +25,11 @@ function UserProfile({ userInfo }) {
     onClose: onUploadAlertClose,
   } = useDisclosure()
 
-  const handlePhotoChange = file => {
+  const handlePhotoChange = (file, callback) => {
     if (file) {
       firebase
         .getUserPhotoUrl(currentUser.uid, file)
-        .then(url => setUserPhotoUrl(url))
+        .then(url => callback(url))
         .catch(error => {
           onUploadAlertOpen()
           console.error(error.message)
@@ -73,7 +73,7 @@ function UserProfile({ userInfo }) {
           type="file"
           name="userPhoto"
           accept="image/*"
-          onChange={e => handlePhotoChange(e.target.files[0])}
+          onChange={e => handlePhotoChange(e.target.files[0], setUserPhotoUrl)}
           hidden
         />
       </Flex>

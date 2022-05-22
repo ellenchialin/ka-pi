@@ -71,11 +71,11 @@ function Comment({ cafeId, currentUser, comment }) {
       .catch(error => console.error(error.message))
   }, [])
 
-  const handleReplyPhotoUpload = file => {
+  const handleReplyPhotoUpload = (file, callback) => {
     if (file) {
       firebase
         .getReplyPhotoUrl(file)
-        .then(url => setReplyPhotoUrl(url))
+        .then(url => callback(url))
         .catch(error => {
           onUploadAlertOpen()
           console.error(error)
@@ -294,7 +294,12 @@ function Comment({ cafeId, currentUser, comment }) {
                       type="file"
                       name="coverPhoto"
                       accept="image/*"
-                      onChange={e => handleReplyPhotoUpload(e.target.files[0])}
+                      onChange={e =>
+                        handleReplyPhotoUpload(
+                          e.target.files[0],
+                          setReplyPhotoUrl
+                        )
+                      }
                       hidden
                     />
                   </Flex>

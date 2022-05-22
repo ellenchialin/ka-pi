@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Text, Icon, useDisclosure, HStack, useToast } from '@chakra-ui/react'
-import { CheckCircleIcon } from '@chakra-ui/icons'
+import { Flex, useDisclosure } from '@chakra-ui/react'
 
 import CafeHeader from '../components/cafe/CafeHeader'
 import PageStats from '../components/cafe/PageStats'
@@ -21,7 +20,6 @@ function Cafe() {
   usePageTracking()
 
   const [cafe, setCafe] = useState({})
-  const [toggleSaved, setToggleSaved] = useState(false)
   const [savedNumber, setSavedNumber] = useState(0)
   const [blogs, setBlogs] = useState([])
   const [userInfo, setUserInfo] = useState({})
@@ -32,7 +30,6 @@ function Cafe() {
   const { currentUser } = useAuth()
   const { cafeId } = useParams()
   const navigate = useNavigate()
-  const successToast = useToast()
 
   const {
     isOpen: isAlertOpen,
@@ -74,15 +71,6 @@ function Cafe() {
             .getUser(currentUser.uid)
             .then(data => setUserInfo(data))
             .catch(error => console.error(error.message))
-
-          firebase
-            .getUserSavedCafes(currentUser.uid)
-            .then(list => {
-              const cafeIdList = list.map(item => item.cafeId)
-              const found = id => id === cafe.id
-              setToggleSaved(cafeIdList.some(found))
-            })
-            .catch(error => console.error(error.message))
         }
 
         api
@@ -108,45 +96,6 @@ function Cafe() {
         console.error(error.message)
       })
   }, [])
-
-  const handleToggleSaved = () => {
-    if (!currentUser) {
-      onAlertOpen()
-      return
-    }
-
-    if (toggleSaved) {
-      firebase.deleteSavedCafe(currentUser.uid, cafe.id).then(() => {
-        setToggleSaved(prev => !prev)
-        showToast()
-      })
-      return
-    }
-    firebase.saveCafe(currentUser.uid, cafe.id).then(() => {
-      setToggleSaved(prev => !prev)
-      showToast()
-    })
-  }
-
-  const showToast = () => {
-    successToast({
-      position: 'top-right',
-      duration: 3000,
-      render: () => (
-        <HStack
-          spacing="4"
-          color="primaryDark"
-          p={3}
-          bg="teal.200"
-          borderRadius="md"
-        >
-          <Icon as={CheckCircleIcon} />
-          <Text>已{toggleSaved ? '移除' : '成功'}收藏</Text>
-        </HStack>
-      ),
-      isClosable: true,
-    })
-  }
 
   const handleClickAddBlog = () => {
     if (!currentUser) {
@@ -182,12 +131,7 @@ function Cafe() {
         <CustomSpinner />
       ) : (
         <>
-          <CafeHeader
-            cafe={cafe}
-            cafeCoverUrl={cafeCoverUrl}
-            toggleSaved={toggleSaved}
-            handleToggleSaved={() => handleToggleSaved()}
-          />
+          <CafeHeader cafe={cafe} cafeCoverUrl={cafeCoverUrl} />
           <PageStats savedNumber={savedNumber} pageViews={pageViews} />
           <RatingStatsGroup cafe={cafe} />
           <GooglePhotoGroup googlePhotoRefs={googlePhotoRefs} />

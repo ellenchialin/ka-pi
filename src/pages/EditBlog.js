@@ -40,11 +40,11 @@ function EditBlog() {
       : setDisablePublish(true)
   }, [blogTitle, blogContent, coverPhotoUrl])
 
-  const handlePhotoUpload = file => {
+  const handlePhotoUpload = (file, callback) => {
     if (file) {
       firebase
         .getBlogPhotoUrl(file)
-        .then(url => setCoverPhotoUrl(url))
+        .then(url => callback(url))
         .catch(error => {
           setAlertHeader('Oops! 圖片上傳失敗')
           setAlertBody(
@@ -119,7 +119,7 @@ function EditBlog() {
           type="file"
           name="coverPhoto"
           accept="image/*"
-          onChange={e => handlePhotoUpload(e.target.files[0])}
+          onChange={e => handlePhotoUpload(e.target.files[0], setCoverPhotoUrl)}
           hidden
         />
       </Flex>
