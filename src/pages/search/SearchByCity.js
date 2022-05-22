@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {
-  Flex,
-  Heading,
-  Text,
-  useDisclosure,
-  useColorModeValue,
-} from '@chakra-ui/react'
+// prettier-ignore
+import { Flex, Heading, Text, useDisclosure, useColorModeValue } from '@chakra-ui/react'
 
 import TaiwanMap from '../../components/map/TaiwanMap'
 import CityInfoCard from '../../components/map/CityInfoCard'
-import City from '../City'
+import City from '../../components/city/City'
 import AlertModal from '../../components/shared/AlertModal'
 import { api } from '../../utils/api'
 

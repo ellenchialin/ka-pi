@@ -3,16 +3,16 @@ import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
 import { Flex, Heading, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
 
-import DistrictFilterBoard from '../components/city/DistrictFilterBoard'
-import CafeCard from '../components/cafe/CafeCard'
-import AlertModal from '../components/shared/AlertModal'
-import CustomBreadcrumb from '../components/shared/CustomBreadcrumb'
-import CustomSpinner from '../components/shared/CustomSpinner'
-import CustomPagination from '../components/shared/CustomPagination'
-import useUpdateEffect from '../hooks/useUpdateEffect'
-import usePageTracking from '../usePageTracking'
-import { api } from '../utils/api'
-import { cityData } from '../cityData'
+import DistrictFilterBoard from './DistrictFilterBoard'
+import CafeCard from '../cafe/CafeCard'
+import AlertModal from '../shared/AlertModal'
+import CustomBreadcrumb from '../shared/CustomBreadcrumb'
+import CustomSpinner from '../shared/CustomSpinner'
+import CustomPagination from '../shared/CustomPagination'
+import useUpdateEffect from '../../hooks/useUpdateEffect'
+import usePageTracking from '../../usePageTracking'
+import { api } from '../../utils/api'
+import { cityData } from '../../cityData'
 
 function City() {
   usePageTracking()
