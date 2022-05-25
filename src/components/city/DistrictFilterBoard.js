@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 // prettier-ignore
 import { useCheckboxGroup, Flex, Button, useColorModeValue, Wrap, WrapItem } from '@chakra-ui/react'
 
-import { areaData } from '../../cityData'
+import { areaData } from '../../utils/cityData'
 import CustomCheckbox from '../shared/CustomCheckbox'
 
 function DistrictFilterBoard({

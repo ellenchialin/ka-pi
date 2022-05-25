@@ -10,7 +10,7 @@ import CafeCard from '../components/cafe/CafeCard'
 import CustomSpinner from '../components/shared/CustomSpinner'
 import CustomPagination from '../components/shared/CustomPagination'
 import AlertModal from '../components/shared/AlertModal'
-import usePageTracking from '../usePageTracking'
+import usePageTracking from '../hooks/usePageTracking'
 
 const workLabels = ['不限時', '夠安靜', '有插座', 'WiFi穩定']
 const hangoutLabels = ['不限時', '裝潢音樂', '通常有位']

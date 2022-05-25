@@ -7,6 +7,7 @@ import { RiAddFill } from 'react-icons/ri'
 
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
+import BlogTitle from '../components/editBlog/BlogTitle'
 import TextEditor from '../components/editor/TextEditor'
 import AlertModal from '../components/shared/AlertModal'
 
@@ -18,7 +19,6 @@ function EditBlog() {
   const [alertHeader, setAlertHeader] = useState('')
   const [alertBody, setAlertBody] = useState('')
 
-  const titleInputRef = useRef(null)
   const coverPhototRef = useRef()
   const { currentUser } = useAuth()
   const { cafeId } = useParams()
@@ -29,10 +29,6 @@ function EditBlog() {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure()
-
-  useEffect(() => {
-    titleInputRef.current.focus()
-  }, [])
 
   useEffect(() => {
     blogTitle && blogContent !== '' && coverPhotoUrl
@@ -123,16 +119,7 @@ function EditBlog() {
           hidden
         />
       </Flex>
-      <Input
-        variant="filled"
-        placeholder="Blog Title"
-        mb="6"
-        size="lg"
-        value={blogTitle}
-        onChange={e => setBlogTitle(e.target.value)}
-        ref={titleInputRef}
-        isRequired
-      />
+      <BlogTitle blogTitle={blogTitle} setBlogTitle={setBlogTitle} />
       <TextEditor setBlogContent={setBlogContent} />
 
       <HStack spacing="2" mb="10" alignSelf="flex-end">

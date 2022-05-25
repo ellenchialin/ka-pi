@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 // prettier-ignore
-import { Flex, Heading, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
+import { Flex, Text, SimpleGrid, Box, useDisclosure } from '@chakra-ui/react'
 
+import CityHeader from './CityHeader'
 import DistrictFilterBoard from './DistrictFilterBoard'
 import CafeCard from '../cafe/CafeCard'
 import AlertModal from '../shared/AlertModal'
@@ -10,12 +11,10 @@ import CustomBreadcrumb from '../shared/CustomBreadcrumb'
 import CustomSpinner from '../shared/CustomSpinner'
 import CustomPagination from '../shared/CustomPagination'
 import useUpdateEffect from '../../hooks/useUpdateEffect'
-import usePageTracking from '../../usePageTracking'
 import { api } from '../../utils/api'
-import { cityData } from '../../cityData'
+import { cityData } from '../../utils/cityData'
 
 function City() {
-  usePageTracking()
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [selectedAreas, setSelectedAreas] = useState([])
@@ -111,9 +110,7 @@ function City() {
               currentDestinationText={translatedCityName}
             />
           </Box>
-          <Heading as="h1" size="xl">
-            {translatedCityName}
-          </Heading>
+          <CityHeader city={translatedCityName} />
           <Text my="3">共收錄 {cityCafes.length} 間</Text>
           <DistrictFilterBoard
             cityCafes={cityCafes}

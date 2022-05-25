@@ -10,7 +10,7 @@ import CafeCard from '../../components/cafe/CafeCard'
 import CustomSpinner from '../../components/shared/CustomSpinner'
 import AlertModal from '../../components/shared/AlertModal'
 import CustomPagination from '../../components/shared/CustomPagination'
-import usePageTracking from '../../usePageTracking'
+import usePageTracking from '../../hooks/usePageTracking'
 
 const defaultFeatures = ['不限時', '有插座']
 const ratingFeatures = [

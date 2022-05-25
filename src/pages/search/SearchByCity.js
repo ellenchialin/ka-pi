@@ -8,6 +8,7 @@ import CityInfoCard from '../../components/map/CityInfoCard'
 import City from '../../components/city/City'
 import AlertModal from '../../components/shared/AlertModal'
 import { api } from '../../utils/api'
+import usePageTracking from '../../hooks/usePageTracking'
 
 function SearchByCity() {
   const [clickedCity, setClickedCity] = useState(null)
@@ -18,6 +19,7 @@ function SearchByCity() {
   const [newTaipeiCafes, setNewTaipeiCafes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchParams] = useSearchParams()
+  usePageTracking()
 
   useEffect(() => {
     setHasCityParam(searchParams.has('city'))
