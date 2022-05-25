@@ -9,7 +9,7 @@ import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
 import CustomPagination from '../components/shared/CustomPagination'
 import AlertModal from '../components/shared/AlertModal'
-import usePageTracking from '../usePageTracking'
+import usePageTracking from '../hooks/usePageTracking'
 
 function Home() {
   usePageTracking()

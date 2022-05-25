@@ -14,7 +14,7 @@ import AlertModal from '../components/shared/AlertModal'
 import { api } from '../utils/api'
 import { firebase } from '../utils/firebase'
 import { useAuth } from '../contexts/AuthContext'
-import usePageTracking from '../usePageTracking'
+import usePageTracking from '../hooks/usePageTracking'
 
 function Cafe() {
   usePageTracking()

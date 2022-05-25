@@ -9,7 +9,7 @@ import Map from '../components/map/Map'
 import CustomSpinner from '../components/shared/CustomSpinner'
 import AlertModal from '../components/shared/AlertModal'
 import CustomPagination from '../components/shared/CustomPagination'
-import usePageTracking from '../usePageTracking'
+import usePageTracking from '../hooks/usePageTracking'
 
 function Picks() {
   usePageTracking()

@@ -10,7 +10,7 @@ import UserCafesMap from '../components/user/UserCafesMap'
 import UserBlogs from '../components/user/UserBlogs'
 import CustomSpinner from '../components/shared/CustomSpinner'
 import AlertModal from '../components/shared/AlertModal'
-import usePageTracking from '../usePageTracking'
+import usePageTracking from '../hooks/usePageTracking'
 
 function User() {
   usePageTracking()

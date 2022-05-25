@@ -11,12 +11,10 @@ import CustomBreadcrumb from '../shared/CustomBreadcrumb'
 import CustomSpinner from '../shared/CustomSpinner'
 import CustomPagination from '../shared/CustomPagination'
 import useUpdateEffect from '../../hooks/useUpdateEffect'
-import usePageTracking from '../../usePageTracking'
 import { api } from '../../utils/api'
 import { cityData } from '../../cityData'
 
 function City() {
-  usePageTracking()
   const [translatedCityName, setTranslatedCityName] = useState('')
   const [cityCafes, setCityCafes] = useState([])
   const [selectedAreas, setSelectedAreas] = useState([])
