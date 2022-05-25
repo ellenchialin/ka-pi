@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { Box } from '@chakra-ui/react'
 
-import { cityData } from '../../cityData'
+import { cityData } from '../../utils/cityData'
 import './TaiwanMap.css'
 
 function TaiwanMap({

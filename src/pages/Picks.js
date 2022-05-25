@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Flex, Heading, Text, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 
 import { api } from '../utils/api'
-import { cityData } from '../cityData'
+import { cityData } from '../utils/cityData'
 import CafeCard from '../components/cafe/CafeCard'
 import Map from '../components/map/Map'
 import CustomSpinner from '../components/shared/CustomSpinner'

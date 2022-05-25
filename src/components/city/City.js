@@ -12,7 +12,7 @@ import CustomSpinner from '../shared/CustomSpinner'
 import CustomPagination from '../shared/CustomPagination'
 import useUpdateEffect from '../../hooks/useUpdateEffect'
 import { api } from '../../utils/api'
-import { cityData } from '../../cityData'
+import { cityData } from '../../utils/cityData'
 
 function City() {
   const [translatedCityName, setTranslatedCityName] = useState('')

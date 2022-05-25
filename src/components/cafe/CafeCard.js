@@ -7,7 +7,7 @@ import { StarIcon } from '@chakra-ui/icons'
 import { RiDeleteBin5Line } from 'react-icons/ri'
 
 import { firebase } from '../../utils/firebase'
-import { thumbnails } from '../../cafeThumbnails'
+import { thumbnails } from '../../utils/cafeThumbnails'
 
 function CafeCard({ cafe, canDeleteCafe, handleDeleteCafe }) {
   const { id, name, address, tasty, socket, limited_time, wifi } = cafe

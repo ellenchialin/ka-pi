@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Flex, Heading, Text, SimpleGrid, Skeleton, useDisclosure } from '@chakra-ui/react'
 
 import { api } from '../utils/api'
-import { cityData } from '../cityData'
+import { cityData } from '../utils/cityData'
 import Intro from '../components/home/Intro.js'
 import Map from '../components/map/Map'
 import CafeCard from '../components/cafe/CafeCard'
