@@ -5,7 +5,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import PropTypes from 'prop-types'
 
 const cafeIcon = new Icon({
-  iconUrl: '/cafeIcon.png',
+  iconUrl: '/images/cafeIcon.png',
   iconSize: [35, 35],
 })
 
