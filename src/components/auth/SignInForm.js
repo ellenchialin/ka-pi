@@ -69,7 +69,9 @@ const SignInForm = () => {
                   mb="2"
                   h="100px"
                 >
-                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <FormLabel htmlFor="email">
+                    Email (測試用: coffeelover@coffee.com)
+                  </FormLabel>
                   <Field as={Input} type="email" name="email" />
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
@@ -79,7 +81,9 @@ const SignInForm = () => {
                   mb="2"
                   h="100px"
                 >
-                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <FormLabel htmlFor="password">
+                    Password (測試用: 123456)
+                  </FormLabel>
                   <InputGroup>
                     <Field
                       as={Input}
