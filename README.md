@@ -89,7 +89,12 @@ Start a conversation with other cafe lovers.
 #### `Update user profile`
 
 Update profile, remove cafes from the bookmarked list or delete outdated blogs.
-![leave a comment or reply](./readme_assets/features_update-profile.gif)
+![update user profile, cafe map and blogs](./readme_assets/features_update-profile.gif)
+
+#### `Dark mode & RWD`
+
+Browse ka-pi in dark mode from any device.
+![ka-pi in dark mode and RWD](./readme_assets/features_darkMode-rwd.gif)
 
 ## Contact
 
