@@ -51,7 +51,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="search">
-                <Route index path="keyword" element={<SearchByKeyword />} />
+                <Route path="keyword" element={<SearchByKeyword />} />
                 <Route path="features" element={<SearchByFeature />} />
                 <Route path="taiwan" element={<SearchByCity />} />
               </Route>
