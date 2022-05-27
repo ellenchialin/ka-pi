@@ -78,22 +78,22 @@ Search cafes in multiple ways.
 
 #### `Publish a blog`
 
-Edit & publish your experience with others.
+Edit & publish your experience with others.<br/>
 ![publish a blog](./readme_assets/features_publish-blog.gif)
 
 #### `Leave comment or reply`
 
-Start a conversation with other cafe lovers.
+Start a conversation with other cafe lovers.<br/>
 ![leave a comment or reply](./readme_assets/features_comment.gif)
 
 #### `Update user profile`
 
-Update profile, remove cafes from the bookmarked list or delete outdated blogs.
+Update profile, remove cafes from the bookmarked list or delete outdated blogs.<br/>
 ![update user profile, cafe map and blogs](./readme_assets/features_update-profile.gif)
 
 #### `Dark mode & RWD`
 
-Browse ka-pi in dark mode from any device.
+Browse ka-pi in dark mode from any device.<br/>
 ![ka-pi in dark mode and RWD](./readme_assets/features_darkMode-rwd.gif)
 
 ## Contact
