@@ -1,4 +1,4 @@
-import { Link as NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
 // prettier-ignore
 import { Box, Flex, Text, Link, Divider, Icon, Collapse, CloseButton, useColorModeValue, useDisclosure } from '@chakra-ui/react'
@@ -90,7 +90,7 @@ function SidebarContent({ onClose, ...rest }) {
           as={NavLink}
           to="/"
           icon={HiOutlineHome}
-          _activeLink={{ color: 'red.400' }}
+          _activeLink={{ bg: 'gray.400', color: 'white' }}
         >
           首頁
         </NavItem>
@@ -103,13 +103,31 @@ function SidebarContent({ onClose, ...rest }) {
           />
         </NavItem>
         <Collapse in={discoverIsOpen}>
-          <NavItem as={NavLink} to="search" pl="12" py="2">
+          <NavItem
+            as={NavLink}
+            to="search/keyword"
+            pl="12"
+            py="2"
+            _activeLink={{ bg: 'gray.400', color: 'white' }}
+          >
             關鍵字搜尋
           </NavItem>
-          <NavItem as={NavLink} to="search/features" pl="12" py="2">
+          <NavItem
+            as={NavLink}
+            to="search/features"
+            pl="12"
+            py="2"
+            _activeLink={{ bg: 'gray.400', color: 'white' }}
+          >
             條件搜尋
           </NavItem>
-          <NavItem as={NavLink} to="search/taiwan" pl="12" py="2">
+          <NavItem
+            as={NavLink}
+            to="search/taiwan"
+            pl="12"
+            py="2"
+            _activeLink={{ bg: 'gray.400', color: 'white' }}
+          >
             城市搜尋
           </NavItem>
         </Collapse>
@@ -122,17 +140,39 @@ function SidebarContent({ onClose, ...rest }) {
           />
         </NavItem>
         <Collapse in={collectionsIsOpen}>
-          <NavItem as={NavLink} to="collections/work" pl="12" py="2">
+          <NavItem
+            as={NavLink}
+            to="collections/work"
+            pl="12"
+            py="2"
+            _activeLink={{ bg: 'gray.400', color: 'white' }}
+          >
             適合工作
           </NavItem>
-          <NavItem as={NavLink} to="collections/hangout" pl="12" py="2">
+          <NavItem
+            as={NavLink}
+            to="collections/hangout"
+            pl="12"
+            py="2"
+            _activeLink={{ bg: 'gray.400', color: 'white' }}
+          >
             適合聚會
           </NavItem>
         </Collapse>
-        <NavItem as={NavLink} to="picks" icon={RiStarSmileLine}>
+        <NavItem
+          as={NavLink}
+          to="picks"
+          icon={RiStarSmileLine}
+          _activeLink={{ bg: 'gray.400', color: 'white' }}
+        >
           精選
         </NavItem>
-        <NavItem as={NavLink} to="user" icon={CgCoffee}>
+        <NavItem
+          as={NavLink}
+          to="user"
+          icon={CgCoffee}
+          _activeLink={{ bg: 'gray.400', color: 'white' }}
+        >
           你的咖啡廳地圖
         </NavItem>
       </Flex>
