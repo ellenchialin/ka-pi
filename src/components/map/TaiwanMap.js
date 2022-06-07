@@ -1,8 +1,19 @@
 import PropTypes from 'prop-types'
 import { Box } from '@chakra-ui/react'
+import styled from '@emotion/styled'
 
 import { cityData, taiwanMapPath } from '../../utils/cityData'
-import './TaiwanMap.css'
+
+const StyledPath = styled.path`
+  stroke: #b3b3b3;
+  fill: transparent;
+  transition: 0.5s;
+  cursor: pointer;
+  &:hover {
+    fill: #f4bf3a;
+    transform: translate(-5px, -5px);
+  }
+`
 
 function TaiwanMap({
   setClickedCity,
@@ -42,7 +53,7 @@ function TaiwanMap({
       >
         <title>台灣地圖</title>
         {taiwanMapPath.map(p => (
-          <path
+          <StyledPath
             key={p.id}
             id={p.id}
             data-name={p['data-name']}
